@@ -1,6 +1,6 @@
 #+options: toc:nil date:nil
 #+BIND: org-latex-image-default-width 0.98\linewidth
-#+TITLE: Lenguaje BABBA
+#+TITLE: Lenguaje BABAA
 #+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote @@latex: \\@@Antonio Coín Castro
 
 #+LATEX_HEADER:\setlength{\parindent}{0in}
@@ -24,6 +24,10 @@ En nuestro lenguaje implementaremos los *arrays 1D y 2D* como estructura de dato
 Esta estructura solo puede tener tipos básicos en su interior (entero, carácter, real y booleano).
 
 * Descripción formal de la sintaxis del lenguaje usando BNF
+
+#+BEGIN_SRC
+#+INCLUDE: "./test.bnf" :src 
+#+END_SRC
 
 * Definición de la semántica en lenguaje natural.
 
