@@ -26,34 +26,32 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 * Descripción formal de la sintaxis del lenguaje usando BNF
 
 #+BEGIN_SRC bnf
-<Programa>           ::= <Cabecera_programa> <bloque>
-<bloque>             ::= <Inicio_de_bloque>
-             <Declar_de_variables_locales>
-             <Declar_de_subprogs>
-             <Sentencias>
-             <Fin_de_bloque>
-<Declar_de_subprogs> ::= <Declar_de_subprogs> <Declar_subprog>
-                     |
-  <Declar_subprog> ::= <Cabecera_subprograma> <bloque>
-  <Declar_de_variables_locales> ::= <Marca_ini_declar_variables>
-  <Variables_locales>
-  <Marca_fin_declar_variables>
-  |
-  <Cabecera_programa> ::= (Dependerá del lenguaje de referencia)
-  <Inicio_de_bloque> ::= En C: {
-  En Pascal: begin
-  <Fin_de_bloque> ::= En C: }
-  En Pascal: end
-  <Variables_locales> ::= <Variables_locales> <Cuerpo_declar_variables>
-  | <Cuerpo_declar_variables>
-  <Cuerpo_declar_variables> ::= (Dependerá del lenguaje de referencia)
-  <Cabecera_subprog> ::= (Dependerá del lenguaje de referencia)
-  <Sentencias> ::= <Sentencias> <Sentencia>
-  | <Sentencia>
-  <Sentencia> ::= <bloque>
-  | <sentencia_asignacion>
-  | <sentencia_if>
-  | <sentencia_while>
+  <Programa>                    ::= #<Cabecera_programa> <bloque>
+  <bloque>                      ::= #<Inicio_de_bloque>
+                                    #<Declar_de_variables_locales>
+                                    #<Declar_de_subprogs>
+                                    #<Sentencias>
+                                    #<Fin_de_bloque>
+  <Declar_de_subprogs>          ::= #<Declar_de_subprogs> <Declar_subprog>
+                                |
+  <Declar_subprog>              ::= #<Cabecera_subprograma> <bloque>
+  <Declar_de_variables_locales> ::= #<Marca_ini_declar_variables>
+                                    #<Variables_locales>
+                                    #<Marca_fin_declar_variables>
+                                |
+  <Cabecera_programa>           ::= #
+  <Inicio_de_bloque>            ::= #
+  <Fin_de_bloque>               ::= #
+  <Variables_locales>           ::= #<Variables_locales> <Cuerpo_declar_variables>
+                                |   #<Cuerpo_declar_variables>
+  <Cuerpo_declar_variables>     ::= #
+  <Cabecera_subprog>            ::= #
+  <Sentencias>                  ::= #<Sentencias> <Sentencia>
+                                |   #<Sentencia>
+  <Sentencia>                   ::= #<bloque>
+                                |   #<sentencia_asignacion>
+                                |   #<sentencia_if>
+                                |   #<sentencia_while>
 
 #+END_SRC
 
