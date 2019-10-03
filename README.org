@@ -1,1 +1,2 @@
-#+INCLUDE: "/path/to/config.org"
+* PL
+Repositorio de las prácticas de PL.
