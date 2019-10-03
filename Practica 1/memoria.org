@@ -1,0 +1,33 @@
+#+options: toc:nil date:nil
+#+BIND: org-latex-image-default-width 0.98\linewidth
+#+TITLE: Lenguaje BABBA
+#+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote @@latex: \\@@Antonio Coín Castro
+
+#+LATEX_HEADER:\setlength{\parindent}{0in}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+#+LATEX_HEADER: \usepackage{mathtools}
+
+* Descripción del lenguaje
+
+La sintaxis de nuestro lenguaje está inspirada en el lenguaje *C*. Por ello, tomaremos como referencia las reglas sintácticas de este para las instrucciones del nuevo lenguaje.
+
+Para las palabras reservadas usaremos el lenguaje *castellano*.
+
+En nuestro lenguaje implementaremos los *arrays 1D y 2D* como estructura de datos. Este tipo de datos tendrán las siguientes operaciones.
+
++ Acceso a elemento.
++ Producto.
++ Suma y resta elemento a elemento.
++ Producto externo (producto de un array por un escalar).
++ Producto de matrices. Teniendo en cuenta que para multiplicar dos matrices, las dimensiones de estas deben ser las adecuadas.
+
+Esta estructura solo puede tener tipos básicos en su interior (entero, carácter, real y booleano).
+
+* Descripción formal de la sintaxis del lenguaje usando BNF
+
+* Definición de la semántica en lenguaje natural.
+
+* Identificación de los tokens.
+** Identificación de las palabras
+
+** Identificación de los tokens.
