@@ -28,17 +28,17 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 #+BEGIN_SRC bnf
   <Programa>                    #::= <Cabecera_programa> <bloque>
   <bloque>                      #::= <Inicio_de_bloque>
-                                #   <Declar_de_variables_locales>
-                                #   <Declar_de_subprogs>
-                                #   <Sentencias>
-                                #   <Fin_de_bloque>
+                                #    <Declar_de_variables_locales>
+                                #    <Declar_de_subprogs>
+                                #    <Sentencias>
+                                #    <Fin_de_bloque>
   <Declar_de_subprogs>          #::= <Declar_de_subprogs> <Declar_subprog>
-                                #|
+                                #|   ϵ
   <Declar_subprog>              #::= <Cabecera_subprograma> <bloque>
   <Declar_de_variables_locales> #::= <Marca_ini_declar_variables>
-                                #   <Variables_locales>
-                                #   <Marca_fin_declar_variables>
-                                #|
+                                #    <Variables_locales>
+                                #    <Marca_fin_declar_variables>
+                                #|   ϵ
   <Cabecera_programa>           #::= programa
   <Inicio_de_bloque>            #::= {
   <Fin_de_bloque>               #::= }
@@ -54,9 +54,8 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                                 #|   <sentencia_while>
   <lista_argumentos>            #::= <lista_argumentos> <argumento>
                                 #|   <argumento>
-                                #|   
+                                #|   ϵ
   <argumento>                   #::= <tipo> <identificador>,
-
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
