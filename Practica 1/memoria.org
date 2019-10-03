@@ -26,36 +26,36 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 * Descripción formal de la sintaxis del lenguaje usando BNF
 
 #+BEGIN_SRC bnf
-  <Programa>                    ::= #<Cabecera_programa> <bloque>
-  <bloque>                      ::= #<Inicio_de_bloque>
-                                    #<Declar_de_variables_locales>
-                                    #<Declar_de_subprogs>
-                                    #<Sentencias>
-                                    #<Fin_de_bloque>
-  <Declar_de_subprogs>          ::= #<Declar_de_subprogs> <Declar_subprog>
-                                |
-  <Declar_subprog>              ::= #<Cabecera_subprograma> <bloque>
-  <Declar_de_variables_locales> ::= #<Marca_ini_declar_variables>
-                                    #<Variables_locales>
-                                    #<Marca_fin_declar_variables>
-                                |
-  <Cabecera_programa>           ::= #programa
-  <Inicio_de_bloque>            ::= #{
-  <Fin_de_bloque>               ::= #}
-  <Variables_locales>           ::= #<Variables_locales> <Cuerpo_declar_variables>
-                                |   #<Cuerpo_declar_variables>
-  <Cuerpo_declar_variables>     ::= #<tipo> <identificador> | <tipo> <sentencia_asignacion>
-  <Cabecera_subprog>            ::= #<tipo> <identificador>(<lista_argumentos>)
-  <Sentencias>                  ::= #<Sentencias> <Sentencia>
-                                |   #<Sentencia>
-  <Sentencia>                   ::= #<bloque>
-                                |   #<sentencia_asignacion>
-                                |   #<sentencia_if>
-                                |   #<sentencia_while>
-  <lista_argumentos> ::= #<lista_argumentos> <argumento>
-    |   #<argumento>
-    |   #
-  <argumento> ::= #<tipo> <identificador>,
+  <Programa>                    #::= <Cabecera_programa> <bloque>
+  <bloque>                      #::= <Inicio_de_bloque>
+                                #   <Declar_de_variables_locales>
+                                #   <Declar_de_subprogs>
+                                #   <Sentencias>
+                                #   <Fin_de_bloque>
+  <Declar_de_subprogs>          #::= <Declar_de_subprogs> <Declar_subprog>
+                                #|
+  <Declar_subprog>              #::= <Cabecera_subprograma> <bloque>
+  <Declar_de_variables_locales> #::= <Marca_ini_declar_variables>
+                                #   <Variables_locales>
+                                #   <Marca_fin_declar_variables>
+                                #|
+  <Cabecera_programa>           #::= programa
+  <Inicio_de_bloque>            #::= {
+  <Fin_de_bloque>               #::= }
+  <Variables_locales>           #::= <Variables_locales> <Cuerpo_declar_variables>
+                                #|   <Cuerpo_declar_variables>
+  <Cuerpo_declar_variables>     #::= <tipo> <identificador> | <tipo> <sentencia_asignacion>
+  <Cabecera_subprog>            #::= <tipo> <identificador>(<lista_argumentos>)
+  <Sentencias>                  #::= <Sentencias> <Sentencia>
+                                #|   <Sentencia>
+  <Sentencia>                   #::= <bloque>
+                                #|   <sentencia_asignacion>
+                                #|   <sentencia_if>
+                                #|   <sentencia_while>
+  <lista_argumentos>            #::= <lista_argumentos> <argumento>
+                                #|   <argumento>
+                                #|   
+  <argumento>                   #::= <tipo> <identificador>,
 
 #+END_SRC
 
