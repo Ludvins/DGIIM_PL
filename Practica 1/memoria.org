@@ -39,19 +39,23 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                                     #<Variables_locales>
                                     #<Marca_fin_declar_variables>
                                 |
-  <Cabecera_programa>           ::= #
-  <Inicio_de_bloque>            ::= #
-  <Fin_de_bloque>               ::= #
+  <Cabecera_programa>           ::= #programa
+  <Inicio_de_bloque>            ::= #{
+  <Fin_de_bloque>               ::= #}
   <Variables_locales>           ::= #<Variables_locales> <Cuerpo_declar_variables>
                                 |   #<Cuerpo_declar_variables>
-  <Cuerpo_declar_variables>     ::= #
-  <Cabecera_subprog>            ::= #
+  <Cuerpo_declar_variables>     ::= #<tipo> <identificador> | <tipo> <sentencia_asignacion>
+  <Cabecera_subprog>            ::= #<tipo> <identificador>(<lista_argumentos>)
   <Sentencias>                  ::= #<Sentencias> <Sentencia>
                                 |   #<Sentencia>
   <Sentencia>                   ::= #<bloque>
                                 |   #<sentencia_asignacion>
                                 |   #<sentencia_if>
                                 |   #<sentencia_while>
+  <lista_argumentos> ::= #<lista_argumentos> <argumento>
+    |   #<argumento>
+    |   #
+  <argumento> ::= #<tipo> <identificador>,
 
 #+END_SRC
 
