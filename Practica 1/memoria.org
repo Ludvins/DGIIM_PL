@@ -33,12 +33,12 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #    <Sentencias>
                               #    <Fin_de_bloque>
 <Declar_de_subprogs>          #::= <Declar_de_subprogs> <Declar_subprog>
-                              #|   
+                              #|
 <Declar_subprog>              #::= <Cabecera_subprograma> <bloque>
 <Declar_de_variables_locales> #::= <Marca_ini_declar_variables>
                               #    <Variables_locales>
                               #    <Marca_fin_declar_variables>
-                              #|   
+                              #|
 <Cabecera_programa>           #::= programa
 <Inicio_de_bloque>            #::= {
 <Fin_de_bloque>               #::= }
@@ -46,13 +46,13 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Cuerpo_declar_variables>
 <Cuerpo_declar_variables>     #::= <Tipo> <Identificador> | <Tipo> <Sentencia_asignacion>
 <Cabecera_subprog>            #::= <Tipo> <Identificador>(<Lista_argumentos>)
-<Signo>                       #::= + | - | 
+<Signo>                       #::= + | - |
 <Booleano>                    #::= Verdadero | Falso
-<Digito>                      #::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
+<Digito>                      #::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <Natural>                     #::= <Digito> <Natural>
                               #| <Digito>
 <Decimal>                     #::= . <Natural>
-                              #| 
+                              #|
 <Entero>                      #::= <Signo> <Natural>
 <Real>                        #::= <Entero><Decimal>
 <Literal>                     #::= <Natural>
@@ -60,7 +60,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Real>
                               #| <Booleano>
 <Caracter>                    #::= a | ... | z | A | ... | Z
-<Tipo>                        #::= Natural 
+<Tipo>                        #::= Natural
                               #| Entero
                               #| ...
 
@@ -69,12 +69,10 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Caracter>
                               #|
 
-
-
 <Expresion>                   #::= (<Expresion>)
                               #| <Identificador>
-                              #| <Pp_unario_izquierda> <Expresion> 
-                              #| <Expresion> <Op_uniario_derecha>
+                              #| <Op_unario_izquierda> <Expresion>
+                              #| <Expresion> <Op_unario_derecha>
                               #| <Expresion> <Op_binario> <Expresion>
                               #| <Signo> <Expresion>
 
@@ -90,13 +88,13 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Sentencia_while>
 <Lista_argumentos>            #::= <Lista_argumentos> <Argumento>
                               #|   <Argumento>
-                              #|   
+                              #|
 <Argumento>                   #::= <Tipo> <Identificador>,
 <Sentencia asignacion>        #::= <Identificador> = <Expresion>;
-<Sentencia_if>                #::= si (<Expresion>) <Sentencias> <Sentencia_else>
-<Sentencia_else>              #::= otro <Sentencias>
-                              #| 
-<Sentencia_while>             #::= mientras (<Expresion>) <Sentencias>
+<Sentencia_if>                #::= si (<Expresion>) <Sentencia> <Sentencia_else>
+<Sentencia_else>              #::= otro <Sentencia>
+                              #|
+<Sentencia_while>             #::= mientras (<Expresion>) <Sentencia>
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
