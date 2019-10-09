@@ -90,11 +90,18 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Argumento>
                               #|
 <Argumento>                   #::= <Tipo> <Identificador>,
-<Sentencia asignacion>        #::= <Identificador> = <Expresion>;
+<Sentencia_asignacion>        #::= <Identificador> = <Expresion>;
 <Sentencia_if>                #::= si (<Expresion>) <Sentencia> <Sentencia_else>
 <Sentencia_else>              #::= otro <Sentencia>
                               #|
 <Sentencia_while>             #::= mientras (<Expresion>) <Sentencia>
+
+<Sentencia_switch>            #::= elige_opcion () <Bloque_switch>
+<Bloque_switch>               #::= { <Opciones> <Sentencias> }
+<Opciones>                    #::= <Opciones> <Opcion> | <Opcion>
+<Opcion>                      #::= opcion <Entero>: <Sentencias>
+                              #| predeterminado: <Sentencias>
+<Sentencia_break>             #::= break;
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
