@@ -76,9 +76,23 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Expresion> <Op_binario> <Expresion>
                               #| <Signo> <Expresion>
 
-<Op_unario_izquierda>         #::=
-<Op_unario_derecha>           #::=
-<Op_binario>                  #::=
+<Op_unario_izquierda>         #::= !
+<Op_unario_derecha>           #::= ++
+                              #| --
+<Op_binario>                  #::= ==
+                              #| >=
+                              #| <=
+                              #| !=
+                              #| +
+                              #| -
+                              #| *
+                              #| /
+                              #| **
+                              #| ^
+                              #| <
+                              #| >
+                              #| &&
+                              #| ||
 
 <Sentencias>                  #::= <Sentencias> <Sentencia>
                               #|   <Sentencia>
