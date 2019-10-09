@@ -1,7 +1,7 @@
 #+options: toc:nil date:nil
 #+BIND: org-latex-image-default-width 0.98\linewidth
 #+TITLE: Lenguaje BABAA
-#+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote @@latex: \\@@Antonio Coín Castro
+#+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote Robaina@@latex: \\@@Antonio Coín Castro
 
 #+LATEX_HEADER:\setlength{\parindent}{0in}
 #+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
@@ -44,31 +44,59 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Fin_de_bloque>               #::= }
 <Variables_locales>           #::= <Variables_locales> <Cuerpo_declar_variables>
                               #|   <Cuerpo_declar_variables>
-<Cuerpo_declar_variables>     #::= <tipo> <identificador> | <tipo> <Sentencia_asignacion>
-<Cabecera_subprog>            #::= <tipo> <identificador>(<lista_argumentos>)
-
-<expresion>                   #::= (<expresion>)
-                              #| <identificador>
+<Cuerpo_declar_variables>     #::= <Tipo> <Identificador> | <Tipo> <Sentencia_asignacion>
+<Cabecera_subprog>            #::= <Tipo> <Identificador>(<Lista_argumentos>)
+<Signo>                       #::= + | - | 
+<Booleano>                    #::= Verdadero | Falso
+<Digito>                      #::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
+<Natural>                     #::= <Digito> <Natural>
+                              #| <Digito>
+<Decimal>                     #::= . <Natural>
                               #| 
+<Entero>                      #::= <Signo> <Natural>
+<Real>                        #::= <Entero><Decimal>
+<Literal>                     #::= <Natural>
+                              #| <Entero>
+                              #| <Real>
+                              #| <Booleano>
+<Caracter>                    #::= a | ... | z | A | ... | Z
+<Tipo>                        #::= Natural 
+                              #| Entero
+                              #| ...
+
+<Identificador>               #::= <Identificador> <Identificador>
+                              #| <Digito>
+                              #| <Caracter>
                               #|
 
 
+
+<Expresion>                   #::= (<Expresion>)
+                              #| <Identificador>
+                              #| <Pp_unario_izquierda> <Expresion> 
+                              #| <Expresion> <Op_uniario_derecha>
+                              #| <Expresion> <Op_binario> <Expresion>
+                              #| <Signo> <Expresion>
+
+<Op_unario_izquierda>         #::=
+<Op_unario_derecha>           #::=
+<Op_binario>                  #::=
+
 <Sentencias>                  #::= <Sentencias> <Sentencia>
                               #|   <Sentencia>
-<Sentencia>                   #::= <bloque>
+<Sentencia>                   #::= <Bloque>
                               #|   <Sentencia_asignacion>
                               #|   <Sentencia_if>
                               #|   <Sentencia_while>
-<lista_argumentos>            #::= <lista_argumentos> <argumento>
-                              #|   <argumento>
+<Lista_argumentos>            #::= <Lista_argumentos> <Argumento>
+                              #|   <Argumento>
                               #|   
-<argumento>                   #::= <tipo> <identificador>,
-<Sentencia asignacion>        #::= <identificador> = <expresion>
-<Sentencia_if>                #::= si (<expresion>) <Sentencias> <Sentencia_else>
-<Sentencia_else>              #::= 
+<Argumento>                   #::= <Tipo> <Identificador>,
+<Sentencia asignacion>        #::= <Identificador> = <Expresion>;
+<Sentencia_if>                #::= si (<Expresion>) <Sentencias> <Sentencia_else>
+<Sentencia_else>              #::= otro <Sentencias>
                               #| 
-<Sentencia_while>             #::= mientras (<expresion>) <Sentencias>
-<Sentencia_asignacion>        #::= <identificador> = <expresion>
+<Sentencia_while>             #::= mientras (<Expresion>) <Sentencias>
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
