@@ -82,11 +82,13 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Signo> <Expresion>
                               #| <Agregado1D>
                               #| <Agregado2D>
+                              #| <Llamada_subprograma>
 
 <Agregado1D>                  #::= {<Lista_expresiones>}
 <Agregado2D>                  #::= {<Lista_expresiones> ; <Lista_expresiones>}
-<Lista_expresiones>           #::= <Lista_expresiones> <Expresion>,
-                              #| <Expresion>,
+<Lista_expresiones>           #::= <Expresion>, <Lista_expresiones>
+                              #| <Expresion>
+<Llamada_subprograma>         #::= <Identificador>(<Lista_expresiones>)
 
 <Op_unario_izquierda>         #::= !
 <Op_unario_derecha>           #::= ++
