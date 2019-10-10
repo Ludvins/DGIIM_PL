@@ -44,7 +44,12 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Fin_de_bloque>               #::= }
 <Variables_locales>           #::= <Variables_locales> <Cuerpo_declar_variables>
                               #|   <Cuerpo_declar_variables>
-<Cuerpo_declar_variables>     #::= <Tipo> <Identificador> | <Tipo> <Sentencia_asignacion>
+<Cuerpo_declar_variables>     #::= <Tipo> <Identificador>
+                              #| <Tipo> <Sentencia_asignacion>
+                              #| <Tipo> <Identificador>[<Natural>]
+                              #| <Tipo> <Identificador>[] = <Agregado1D>
+                              #| <Tipo> <Identificador>[<Natural>, <Natural>]
+                              #| <Tipo> <Identificador>[] = {Agregado2D}
 <Cabecera_subprog>            #::= <Tipo> <Identificador>(<Lista_argumentos>)
 <Signo>                       #::= + | - |
 <Booleano>                    #::= Verdadero | Falso
@@ -64,17 +69,24 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| Entero
                               #| ...
 
-<Identificador>               #::= <Identificador> <Identificador>
-                              #| <Digito>
+<Identificador>               #::= <Identificador> <Caracter>
+                              #| <Identificador> <Natural>
                               #| <Caracter>
-                              #|
 
 <Expresion>                   #::= (<Expresion>)
                               #| <Identificador>
+                              #| <Constante>
                               #| <Op_unario_izquierda> <Expresion>
                               #| <Expresion> <Op_unario_derecha>
                               #| <Expresion> <Op_binario> <Expresion>
                               #| <Signo> <Expresion>
+                              #| <Agregado1D>
+                              #| <Agregado2D>
+
+<Agregado1D>                  #::= {<Lista_expresiones>}
+<Agregado2D>                  #::= {<Lista_expresiones> ; <Lista_expresiones>}
+<Lista_expresiones>           #::= <Lista_expresiones> <Expresion>,
+                              #| <Expresion>,
 
 <Op_unario_izquierda>         #::= !
 <Op_unario_derecha>           #::= ++
@@ -97,9 +109,11 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Sentencias>                  #::= <Sentencias> <Sentencia>
                               #|   <Sentencia>
 <Sentencia>                   #::= <Bloque>
+                              #|   <Expresion>; CHECK
                               #|   <Sentencia_asignacion>
                               #|   <Sentencia_if>
                               #|   <Sentencia_while>
+                              #|   <Sentencia_break>
 <Lista_argumentos>            #::= <Lista_argumentos> <Argumento>
                               #|   <Argumento>
                               #|
@@ -110,10 +124,10 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|
 <Sentencia_while>             #::= mientras (<Expresion>) <Sentencia>
 
-<Sentencia_switch>            #::= elige_opcion () <Bloque_switch>
+<Sentencia_switch>            #::= casos (<Expresion>) <Bloque_switch>
 <Bloque_switch>               #::= { <Opciones> <Sentencias> }
 <Opciones>                    #::= <Opciones> <Opcion> | <Opcion>
-<Opcion>                      #::= opcion <Entero>: <Sentencias>
+<Opcion>                      #::= caso <Entero>: <Sentencias>
                               #| predeterminado: <Sentencias>
 <Sentencia_break>             #::= break;
 #+END_SRC
