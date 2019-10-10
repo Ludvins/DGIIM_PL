@@ -26,75 +26,85 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 * Descripción formal de la sintaxis del lenguaje usando BNF
 
 #+BEGIN_SRC bnf
-<Programa>                    #::= <Cabecera_programa> <bloque>
+<Programa>                    #::= <Cabecera_programa> <Bloque>
 <Bloque>                      #::= <Inicio_de_bloque>
                               #    <Declar_de_variables_locales>
                               #    <Declar_de_subprogs>
                               #    <Sentencias>
                               #    <Fin_de_bloque>
 <Declar_de_subprogs>          #::= <Declar_de_subprogs> <Declar_subprog>
-                              #|
-<Declar_subprog>              #::= <Cabecera_subprograma> <bloque>
+                              #| vacio
+<Declar_subprog>              #::= <Cabecera_subprograma> <Bloque>
 <Declar_de_variables_locales> #::= <Marca_ini_declar_variables>
                               #    <Variables_locales>
                               #    <Marca_fin_declar_variables>
-                              #|
-<Cabecera_programa>           #::= programa
+                              #| vacio
+<Marca_ini_declar_variables>  #::= var
+<Marca_fin_declar_variables>  #::= finvar
+<Cabecera_programa>           #::= programa()
 <Inicio_de_bloque>            #::= {
 <Fin_de_bloque>               #::= }
-<Variables_locales>           #::= <Variables_locales> <Cuerpo_declar_variables>
-                              #|   <Cuerpo_declar_variables>
-<Cuerpo_declar_variables>     #::= <Tipo> <Identificador>
-                              #| <Tipo> <Sentencia_asignacion>
+<Variables_locales>           #::= <Variables_locales> <Cuerpo_declar_variable>;
+                              #|   <Cuerpo_declar_variable>;
+<Cuerpo_declar_variable>      #::= <Tipo> <Identificador>
+                              #| <Tipo> <Identificador> = <Expresion>
                               #| <Tipo> <Identificador>[<Natural>]
                               #| <Tipo> <Identificador>[] = <Agregado1D>
                               #| <Tipo> <Identificador>[<Natural>, <Natural>]
-                              #| <Tipo> <Identificador>[] = {Agregado2D}
+                              #| <Tipo> <Identificador>[,] = <Agregado2D> CHECK
+
 <Cabecera_subprog>            #::= <Tipo> <Identificador>(<Lista_argumentos>)
-<Signo>                       #::= + | - |
+<Lista_argumentos>            #::= <Argumentos>
+                              #|
+<Argumentos>                  #::= <Argumento> , <Argumentos>
+                              #| <Argumento>
+<Argumento>                   #::= <Tipo> <Identificador>
+<Signo>                       #::= -
+                              #| vacio
 <Booleano>                    #::= Verdadero | Falso
 <Digito>                      #::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <Natural>                     #::= <Digito> <Natural>
                               #| <Digito>
-<Decimal>                     #::= . <Natural>
-                              #|
 <Entero>                      #::= <Signo> <Natural>
-<Real>                        #::= <Entero><Decimal>
+<Real>                        #::= <Entero>.<Natural>
 <Literal>                     #::= <Natural>
                               #| <Entero>
                               #| <Real>
                               #| <Booleano>
 <Caracter>                    #::= a | ... | z | A | ... | Z
-<Tipo>                        #::= Natural
-                              #| Entero
-                              #| ...
-
+<Tipo>                        #::= entero
+                              #| real
+                              #| buleano
+                              #| caracter
 <Identificador>               #::= <Identificador> <Caracter>
                               #| <Identificador> <Natural>
                               #| <Caracter>
-
 <Expresion>                   #::= (<Expresion>)
                               #| <Identificador>
                               #| <Constante>
                               #| <Op_unario_izquierda> <Expresion>
                               #| <Expresion> <Op_unario_derecha>
                               #| <Expresion> <Op_binario> <Expresion>
-                              #| <Signo> <Expresion>
                               #| <Agregado1D>
                               #| <Agregado2D>
                               #| <Llamada_subprograma>
-
 <Agregado1D>                  #::= {<Lista_expresiones>}
-<Agregado2D>                  #::= {<Lista_expresiones> ; <Lista_expresiones>}
+<Agregado2D>                  #::= {<Listas> ; <Lista_expresiones>}
+<Listas>                      #::= <Listas> ; <Lista_expresiones>
+                              #| <Lista_expresiones>
 <Lista_expresiones>           #::= <Expresiones>
                               #|
 <Expresiones>                 #::= <Expresión>, <Expresiones>
                               #| <Expresión>
 <Llamada_subprograma>         #::= <Identificador>(<Lista_expresiones>)
-
 <Op_unario_izquierda>         #::= !
+                              #| -
+                              #| ++
+                              #| --
 <Op_unario_derecha>           #::= ++
                               #| --
+                              #| [<Natural>]
+                              #| [<Natural>,<Natural>]
 <Op_binario>                  #::= ==
                               #| >=
                               #| <=
@@ -109,29 +119,24 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| >
                               #| &&
                               #| ||
-
 <Sentencias>                  #::= <Sentencias> <Sentencia>
-                              #|   <Sentencia>
+                              #| vacio
 <Sentencia>                   #::= <Bloque>
-                              #|   <Expresion>; CHECK
+                              #|   <Expresion>;
                               #|   <Sentencia_asignacion>
                               #|   <Sentencia_if>
                               #|   <Sentencia_while>
+                              #|   <Sentencia switch>
                               #|   <Sentencia_break>
-<Lista_argumentos>            #::= <Argumentos>
-                              #|
-<Argumentos>                  #::= <Argumento> , <Argumentos>
-                              | <Argumento>
-<Argumento>                   #::= <Tipo> <Identificador>
 <Sentencia_asignacion>        #::= <Identificador> = <Expresion>;
 <Sentencia_if>                #::= si (<Expresion>) <Sentencia> <Sentencia_else>
 <Sentencia_else>              #::= otro <Sentencia>
                               #|
 <Sentencia_while>             #::= mientras (<Expresion>) <Sentencia>
-
 <Sentencia_switch>            #::= casos (<Expresion>) <Bloque_switch>
-<Bloque_switch>               #::= { <Opciones> <Sentencias> }
-<Opciones>                    #::= <Opciones> <Opcion> | <Opcion>
+<Bloque_switch>               #::= { <Opciones> }
+<Opciones>                    #::= <Opciones> <Opcion>
+                              #| <Opcion>
 <Opcion>                      #::= caso <Entero>: <Sentencias>
                               #| predeterminado: <Sentencias>
 <Sentencia_break>             #::= break;
