@@ -1,7 +1,7 @@
 #+options: toc:nil date:nil
 #+BIND: org-latex-image-default-width 0.98\linewidth
 #+TITLE: Lenguaje BABAA
-#+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote Robaina@@latex: \\@@Antonio Coín Castro
+#+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote Robayna@@latex: \\@@Antonio Coín Castro
 
 #+LATEX_HEADER:\setlength{\parindent}{0in}
 #+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
@@ -86,8 +86,10 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 
 <Agregado1D>                  #::= {<Lista_expresiones>}
 <Agregado2D>                  #::= {<Lista_expresiones> ; <Lista_expresiones>}
-<Lista_expresiones>           #::= <Expresion>, <Lista_expresiones>
-                              #| <Expresion>
+<Lista_expresiones>           #::= <Expresiones>
+                              #|
+<Expresiones>                 #::= <Expresión>, <Expresiones>
+                              #| <Expresión>
 <Llamada_subprograma>         #::= <Identificador>(<Lista_expresiones>)
 
 <Op_unario_izquierda>         #::= !
@@ -116,10 +118,11 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Sentencia_if>
                               #|   <Sentencia_while>
                               #|   <Sentencia_break>
-<Lista_argumentos>            #::= <Lista_argumentos> <Argumento>
-                              #|   <Argumento>
+<Lista_argumentos>            #::= <Argumentos>
                               #|
-<Argumento>                   #::= <Tipo> <Identificador>,
+<Argumentos>                  #::= <Argumento> , <Argumentos>
+                              | <Argumento>
+<Argumento>                   #::= <Tipo> <Identificador>
 <Sentencia_asignacion>        #::= <Identificador> = <Expresion>;
 <Sentencia_if>                #::= si (<Expresion>) <Sentencia> <Sentencia_else>
 <Sentencia_else>              #::= otro <Sentencia>
