@@ -49,9 +49,9 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Cuerpo_declar_variable>      #::= <Tipo> <Identificador>
                               #| <Tipo> <Identificador> = <Expresion>
                               #| <Tipo> <Identificador>[<Natural>]
+                              #| <Tipo> <Identificador>[<Natural>,<Natural>]
                               #| <Tipo> <Identificador>[] = <Agregado1D>
-                              #| <Tipo> <Identificador>[<Natural>, <Natural>]
-                              #| <Tipo> <Identificador>[,] = <Agregado2D> CHECK
+                              #| <Tipo> <Identificador>[,] = <Agregado2D>
 
 <Cabecera_subprog>            #::= <Tipo> <Identificador>(<Lista_argumentos>)
 <Lista_argumentos>            #::= <Argumentos>
@@ -67,17 +67,24 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Digito>
 <Entero>                      #::= <Signo> <Natural>
 <Real>                        #::= <Entero>.<Natural>
-<Literal>                     #::= <Natural>
+<Caracter>                    #::= a | ... | z | A | ... | Z | _
+<Alfanum>                     #::= <Caracter>
+                              #| <Natural>
+<Caracter_ascii>              #::= (Cualquier carácter ASCII)
+<Cadena>                      #::= <Cadena> <Caracter_ascii>
+                              #| <Caracter_ascii>
+<Cadena_const>                #::= "<Cadena>"
+<Constante>                   #::= <Natural>
                               #| <Entero>
                               #| <Real>
                               #| <Booleano>
-<Caracter>                    #::= a | ... | z | A | ... | Z
+                              #| <Cadena_const>
+                              #| '<Caracter_ascii>'
 <Tipo>                        #::= entero
                               #| real
                               #| buleano
                               #| caracter
-<Identificador>               #::= <Identificador> <Caracter>
-                              #| <Identificador> <Natural>
+<Identificador>               #::= <Identificador> <Alfanum>
                               #| <Caracter>
 <Expresion>                   #::= (<Expresion>)
                               #| <Identificador>
@@ -94,17 +101,20 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Lista_expresiones>
 <Lista_expresiones>           #::= <Expresiones>
                               #|
-<Expresiones>                 #::= <Expresión>, <Expresiones>
-                              #| <Expresión>
+<Expresiones>                 #::= <Expresion>, <Expresiones>
+                              #| <Expresion>
 <Llamada_subprograma>         #::= <Identificador>(<Lista_expresiones>)
 <Op_unario_izquierda>         #::= !
                               #| -
                               #| ++
                               #| --
+<Acceso_array>                #::= [<Natural>]
+                              #|   [<Natural>,<Natural>]
+<Identificador_comp>          #::= <Identificador>
+                              #|   <Identificador><Acceso_array>
 <Op_unario_derecha>           #::= ++
                               #| --
-                              #| [<Natural>]
-                              #| [<Natural>,<Natural>]
+                              #| <Acceso_array>
 <Op_binario>                  #::= ==
                               #| >=
                               #| <=
@@ -128,7 +138,9 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Sentencia_while>
                               #|   <Sentencia switch>
                               #|   <Sentencia_break>
-<Sentencia_asignacion>        #::= <Identificador> = <Expresion>;
+                              #|   <Sentencia_entrada>
+                              #|   <Sentencia_salida>
+<Sentencia_asignacion>        #::= <Identificador_comp> = <Expresion>;
 <Sentencia_if>                #::= si (<Expresion>) <Sentencia> <Sentencia_else>
 <Sentencia_else>              #::= otro <Sentencia>
                               #|
@@ -140,6 +152,10 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Opcion>                      #::= caso <Entero>: <Sentencias>
                               #| predeterminado: <Sentencias>
 <Sentencia_break>             #::= break;
+<Sentencia_entrada>           #::= entrada <Lista_id>;
+<Lista_id>                    #::= <Lista_id>, <Identificador_comp>
+                              #| <Identificador_comp>
+<Sentencia_salida>            #::= salida <Expresiones>;
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
