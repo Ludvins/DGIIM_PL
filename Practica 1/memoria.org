@@ -159,7 +159,16 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural.
+El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa" seguida de de paréntesis sin argumentos. Por otro lado el bloque empieza con "{" y termina "}", en su interior pueden aparecer variables locales, subprogramas o sentencias.
+Las variables locales pueden ser ...
 
+Los subprogramas...
+
+Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (si, otro, mientras, casos). Las instrucciones de control tienen una expresion y una sentencia.
+
+La expresion puede encontrarse entre paréntesis, y puede ir precedido de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
+
+Por último...
 * Identificación de los tokens.
 ** Identificación de las palabras
 
