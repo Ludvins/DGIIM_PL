@@ -61,7 +61,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Argumento>                   #::= <Tipo> <Identificador>
 <Signo>                       #::= -
                               #| vacio
-<Booleano>                    #::= Verdadero | Falso
+<Booleano>                    #::= verdadero | falso
 <Digito>                      #::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <Natural>                     #::= <Digito> <Natural>
                               #| <Digito>
@@ -94,7 +94,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Expresion> <Op_binario> <Expresion>
                               #| <Agregado1D>
                               #| <Agregado2D>
-                              #| <Llamada_subprograma>
+                              #| <Llamada_funcion>
 <Agregado1D>                  #::= {<Lista_expresiones>}
 <Agregado2D>                  #::= {<Listas> ; <Lista_expresiones>}
 <Listas>                      #::= <Listas> ; <Lista_expresiones>
@@ -103,7 +103,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|
 <Expresiones>                 #::= <Expresion>, <Expresiones>
                               #| <Expresion>
-<Llamada_subprograma>         #::= <Identificador>(<Lista_expresiones>)
+<Llamada_funcion>             #::= <Identificador>(<Lista_expresiones>)
 <Op_unario_izquierda>         #::= !
                               #| -
                               #| ++
@@ -138,6 +138,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #|   <Sentencia_while>
                               #|   <Sentencia switch>
                               #|   <Sentencia_break>
+							  #|   <Sentencia_return>
                               #|   <Sentencia_entrada>
                               #|   <Sentencia_salida>
 <Sentencia_asignacion>        #::= <Identificador_comp> = <Expresion>;
@@ -152,6 +153,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Opcion>                      #::= caso <Entero>: <Sentencias>
                               #| predeterminado: <Sentencias>
 <Sentencia_break>             #::= break;
+<Sentencia_return>			  #::= devolver
 <Sentencia_entrada>           #::= entrada <Lista_id>;
 <Lista_id>                    #::= <Lista_id>, <Identificador_comp>
                               #| <Identificador_comp>

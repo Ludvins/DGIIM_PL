@@ -1,0 +1,21 @@
+| Nombre         | Expresión regular            | Código | Atributos 						  |
+|----------------+------------------------------+--------+------------------------------------+
+| CABECERA       | "programa()"                 | 257    |           						  |
+| LLAVEIZQ       | "{"          	            | 258    |           						  |
+| LLAVEDCH       | "}"                          | 259    |           						  |
+| INILOCAL       | "var"						| 261	 |			 						  |
+| FINLOCAL       | "finvar"						| 262	 |			 						  |
+| INILOCAL       | "var"						| 263	 |			 						  |
+| ASIG           | "="  						| 264	 |			 						  |
+| CORCHIZQ       | "["  						| 265	 |			 						  |
+| CORCHDCH       | "]"							| 266	 |			 						  |
+| COMA           | ","   						| 267	 |			 						  |
+| PYC	         | ";"							| 268	 |			 						  |
+| PARIZQ         | "("  						| 269	 |			 						  |
+| PARDCH         | ")"							| 270	 |			 						  |
+| SIGNO          | "-"  						| 271	 |			 						  |
+| BOOLEANO       | "verdadero" \vert "falso"    | 272    | 0: "verdadero", 1: "falso"         |
+| DIGITO         | [0-9]                        | 273    |           						  |
+| PUNTO          | "."							| 274    |           						  |
+| CARACTER       | [a-zA-Z\-]					| 275    |           						  |
+
