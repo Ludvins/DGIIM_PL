@@ -180,9 +180,9 @@ Los subprogramas son siempre funciones que devuelven algo. Constan de una cabece
 
 Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (si, otro, mientras, casos). Las instrucciones de control tienen una expresion y una sentencia. La sintaxis del 'switch' es una copia de la de C, teniendo en cuenta que los caso solo pueden ser números enteros.
 
-La expresion puede encontrarse entre paréntesis, y puede ir precedido de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
+La expresión puede encontrarse entre paréntesis, y puede ir precedido de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
 
-Por último...
+Por último, tenemos un tipo especial similar a los arrays de C, que representa un agregado de datos del mismo tipo, ya sea unidimensional o bidimensional.
 
 * Tabla de tokens:
 
