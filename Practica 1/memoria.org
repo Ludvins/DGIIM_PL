@@ -166,15 +166,15 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 <Sentencia_salida>            ::= salida <Expresiones>;
 #+END_SRC
 
-* Definición de la semántica en lenguaje natural.
+* Definición de la semántica en lenguaje natural
 El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa" seguida de de paréntesis sin argumentos. Por otro lado el bloque empieza con "{" y termina "}", en su interior pueden aparecer variables locales, subprogramas o sentencias.
 
 Las variables locales deben declararse entre unas marcas de inicio y fin, notadas como "var" y "finvar" respectivamente. Una vez dentro de las marcas, podemos declarar variables al estilo de C, e inicializarlas /in situ/:
 
-```
+#+begin_src
 <tipo> <id>;
 <tipo> <id> = <expr>;
-```
+#+end_src
 
 Los subprogramas son siempre funciones que devuelven algo. Constan de una cabecera ~<tipo> <nombre>(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave 'devolver'.
 
@@ -184,7 +184,7 @@ La expresión puede encontrarse entre paréntesis, y puede ir precedido de una o
 
 Por último, tenemos un tipo especial similar a los arrays de C, que representa un agregado de datos del mismo tipo, ya sea unidimensional o bidimensional.
 
-* Tabla de tokens:
+* Tabla de tokens
 
 | Nombre          | Expresión regular                                              | Código | Atributos                  |
 |-----------------+----------------------------------------------------------------+--------+----------------------------|
@@ -222,7 +222,7 @@ Por último, tenemos un tipo especial similar a los arrays de C, que representa 
 | ~RETURN~        | ~"devolver"~                                                   | ~286~  |                            |
 | ~OPREL~         | ~[<>]=?~ \vert ~[=!]=~                                         | ~287~  |                            |
 | ~OPBIN~         | ~"+"~ \vert ~"-"~ \vert ~"*"~ \vert ~"/"~ \vert ~"**"~         | ~288~  | ~0:+ 1:- 2:* 3:/ 4:**~     |
-| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1:~ \vert\vert ~2:&&~ |
+| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1:~\vert\vert ~2:&&~  |
 | ~OPUNARIOIZQ~   | ~"!"~ \vert ~"-"~ \vert ~"++"~ \vert ~"--"~                    | ~290~  | ~0:! 1:- 2:++ 3:--~        |
 | ~OPUNARIODCH~   | ~"++"~ \vert ~"--"~                                            | ~291~  | ~0:++ 1:--~                |
 | ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~292~  |                            |
