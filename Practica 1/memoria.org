@@ -168,17 +168,24 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 
 * Definición de la semántica en lenguaje natural.
 El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa" seguida de de paréntesis sin argumentos. Por otro lado el bloque empieza con "{" y termina "}", en su interior pueden aparecer variables locales, subprogramas o sentencias.
-Las variables locales pueden ser ...
 
-Los subprogramas...
+Las variables locales deben declararse entre unas marcas de inicio y fin, notadas como "var" y "finvar" respectivamente. Una vez dentro de las marcas, podemos declarar variables al estilo de C, e inicializarlas /in situ/:
 
-Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (si, otro, mientras, casos). Las instrucciones de control tienen una expresion y una sentencia.
+```
+<tipo> <id>;
+<tipo> <id> = <expr>;
+```
+
+Los subprogramas son siempre funciones que devuelven algo. Constan de una cabecera ~<tipo> <nombre>(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave 'devolver'.
+
+Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (si, otro, mientras, casos). Las instrucciones de control tienen una expresion y una sentencia. La sintaxis del 'switch' es una copia de la de C, teniendo en cuenta que los caso solo pueden ser números enteros.
 
 La expresion puede encontrarse entre paréntesis, y puede ir precedido de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
 
 Por último...
-* Identificación de los tokens.
-Tabla de tokens:
+
+* Tabla de tokens:
+
 | Nombre          | Expresión regular                                              | Código | Atributos                |
 |-----------------+----------------------------------------------------------------+--------+--------------------------|
 | ~CABECERA~      | ~"programa()"~                                                 | ~257~  |                          |
@@ -213,6 +220,11 @@ Tabla de tokens:
 |                 | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~ |
 | ~LITERAL~       | \vert ~(\"(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])+\")~             | ~286~  | ~2:falso 3:cte_cadena~   |
 |                 | \vert ~(\'(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])\')~              |        | ~4:cte_caracter~         |
-
-# ** Identificación de las palabras
-# ** Identificación de los tokens.
+| ~RETURN~        | ~"devolver"~                                                   | ~287~  |                          |
+| ~OPREL~         | ~[<>]=? \vert [=!]=~                                           | ~288~  |                          |
+| ~OPBIN~         | ~"+" \vert "-" \vert "*" \vert "/" \vert "**"~                 | ~289~  | ~0:+ 1:- 2:* 3:/ 4:**~   |
+| ~OPLOG~         | ~"^" \vert "\vert \vert" \vert "&&"~                           | ~290~  | ~0:^ 1:\vert \vert 2:&&~ |
+| ~OPUNARIOIZQ~   | ~"!" \vert "-" \vert "++" \vert "--"~                          | ~291~  | ~0:! 1:- 2:++ 3:--~      |
+| ~OPUNARIODCH~   | ~"++" \vert "--"~                                              | ~292~  | ~0:++ 1:--~              |
+| ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~293~  |                          |
+| ~ARRAY2D~       | ~\[[0-9]+,[0-9+]\]~                                            | ~294~  |                          |
