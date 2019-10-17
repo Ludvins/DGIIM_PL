@@ -23,6 +23,10 @@ En nuestro lenguaje implementaremos los *arrays 1D y 2D* como estructura de dato
 
 Esta estructura solo puede tener tipos básicos en su interior (entero, carácter, real y booleano).
 
+El tipo de subprograma que contendrá nuestro lenguaje son *funciones*, es decir, supondremos que nuestro subprograma siempre devuelve un valor.
+
+Por último, el lenguaje incluirá una estructura de control tipo *switch*.
+
 * Descripción formal de la sintaxis del lenguaje usando BNF
 
 #+BEGIN_SRC bnf
@@ -70,7 +74,9 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
 <Caracter>                    #::= a | ... | z | A | ... | Z | _
 <Alfanum>                     #::= <Caracter>
                               #| <Natural>
-<Caracter_ascii>              #::= (Cualquier carácter ASCII)
+<Caracter_ascii>              #::= (Cualquier carácter ASCII menos las comillas (' o "))
+                              #| \"
+                              #| \'
 <Cadena>                      #::= <Cadena> <Caracter_ascii>
                               #| <Caracter_ascii>
 <Cadena_const>                #::= "<Cadena>"
@@ -152,7 +158,7 @@ Esta estructura solo puede tener tipos básicos en su interior (entero, carácte
                               #| <Opcion>
 <Opcion>                      #::= caso <Entero>: <Sentencias>
                               #| predeterminado: <Sentencias>
-<Sentencia_break>             #::= break;
+<Sentencia_break>             #::= roto;
 <Sentencia_return>			  #::= devolver
 <Sentencia_entrada>           #::= entrada <Lista_id>;
 <Lista_id>                    #::= <Lista_id>, <Identificador_comp>
@@ -172,6 +178,38 @@ La expresion puede encontrarse entre paréntesis, y puede ir precedido de una op
 
 Por último...
 * Identificación de los tokens.
-** Identificación de las palabras
+Tabla de tokens:
+| Nombre         | Expresión regular            | Código | Atributos 						  |
+|----------------+------------------------------+--------+------------------------------------+
+| CABECERA       | "programa()"                 | 257    |           						  |
+| LLAVEIZQ       | "{"          	            | 258    |           						  |
+| LLAVEDCH       | "}"                          | 259    |           						  |
+| INILOCAL       | "var"						| 261	 |			 						  |
+| FINLOCAL       | "finvar"						| 262	 |			 						  |
+| TIPO           | "entero" \vert "real" \vert "buleano" \vert "caracter" | 263 | 0: entero 1:real 2:bulean 3:caracter  |
+| IF             | "si"                         | 264    |                                    |
+| ELSE           | "otro"                       | 265    |                                    |
+| WHILE          | "mientras"                   | 266    |                                    |
+| SWITCH         | "casos"                      | 267    |                                    |
+| CASE           | "caso"                       | 268    |                                    |
+| BREAK          | "roto"                       | 269    |                                    |
+| CIN            | "entrada"                    | 270    |                                    |
+| COUT           | "salida"                     | 271    |                                    |
+| PREDET         | "predeterminado"             | 272    |                                    |
+| ASIG           | "="  						| 273	 |			 						  |
+| CORCHIZQ       | "["  						| 274	 |			 						  |
+| CORCHDCH       | "]"							| 275	 |			 						  |
+| COMA           | ","   						| 276	 |			 						  |
+| PYC	         | ";"							| 277	 |			 						  |
+| PYP	         | ":"							| 278	 |			 						  |
+| PARIZQ         | "("  						| 279	 |			 						  |
+| PARDCH         | ")"							| 280	 |			 						  |
+| SIGNO          | "-"  						| 281	 |			 						  |
+| DIGITO         | [0-9]                        | 282    |           						  |
+| PUNTO          | "."							| 283    |           						  |
+| CARACTER       | [a-zA-Z_]					| 284    |           						  |
+| IDENTIFICADOR  | [a-zA-Z_][a-zA-Z0-9_]*       | 285    |                                    |
+| LITERAL        | -?[0-9]+(.[0-9]+)? \vert "verdadero" \vert "falso" \vert (\"(\\\"\vert\\\'\vert[^\"\'])+\") \vert (\'(\\\"\vert\\\'\vert[^\"\'])\') | 286 | 0:real_num 1:verdadero 2:falso 3:cte_cadena 4:cte_caracter  |
 
-** Identificación de los tokens.
+# ** Identificación de las palabras
+# ** Identificación de los tokens.
