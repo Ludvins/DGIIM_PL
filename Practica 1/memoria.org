@@ -29,7 +29,7 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 
 * Descripción formal de la sintaxis del lenguaje usando BNF
 
-#+BEGIN_SRC bnf
+#+BEGIN_SRC 
 <Programa>                    ::= <Cabecera_programa> <Bloque>
 <Bloque>                      ::= <Inicio_de_bloque>
                                   <Declar_de_variables_locales>
@@ -37,12 +37,12 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
                                   <Sentencias>
                                   <Fin_de_bloque>
 <Declar_de_subprogs>          ::= <Declar_de_subprogs> <Declar_subprog>
-                              | vacio
+                              |   vacio
 <Declar_subprog>              ::= <Cabecera_subprograma> <Bloque>
 <Declar_de_variables_locales> ::= <Marca_ini_declar_variables>
                                   <Variables_locales>
                                   <Marca_fin_declar_variables>
-                              | vacio
+                              |   vacio
 <Marca_ini_declar_variables>  ::= var
 <Marca_fin_declar_variables>  ::= finvar
 <Cabecera_programa>           ::= programa()
@@ -50,95 +50,85 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 <Fin_de_bloque>               ::= }
 <Variables_locales>           ::= <Variables_locales> <Cuerpo_declar_variable>;
                               |   <Cuerpo_declar_variable>;
-<Cuerpo_declar_variable>      ::= <Tipo> <Identificador>
-                              | <Tipo> <Identificador> = <Expresion>
-                              | <Tipo> <Identificador>[<Natural>]
-                              | <Tipo> <Identificador>[<Natural>,<Natural>]
-                              | <Tipo> <Identificador>[] = <Agregado1D>
-                              | <Tipo> <Identificador>[,] = <Agregado2D>
-
-<Cabecera_subprog>            ::= <Tipo> <Identificador>(<Lista_argumentos>)
+<Cuerpo_declar_variable>      ::= <Tipo> <Lista_id>
+<Cabecera_subprog>            ::= <Tipo_comp> <Identificador>(<Lista_argumentos>)
 <Lista_argumentos>            ::= <Argumentos>
                               |
 <Argumentos>                  ::= <Argumento> , <Argumentos>
-                              | <Argumento>
-<Argumento>                   ::= <Tipo> <Identificador>
-<Signo>                       ::= -
-                              | vacio
+                              |   <Argumento>
+<Argumento>                   ::= <Tipo> <Identificador_comp>
 <Booleano>                    ::= verdadero | falso
 <Digito>                      ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <Natural>                     ::= <Digito> <Natural>
-                              | <Digito>
-<Entero>                      ::= <Signo> <Natural>
-<Real>                        ::= <Entero>.<Natural>
+                              |   <Digito>
+<Real>                        ::= <Natural>.<Natural>
 <Caracter>                    ::= a | ... | z | A | ... | Z | _
 <Alfanum>                     ::= <Caracter>
-                              | <Natural>
+                              |   <Natural>
 <Caracter_ascii>              ::= (Cualquier carácter ASCII menos las comillas (' o "))
-                              | \"
-                              | \'
+                              |   \"
+                              |   \'
 <Cadena>                      ::= <Cadena> <Caracter_ascii>
-                              | <Caracter_ascii>
+                              |   <Caracter_ascii>
 <Cadena_const>                ::= "<Cadena>"
 <Constante>                   ::= <Natural>
-                              | <Entero>
-                              | <Real>
-                              | <Booleano>
-                              | <Cadena_const>
-                              | '<Caracter_ascii>'
+                              |   <Real>
+                              |   <Booleano>
+                              |   '<Caracter_ascii>'
 <Tipo>                        ::= entero
-                              | real
-                              | buleano
-                              | caracter
+                              |   real
+                              |   buleano
+                              |   caracter
+<Tipo_comp>                   ::= <Tipo>
+                              |   <Tipo><Acceso_array>
 <Identificador>               ::= <Identificador> <Alfanum>
-                              | <Caracter>
+                              |   <Caracter>
 <Expresion>                   ::= (<Expresion>)
-                              | <Identificador>
-                              | <Constante>
-                              | <Op_unario_izquierda> <Expresion>
-                              | <Expresion> <Op_unario_derecha>
-                              | <Expresion> <Op_binario> <Expresion>
-                              | <Agregado1D>
-                              | <Agregado2D>
-                              | <Llamada_funcion>
-<Agregado1D>                  ::= {<Lista_expresiones>}
-<Agregado2D>                  ::= {<Listas> ; <Lista_expresiones>}
-<Listas>                      ::= <Listas> ; <Lista_expresiones>
-                              | <Lista_expresiones>
-<Lista_expresiones>           ::= <Expresiones>
-                              |
+                              |   <Identificador>
+                              |   <Constante>
+                              |   <Op_unario_izquierda> <Expresion>
+                              |   <Expresion> <Op_unario_derecha>
+                              |   <Expresion> <Op_binario> <Expresion>
+                              |   <Agregado1D>
+                              |   <Agregado2D>
+                              |   <Llamada_funcion>
+<Agregado1D>                  ::= {<Expresiones>}
+<Agregado2D>                  ::= {<Listas> ; <Expresiones>}
+<Listas>                      ::= <Listas> ; <Expresiones>
+                              |   <Expresiones>
 <Expresiones>                 ::= <Expresion>, <Expresiones>
-                              | <Expresion>
-<Llamada_funcion>             ::= <Identificador>(<Lista_expresiones>)
+                              |   <Expresion>
+<Llamada_funcion>             ::= <Identificador>(<Expresiones>)
+                              |   <Identificador>()
 <Op_unario_izquierda>         ::= !
-                              | -
-                              | ++
-                              | --
-<Acceso_array>                ::= [<Natural>]
-                              |   [<Natural>,<Natural>]
+                              |   +
+                              |   -
+                              |   ++
+                              |   --
+<Acceso_array>                ::= [<Expresion>]
+                              |   [<Expresion>,<Expresion>]
 <Identificador_comp>          ::= <Identificador>
                               |   <Identificador><Acceso_array>
 <Op_unario_derecha>           ::= ++
-                              | --
-                              | <Acceso_array>
+                              |   --
+                              |   <Acceso_array>
 <Op_binario>                  ::= ==
-                              | >=
-                              | <=
-                              | !=
-                              | +
-                              | -
-                              | *
-                              | /
-                              | **
-                              | ^
-                              | <
-                              | >
-                              | &&
-                              | ||
+                              |   >=
+                              |   <=
+                              |   !=
+                              |   +
+                              |   -
+                              |   *
+                              |   /
+                              |   **
+                              |   ^
+                              |   <
+                              |   >
+                              |   &&
+                              |   ||
 <Sentencias>                  ::= <Sentencias> <Sentencia>
-                              | vacio
+                              |   vacio
 <Sentencia>                   ::= <Bloque>
-                              |   <Expresion>;
                               |   <Sentencia_asignacion>
                               |   <Sentencia_if>
                               |   <Sentencia_while>
@@ -155,15 +145,20 @@ Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 <Sentencia_switch>            ::= casos (<Expresion>) <Bloque_switch>
 <Bloque_switch>               ::= { <Opciones> }
 <Opciones>                    ::= <Opciones> <Opcion>
-                              | <Opcion>
+                              |   <Opcion> <Opcion_pred>
+                              |   <Opcion_pred>
 <Opcion>                      ::= caso <Entero>: <Sentencias>
-                              | predeterminado: <Sentencias>
+<Opcion_pred>                 ::= predeterminado: <Sentencias>
 <Sentencia_break>             ::= roto;
 <Sentencia_return>            ::= devolver
 <Sentencia_entrada>           ::= entrada <Lista_id>;
 <Lista_id>                    ::= <Lista_id>, <Identificador_comp>
-                              | <Identificador_comp>
-<Sentencia_salida>            ::= salida <Expresiones>;
+                              |   <Identificador_comp>
+<Lista_exp_cad>               ::= <Lista_exp_cad>, <Exp_cad>
+                              |   <Exp_cad>
+<Exp_cad>                     ::= <Expresion>
+                              |   <Cadena>
+<Sentencia_salida>            ::= salida <Lista_exp_cad>;
 #+END_SRC
 
 * Definición de la semántica en lenguaje natural
@@ -186,44 +181,44 @@ Por último, tenemos un tipo especial similar a los arrays de C, que representa 
 
 * Tabla de tokens
 
-| Nombre          | Expresión regular                                              | Código | Atributos                  |
-|-----------------+----------------------------------------------------------------+--------+----------------------------|
-| ~CABECERA~      | ~"programa()"~                                                 | ~257~  |                            |
-| ~LLAVEIZQ~      | ~"{"~                                                          | ~258~  |                            |
-| ~LLAVEDCH~      | ~"}"~                                                          | ~259~  |                            |
-| ~INILOCAL~      | ~"var"~                                                        | ~261~  |                            |
-| ~FINLOCAL~      | ~"finvar"~                                                     | ~262~  |                            |
-| ~TIPO~          | ~"entero"~ \vert ~"real"~ \vert ~"buleano"~ \vert ~"caracter"~ | ~263~  | ~0:entero 1:real~          |
-|                 |                                                                |        | ~2:buleano 3:caracter~     |
-| ~IF~            | ~"si"~                                                         | ~264~  |                            |
-| ~ELSE~          | ~"otro"~                                                       | ~265~  |                            |
-| ~WHILE~         | ~"mientras"~                                                   | ~266~  |                            |
-| ~SWITCH~        | ~"casos"~                                                      | ~267~  |                            |
-| ~CASE~          | ~"caso"~                                                       | ~268~  |                            |
-| ~BREAK~         | ~"roto"~                                                       | ~269~  |                            |
-| ~CIN~           | ~"entrada"~                                                    | ~270~  |                            |
-| ~COUT~          | ~"salida"~                                                     | ~271~  |                            |
-| ~PREDET~        | ~"predeterminado"~                                             | ~272~  |                            |
-| ~ASIG~          | ~"="~                                                          | ~273~  |                            |
-| ~CORCHIZQ~      | ~"["~                                                          | ~274~  |                            |
-| ~CORCHDCH~      | ~"]"~                                                          | ~275~  |                            |
-| ~COMA~          | ~","~                                                          | ~276~  |                            |
-| ~PYC~           | ~";"~                                                          | ~277~  |                            |
-| ~PYP~           | ~":"~                                                          | ~278~  |                            |
-| ~PARIZQ~        | ~"("~                                                          | ~279~  |                            |
-| ~PARDCH~        | ~")"~                                                          | ~280~  |                            |
-| ~SIGNO~         | ~"-"~                                                          | ~281~  |                            |
-| ~DIGITO~        | ~[0-9]~                                                        | ~282~  |                            |
-| ~PUNTO~         | ~"."~                                                          | ~283~  |                            |
-| ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                       | ~284~  |                            |
-|                 | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~   |
-| ~LITERAL~       | \vert ~(\"(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])+\")~             | ~285~  | ~2:falso 3:cte_cadena~     |
-|                 | \vert ~(\'(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])\')~              |        | ~4:cte_caracter~           |
-| ~RETURN~        | ~"devolver"~                                                   | ~286~  |                            |
-| ~OPREL~         | ~[<>]=?~ \vert ~[=!]=~                                         | ~287~  |                            |
-| ~OPBIN~         | ~"+"~ \vert ~"-"~ \vert ~"*"~ \vert ~"/"~ \vert ~"**"~         | ~288~  | ~0:+ 1:- 2:* 3:/ 4:**~     |
-| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1:~ \vert\vert ~2:&&~ |
-| ~OPUNARIOIZQ~   | ~"!"~ \vert ~"-"~ \vert ~"++"~ \vert ~"--"~                    | ~290~  | ~0:! 1:- 2:++ 3:--~        |
-| ~OPUNARIODCH~   | ~"++"~ \vert ~"--"~                                            | ~291~  | ~0:++ 1:--~                |
-| ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~292~  |                            |
-| ~ARRAY2D~       | ~\[[0-9]+,[0-9+]\]~                                            | ~293~  |                            |
+| Nombre          | Expresión regular                                              | Código | Atributos                 |
+|-----------------+----------------------------------------------------------------+--------+---------------------------|
+| ~CABECERA~      | ~"programa()"~                                                 | ~257~  |                           |
+| ~LLAVEIZQ~      | ~"{"~                                                          | ~258~  |                           |
+| ~LLAVEDCH~      | ~"}"~                                                          | ~259~  |                           |
+| ~INILOCAL~      | ~"var"~                                                        | ~261~  |                           |
+| ~FINLOCAL~      | ~"finvar"~                                                     | ~262~  |                           |
+| ~TIPO~          | ~"entero"~ \vert ~"real"~ \vert ~"buleano"~ \vert ~"caracter"~ | ~263~  | ~0:entero 1:real~         |
+|                 |                                                                |        | ~2:buleano 3:caracter~    |
+| ~IF~            | ~"si"~                                                         | ~264~  |                           |
+| ~ELSE~          | ~"otro"~                                                       | ~265~  |                           |
+| ~WHILE~         | ~"mientras"~                                                   | ~266~  |                           |
+| ~SWITCH~        | ~"casos"~                                                      | ~267~  |                           |
+| ~CASE~          | ~"caso"~                                                       | ~268~  |                           |
+| ~BREAK~         | ~"roto"~                                                       | ~269~  |                           |
+| ~CIN~           | ~"entrada"~                                                    | ~270~  |                           |
+| ~COUT~          | ~"salida"~                                                     | ~271~  |                           |
+| ~PREDET~        | ~"predeterminado"~                                             | ~272~  |                           |
+| ~ASIG~          | ~"="~                                                          | ~273~  |                           |
+| ~CORCHIZQ~      | ~"["~                                                          | ~274~  |                           |
+| ~CORCHDCH~      | ~"]"~                                                          | ~275~  |                           |
+| ~COMA~          | ~","~                                                          | ~276~  |                           |
+| ~PYC~           | ~";"~                                                          | ~277~  |                           |
+| ~PYP~           | ~":"~                                                          | ~278~  |                           |
+| ~PARIZQ~        | ~"("~                                                          | ~279~  |                           |
+| ~PARDCH~        | ~")"~                                                          | ~280~  |                           |
+| ~SIGNO~         | ~"-"~                                                          | ~281~  |                           |
+| ~DIGITO~        | ~[0-9]~                                                        | ~282~  |                           |
+| ~PUNTO~         | ~"."~                                                          | ~283~  |                           |
+| ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                       | ~284~  |                           |
+|                 | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~  |
+| ~LITERAL~       | \vert ~(\"(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])+\")~             | ~285~  | ~2:falso 3:cte_cadena~    |
+|                 | \vert ~(\'(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])\')~              |        | ~4:cte_caracter~          |
+| ~RETURN~        | ~"devolver"~                                                   | ~286~  |                           |
+| ~OPREL~         | ~[<>]=?~ \vert ~[=!]=~                                         | ~287~  |                           |
+| ~OPBIN~         | ~"+"~ \vert ~"-"~ \vert ~"*"~ \vert ~"/"~ \vert ~"**"~         | ~288~  | ~0:+ 1:- 2:* 3:/ 4:**~    |
+| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1:~\vert\vert ~2:&&~ |
+| ~OPUNARIOIZQ~   | ~"!"~ \vert ~"-"~ \vert ~"++"~ \vert ~"--"~                    | ~290~  | ~0:! 1:- 2:++ 3:--~       |
+| ~OPUNARIODCH~   | ~"++"~ \vert ~"--"~                                            | ~291~  | ~0:++ 1:--~               |
+| ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~292~  |                           |
+| ~ARRAY2D~       | ~\[[0-9]+,[0-9+]\]~                                            | ~293~  |                           |
