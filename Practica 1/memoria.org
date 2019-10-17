@@ -217,7 +217,7 @@ Por último, tenemos un tipo especial similar a los arrays de C, que representa 
 | ~RETURN~        | ~"devolver"~                                                   | ~286~  |                           |
 | ~OPREL~         | ~[<>]=?~ \vert ~[=!]=~                                         | ~287~  |                           |
 | ~OPBIN~         | ~"+"~ \vert ~"-"~ \vert ~"*"~ \vert ~"/"~ \vert ~"**"~         | ~288~  | ~0:+ 1:- 2:* 3:/ 4:**~    |
-| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1:~\vert\vert ~2:&&~ |
+| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~289~  | ~0:^ 1~:\vert\vert ~2:&&~ |
 | ~OPUNARIOIZQ~   | ~"!"~ \vert ~"-"~ \vert ~"++"~ \vert ~"--"~                    | ~290~  | ~0:! 1:- 2:++ 3:--~       |
 | ~OPUNARIODCH~   | ~"++"~ \vert ~"--"~                                            | ~291~  | ~0:++ 1:--~               |
 | ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~292~  |                           |
