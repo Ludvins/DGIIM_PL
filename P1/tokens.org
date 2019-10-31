@@ -1,41 +1,36 @@
-| Nombre          | Expresión regular                                              | Código | Atributos                 |
-|-----------------+----------------------------------------------------------------+--------+---------------------------|
-| ~CABECERA~      | ~"programa()"~                                                 | ~257~  |                           |
-| ~LLAVEIZQ~      | ~"{"~                                                          | ~258~  |                           |
-| ~LLAVEDCH~      | ~"}"~                                                          | ~259~  |                           |
-| ~INILOCAL~      | ~"var"~                                                        | ~260~  |                           |
-| ~FINLOCAL~      | ~"finvar"~                                                     | ~261~  |                           |
-| ~TIPO~          | ~"entero"~ \vert ~"real"~ \vert ~"buleano"~ \vert ~"caracter"~ | ~262~  | ~0:entero 1:real~         |
-|                 |                                                                |        | ~2:buleano 3:caracter~    |
-| ~IF~            | ~"si"~                                                         | ~263~  |                           |
-| ~ELSE~          | ~"otro"~                                                       | ~264~  |                           |
-| ~WHILE~         | ~"mientras"~                                                   | ~265~  |                           |
-| ~SWITCH~        | ~"casos"~                                                      | ~266~  |                           |
-| ~CASE~          | ~"caso"~                                                       | ~267~  |                           |
-| ~BREAK~         | ~"roto"~                                                       | ~268~  |                           |
-| ~CIN~           | ~"entrada"~                                                    | ~269~  |                           |
-| ~COUT~          | ~"salida"~                                                     | ~270~  |                           |
-| ~PREDET~        | ~"predeterminado"~                                             | ~271~  |                           |
-| ~ASIG~          | ~"="~                                                          | ~272~  |                           |
-| ~CORCHIZQ~      | ~"["~                                                          | ~273~  |                           |
-| ~CORCHDCH~      | ~"]"~                                                          | ~274~  |                           |
-| ~COMA~          | ~","~                                                          | ~275~  |                           |
-| ~PYC~           | ~";"~                                                          | ~276~  |                           |
-| ~PYP~           | ~":"~                                                          | ~277~  |                           |
-| ~PARIZQ~        | ~"("~                                                          | ~278~  |                           |
-| ~PARDCH~        | ~")"~                                                          | ~279~  |                           |
-| ~SIGNO~         | ~"-"~                                                          | ~280~  |                           |
-| ~DIGITO~        | ~[0-9]~                                                        | ~281~  |                           |
-| ~PUNTO~         | ~"."~                                                          | ~282~  |                           |
-| ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                       | ~283~  |                           |
-|                 | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~  |
-| ~LITERAL~       | \vert ~(\"(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])+\")~             | ~284~  | ~2:falso 3:cte_cadena~    |
-|                 | \vert ~(\'(\\\"~ \vert ~\\\'~ \vert ~[^\"\'])\')~              |        | ~4:cte_caracter~          |
-| ~RETURN~        | ~"devolver"~                                                   | ~285~  |                           |
-| ~OPREL~         | ~[<>]=?~ \vert ~[=!]=~                                         | ~286~  |                           |
-| ~OPBIN~         | ~"+"~ \vert ~"-"~ \vert ~"*"~ \vert ~"/"~ \vert ~"**"~         | ~287~  | ~0:+ 1:- 2:* 3:/ 4:**~    |
-| ~OPLOG~         | ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~                    | ~288~  | ~0:^ 1:~\vert\vert ~2:&&~ |
-| ~OPUNARIOIZQ~   | ~"!"~ \vert ~"-"~ \vert ~"++"~ \vert ~"--"~                    | ~289~  | ~0:! 1:- 2:++ 3:--~       |
-| ~OPUNARIODCH~   | ~"++"~ \vert ~"--"~                                            | ~290~  | ~0:++ 1:--~               |
-| ~ARRAY1D~       | ~\[[0-9]+\]~                                                   | ~291~  |                           |
-| ~ARRAY2D~       | ~\[[0-9]+,[0-9+]\]~                                            | ~292~  |                           |
+
+| Nombre          | Expresión regular                                              | Código | Atributos                         |
+|-----------------+----------------------------------------------------------------+--------+-----------------------------------|
+| ~CABECERA~      | ~"programa()"~                                                 | ~257~  |                                   |
+| ~LLAVEIZQ~      | ~"{"~                                                          | ~258~  |                                   |
+| ~LLAVEDCH~      | ~"}"~                                                          | ~259~  |                                   |
+| ~INILOCAL~      | ~"var"~                                                        | ~260~  |                                   |
+| ~FINLOCAL~      | ~"finvar"~                                                     | ~261~  |                                   |
+| ~TIPO~          | ~"entero"~ \vert ~"real"~ \vert ~"buleano"~ \vert ~"caracter"~ | ~262~  | ~0:entero 1:real~                 |
+|                 |                                                                |        | ~2:buleano 3:caracter~            |
+| ~IF~            | ~"si"~                                                         | ~263~  |                                   |
+| ~ELSE~          | ~"otro"~                                                       | ~264~  |                                   |
+| ~WHILE~         | ~"mientras"~                                                   | ~265~  |                                   |
+| ~SWITCH~        | ~"casos"~                                                      | ~266~  |                                   |
+| ~CASE~          | ~"caso"~                                                       | ~267~  |                                   |
+| ~BREAK~         | ~"roto"~                                                       | ~268~  |                                   |
+| ~CIN~           | ~"entrada"~                                                    | ~269~  |                                   |
+| ~COUT~          | ~"salida"~                                                     | ~270~  |                                   |
+| ~PREDET~        | ~"predeterminado"~                                             | ~271~  |                                   |
+| ~ASIG~          | ~"="~                                                          | ~272~  |                                   |
+| ~CORCHIZQ~      | ~"["~                                                          | ~273~  |                                   |
+| ~CORCHDCH~      | ~"]"~                                                          | ~274~  |                                   |
+| ~COMA~          | ~","~                                                          | ~275~  |                                   |
+| ~PYC~           | ~";"~                                                          | ~276~  |                                   |
+| ~PYP~           | ~":"~                                                          | ~277~  |                                   |
+| ~PARIZQ~        | ~"("~                                                          | ~278~  |                                   |
+| ~PARDCH~        | ~")"~                                                          | ~279~  |                                   |
+| ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                       | ~280~  |                                   |
+| ~CONSTANTE~     | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~          |
+|                 | \vert ~\'[^\']\'~                                              | ~281~  | ~2:falso 3:cte_caracter~          |
+| ~RETURN~        | ~"devolver"~                                                   | ~282~  |                                   |
+| ~OPBIN~         | ~[<>]=?~ \vert ~[=!]=~ \vert ~"*"~                             | ~283~  | ~0:> 1:< 2:<= 3:>= 4:== 5:!= 6:*~ |
+|                 | \vert ~"/"~\vert ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~   |        | ~7:/ 8:^ 9:~\vert\vert ~10:&&~    |
+| ~OPUNARIOIZQ~   | ~"!"~                                                          | ~284~  |                                   |
+| ~MASMENOS~      | ~+~ \vert ~-~                                                  |        |                                   |
+| ~CADENA~        | ~\"[^\"]*\"~                                                   |        |                                   |

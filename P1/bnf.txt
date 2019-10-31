@@ -6,12 +6,12 @@
                                   <Sentencias>
                                   <Fin_de_bloque>
 <Declar_de_subprogs>          ::= <Declar_de_subprogs> <Declar_subprog>
-                              |   vacio
+                              |
 <Declar_subprog>              ::= <Cabecera_subprograma> <Bloque>
 <Declar_de_variables_locales> ::= <Marca_ini_declar_variables>
                                   <Variables_locales>
                                   <Marca_fin_declar_variables>
-                              |   vacio
+                              |
 <Marca_ini_declar_variables>  ::= var
 <Marca_fin_declar_variables>  ::= finvar
 <Cabecera_programa>           ::= programa()
@@ -20,12 +20,20 @@
 <Variables_locales>           ::= <Variables_locales> <Cuerpo_declar_variable>;
                               |   <Cuerpo_declar_variable>;
 <Cuerpo_declar_variable>      ::= <Tipo> <Lista_id>
+<Acceso_array>                ::= [<Expresion>]
+                              |   [<Expresion>,<Expresion>]
+<Identificador_comp>          ::= <Identificador>
+                              |   <Identificador><Acceso_array>
+<Acceso_array_cte_>           ::= [<Natural>]
+                              |   [<Natural>,<Natural>]
+<Identificador_comp_cte>      ::= <Identificador>
+                              |   <Identificador><Acceso_array_cte>
 <Cabecera_subprog>            ::= <Tipo_comp> <Identificador>(<Lista_argumentos>)
 <Lista_argumentos>            ::= <Argumentos>
                               |
 <Argumentos>                  ::= <Argumento> , <Argumentos>
                               |   <Argumento>
-<Argumento>                   ::= <Tipo> <Identificador_comp>
+<Argumento>                   ::= <Tipo> <Identificador_comp_cte>
 <Booleano>                    ::= verdadero | falso
 <Digito>                      ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <Natural>                     ::= <Digito> <Natural>
@@ -53,7 +61,7 @@
 <Identificador>               ::= <Identificador> <Alfanum>
                               |   <Caracter>
 <Expresion>                   ::= (<Expresion>)
-                              |   <Identificador>
+                              |   <Identificador_comp>
                               |   <Constante>
                               |   <Op_unario_izquierda> <Expresion>
                               |   <Expresion> <Op_unario_derecha>
@@ -72,15 +80,6 @@
 <Op_unario_izquierda>         ::= !
                               |   +
                               |   -
-                              |   ++
-                              |   --
-<Acceso_array>                ::= [<Expresion>]
-                              |   [<Expresion>,<Expresion>]
-<Identificador_comp>          ::= <Identificador>
-                              |   <Identificador><Acceso_array>
-<Op_unario_derecha>           ::= ++
-                              |   --
-                              |   <Acceso_array>
 <Op_binario>                  ::= ==
                               |   >=
                               |   <=
@@ -89,7 +88,6 @@
                               |   -
                               |   *
                               |   /
-                              |   **
                               |   ^
                               |   <
                               |   >
@@ -116,10 +114,10 @@
 <Opciones>                    ::= <Opciones> <Opcion>
                               |   <Opcion> <Opcion_pred>
                               |   <Opcion_pred>
-<Opcion>                      ::= caso <Entero>: <Sentencias>
+<Opcion>                      ::= caso <Natural>: <Sentencias>
 <Opcion_pred>                 ::= predeterminado: <Sentencias>
 <Sentencia_break>             ::= roto;
-<Sentencia_return>            ::= devolver
+<Sentencia_return>            ::= devolver <Expresion>
 <Sentencia_entrada>           ::= entrada <Lista_id>;
 <Lista_id>                    ::= <Lista_id>, <Identificador_comp>
                               |   <Identificador_comp>
