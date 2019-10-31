@@ -28,8 +28,7 @@ El tipo de subprograma que contendrá nuestro lenguaje son *funciones*, es decir
 Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 
 * Descripción formal de la sintaxis del lenguaje usando BNF
-
-#+INCLUDE: "./Practica 1/bnf" src
+#+INCLUDE: "./P1/bnf.txt" src
 * Definición de la semántica en lenguaje natural
 El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa" seguida de de paréntesis sin argumentos. Por otro lado el bloque empieza con "{" y termina "}", en su interior pueden aparecer variables locales, subprogramas o sentencias.
 
@@ -49,5 +48,4 @@ La expresión puede encontrarse entre paréntesis, y puede ir precedido de una o
 Por último, tenemos un tipo especial similar a los arrays de C, que representa un agregado de datos del mismo tipo, ya sea unidimensional o bidimensional.
 
 * Tabla de tokens
-
-#+INCLUDE: "./Practica 1/tokens.org"
+#+INCLUDE: "./P1/tokens.org"

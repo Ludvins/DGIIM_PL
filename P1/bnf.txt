@@ -128,4 +128,3 @@
 <Exp_cad>                     ::= <Expresion>
                               |   <Cadena>
 <Sentencia_salida>            ::= salida <Lista_exp_cad>;
-#+END_SRC
