@@ -1,5 +1,4 @@
 
-#+BEGIN_SRC 
 <Programa>                    ::= <Cabecera_programa> <Bloque>
 <Bloque>                      ::= <Inicio_de_bloque>
                                   <Declar_de_variables_locales>
