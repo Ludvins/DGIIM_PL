@@ -7,7 +7,6 @@ opbin     [<>]=? \| [=!]= \| "*"| "/"\| "^" \| " \|\| " \| "&&"
 masmenos  +|-
 cadena    \"[^\"]*\"
 
-
 %%
 
 "programa()" #return CABECERA
@@ -33,8 +32,8 @@ cadena    \"[^\"]*\"
 ":" #return PYP
 "(" #return PARIZQ
 ")" #return PARDCH
-                {id} #return IDENTIFICADOR
-                {constante} #return CONSTANTE
+{id} #return IDENTIFICADOR
+{constante} #return CONSTANTE
 "devolver" #return RETURN
 "!"
 
@@ -44,10 +43,5 @@ cadena    \"[^\"]*\"
 int main()
 
 {
-
     yylex();
-
-    printf("\n total no. of token = %d\n", n);
-
 }
-
