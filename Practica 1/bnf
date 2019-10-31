@@ -1,0 +1,132 @@
+
+#+BEGIN_SRC 
+<Programa>                    ::= <Cabecera_programa> <Bloque>
+<Bloque>                      ::= <Inicio_de_bloque>
+                                  <Declar_de_variables_locales>
+                                  <Declar_de_subprogs>
+                                  <Sentencias>
+                                  <Fin_de_bloque>
+<Declar_de_subprogs>          ::= <Declar_de_subprogs> <Declar_subprog>
+                              |   vacio
+<Declar_subprog>              ::= <Cabecera_subprograma> <Bloque>
+<Declar_de_variables_locales> ::= <Marca_ini_declar_variables>
+                                  <Variables_locales>
+                                  <Marca_fin_declar_variables>
+                              |   vacio
+<Marca_ini_declar_variables>  ::= var
+<Marca_fin_declar_variables>  ::= finvar
+<Cabecera_programa>           ::= programa()
+<Inicio_de_bloque>            ::= {
+<Fin_de_bloque>               ::= }
+<Variables_locales>           ::= <Variables_locales> <Cuerpo_declar_variable>;
+                              |   <Cuerpo_declar_variable>;
+<Cuerpo_declar_variable>      ::= <Tipo> <Lista_id>
+<Cabecera_subprog>            ::= <Tipo_comp> <Identificador>(<Lista_argumentos>)
+<Lista_argumentos>            ::= <Argumentos>
+                              |
+<Argumentos>                  ::= <Argumento> , <Argumentos>
+                              |   <Argumento>
+<Argumento>                   ::= <Tipo> <Identificador_comp>
+<Booleano>                    ::= verdadero | falso
+<Digito>                      ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<Natural>                     ::= <Digito> <Natural>
+                              |   <Digito>
+<Real>                        ::= <Natural>.<Natural>
+<Caracter>                    ::= a | ... | z | A | ... | Z | _
+<Alfanum>                     ::= <Caracter>
+                              |   <Natural>
+<Caracter_ascii>              ::= (Cualquier carácter ASCII menos las comillas (' o "))
+                              |   \"
+                              |   \'
+<Cadena>                      ::= <Cadena> <Caracter_ascii>
+                              |   <Caracter_ascii>
+<Cadena_const>                ::= "<Cadena>"
+<Constante>                   ::= <Natural>
+                              |   <Real>
+                              |   <Booleano>
+                              |   '<Caracter_ascii>'
+<Tipo>                        ::= entero
+                              |   real
+                              |   buleano
+                              |   caracter
+<Tipo_comp>                   ::= <Tipo>
+                              |   <Tipo><Acceso_array>
+<Identificador>               ::= <Identificador> <Alfanum>
+                              |   <Caracter>
+<Expresion>                   ::= (<Expresion>)
+                              |   <Identificador>
+                              |   <Constante>
+                              |   <Op_unario_izquierda> <Expresion>
+                              |   <Expresion> <Op_unario_derecha>
+                              |   <Expresion> <Op_binario> <Expresion>
+                              |   <Agregado1D>
+                              |   <Agregado2D>
+                              |   <Llamada_funcion>
+<Agregado1D>                  ::= {<Expresiones>}
+<Agregado2D>                  ::= {<Listas> ; <Expresiones>}
+<Listas>                      ::= <Listas> ; <Expresiones>
+                              |   <Expresiones>
+<Expresiones>                 ::= <Expresion>, <Expresiones>
+                              |   <Expresion>
+<Llamada_funcion>             ::= <Identificador>(<Expresiones>)
+                              |   <Identificador>()
+<Op_unario_izquierda>         ::= !
+                              |   +
+                              |   -
+                              |   ++
+                              |   --
+<Acceso_array>                ::= [<Expresion>]
+                              |   [<Expresion>,<Expresion>]
+<Identificador_comp>          ::= <Identificador>
+                              |   <Identificador><Acceso_array>
+<Op_unario_derecha>           ::= ++
+                              |   --
+                              |   <Acceso_array>
+<Op_binario>                  ::= ==
+                              |   >=
+                              |   <=
+                              |   !=
+                              |   +
+                              |   -
+                              |   *
+                              |   /
+                              |   **
+                              |   ^
+                              |   <
+                              |   >
+                              |   &&
+                              |   ||
+<Sentencias>                  ::= <Sentencias> <Sentencia>
+                              |   vacio
+<Sentencia>                   ::= <Bloque>
+                              |   <Sentencia_asignacion>
+                              |   <Sentencia_if>
+                              |   <Sentencia_while>
+                              |   <Sentencia switch>
+                              |   <Sentencia_break>
+                              |   <Sentencia_return>
+                              |   <Sentencia_entrada>
+                              |   <Sentencia_salida>
+<Sentencia_asignacion>        ::= <Identificador_comp> = <Expresion>;
+<Sentencia_if>                ::= si (<Expresion>) <Sentencia> <Sentencia_else>
+<Sentencia_else>              ::= otro <Sentencia>
+                              |
+<Sentencia_while>             ::= mientras (<Expresion>) <Sentencia>
+<Sentencia_switch>            ::= casos (<Expresion>) <Bloque_switch>
+<Bloque_switch>               ::= { <Opciones> }
+<Opciones>                    ::= <Opciones> <Opcion>
+                              |   <Opcion> <Opcion_pred>
+                              |   <Opcion_pred>
+<Opcion>                      ::= caso <Entero>: <Sentencias>
+<Opcion_pred>                 ::= predeterminado: <Sentencias>
+<Sentencia_break>             ::= roto;
+<Sentencia_return>            ::= devolver
+<Sentencia_entrada>           ::= entrada <Lista_id>;
+<Lista_id>                    ::= <Lista_id>, <Identificador_comp>
+                              |   <Identificador_comp>
+<Lista_exp_cad>               ::= <Lista_exp_cad>, <Exp_cad>
+                              |   <Exp_cad>
+<Exp_cad>                     ::= <Expresion>
+                              |   <Cadena>
+<Sentencia_salida>            ::= salida <Lista_exp_cad>;
+#+END_SRC
