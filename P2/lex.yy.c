@@ -555,12 +555,13 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "babaa.l"
 #line 2 "babaa.l"
+// Uso: flex babaa.l && gcc lex.yy.c -o lexico -lfl && ./lexico test.babaa
 #include <stdio.h>
 #include "tabla.h"
 
 char attr[256];
-#line 562 "lex.yy.c"
 #line 563 "lex.yy.c"
+#line 564 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -777,10 +778,10 @@ YY_DECL
 		}
 
 	{
-#line 16 "babaa.l"
+#line 17 "babaa.l"
 
 
-#line 783 "lex.yy.c"
+#line 784 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -849,189 +850,189 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 18 "babaa.l"
+#line 19 "babaa.l"
 return CABECERA;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "babaa.l"
+#line 20 "babaa.l"
 return LLAVEIZQ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "babaa.l"
+#line 21 "babaa.l"
 return LLAVEDCH;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "babaa.l"
+#line 22 "babaa.l"
 return INILOCAL;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "babaa.l"
+#line 23 "babaa.l"
 return FINLOCAL;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "babaa.l"
+#line 24 "babaa.l"
 return IF;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "babaa.l"
+#line 25 "babaa.l"
 return ELSE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 25 "babaa.l"
+#line 26 "babaa.l"
 return WHILE;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "babaa.l"
+#line 27 "babaa.l"
 return SWITCH;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "babaa.l"
+#line 28 "babaa.l"
 return CASE;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "babaa.l"
+#line 29 "babaa.l"
 return BREAK;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "babaa.l"
+#line 30 "babaa.l"
 return CIN;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "babaa.l"
+#line 31 "babaa.l"
 return COUT;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 31 "babaa.l"
+#line 32 "babaa.l"
 return PREDET;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 32 "babaa.l"
+#line 33 "babaa.l"
 return ASIG;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 33 "babaa.l"
+#line 34 "babaa.l"
 return CORCHIZQ;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 34 "babaa.l"
+#line 35 "babaa.l"
 return CORCHDCH;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 35 "babaa.l"
+#line 36 "babaa.l"
 return COMA;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 36 "babaa.l"
+#line 37 "babaa.l"
 return PYC;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 37 "babaa.l"
+#line 38 "babaa.l"
 return PYP;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 38 "babaa.l"
+#line 39 "babaa.l"
 return PARIZQ;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 39 "babaa.l"
+#line 40 "babaa.l"
 return PARDCH;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 40 "babaa.l"
+#line 41 "babaa.l"
 return RETURN;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 41 "babaa.l"
+#line 42 "babaa.l"
 return OPUNARIOIZQ;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 42 "babaa.l"
-return MASMENOS;
+#line 43 "babaa.l"
+{strcpy(attr, yytext); return MASMENOS;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 43 "babaa.l"
+#line 44 "babaa.l"
 {strcpy(attr, yytext); return TIPO;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 44 "babaa.l"
+#line 45 "babaa.l"
 {strcpy(attr, yytext); return OPBIN;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 45 "babaa.l"
+#line 46 "babaa.l"
 return CADENA;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 46 "babaa.l"
+#line 47 "babaa.l"
 {strcpy(attr, yytext); return CONSTANTE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 47 "babaa.l"
+#line 48 "babaa.l"
 {strcpy(attr, "num"); return CONSTANTE;}
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 48 "babaa.l"
+#line 49 "babaa.l"
 {strcpy(attr, "cte_caracter"); return CONSTANTE;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 49 "babaa.l"
+#line 50 "babaa.l"
 return IDENTIFICADOR;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 51 "babaa.l"
+#line 52 "babaa.l"
 ;
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 52 "babaa.l"
+#line 53 "babaa.l"
 ;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 53 "babaa.l"
+#line 54 "babaa.l"
 {; printf("(Línea %d) Error léxico: token %s no reconocido.\n",
                               yylineno, yytext);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 56 "babaa.l"
+#line 57 "babaa.l"
 ECHO;
 	YY_BREAK
-#line 1034 "lex.yy.c"
+#line 1035 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2048,7 +2049,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "babaa.l"
+#line 57 "babaa.l"
 
 
 int main(int argc, char* argv[]) {
