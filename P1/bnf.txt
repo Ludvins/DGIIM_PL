@@ -64,7 +64,6 @@
                               |   <Identificador_comp>
                               |   <Constante>
                               |   <Op_unario_izquierda> <Expresion>
-                              |   <Expresion> <Op_unario_derecha>
                               |   <Expresion> <Op_binario> <Expresion>
                               |   <Agregado1D>
                               |   <Agregado2D>
@@ -84,17 +83,17 @@
                               |   >=
                               |   <=
                               |   !=
-                              |   +
-                              |   -
                               |   *
                               |   /
+                              |   +
+                              |   -
                               |   ^
                               |   <
                               |   >
                               |   &&
                               |   ||
 <Sentencias>                  ::= <Sentencias> <Sentencia>
-                              |   vacio
+                              |
 <Sentencia>                   ::= <Bloque>
                               |   <Sentencia_asignacion>
                               |   <Sentencia_if>

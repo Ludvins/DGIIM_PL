@@ -4,35 +4,36 @@
 #+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote Robayna@@latex: \\@@Antonio Coín Castro
 
 #+LATEX_HEADER:\setlength{\parindent}{0in}
-#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
 #+LATEX_HEADER: \usepackage{mathtools}
 
 * Descripción del lenguaje
 
 La sintaxis de nuestro lenguaje está inspirada en el lenguaje *C*. Por ello, tomaremos como referencia las reglas sintácticas de este para las instrucciones del nuevo lenguaje.
 
-Para las palabras reservadas usaremos el lenguaje *castellano*.
+Para las palabras reservadas usaremos el idioma *castellano*.
 
-En nuestro lenguaje implementaremos los *arrays 1D y 2D* como estructura de datos. Este tipo de datos tendrán las siguientes operaciones.
+En nuestro lenguaje implementaremos los *arrays 1D y 2D* como estructura de datos, que solo pueden tener elementos *del mimso* tipo básico en su interior: entero, carácter, real y booleano. Este tipo de datos tendrán las siguientes operaciones:
 
 + Acceso a elemento.
 + Producto.
 + Suma y resta elemento a elemento.
 + Producto externo (producto de un array por un escalar).
-+ Producto de matrices. Teniendo en cuenta que para multiplicar dos matrices, las dimensiones de estas deben ser las adecuadas.
++ Producto de matrices (teniendo en cuenta que para multiplicar dos matrices, las dimensiones de estas deben ser las adecuadas).
 
-Esta estructura solo puede tener tipos básicos en su interior (entero, carácter, real y booleano).
-
-El tipo de subprograma que contendrá nuestro lenguaje son *funciones*, es decir, supondremos que nuestro subprograma siempre devuelve un valor.
+El tipo de subprograma que contendrá nuestro lenguaje son *funciones*, es decir, supondremos que los subprogramas siempre devuelven un valor.
 
 Por último, el lenguaje incluirá una estructura de control tipo *switch*.
 
 * Descripción formal de la sintaxis del lenguaje usando BNF
-#+INCLUDE: "./P1/bnf.txt" src
-* Definición de la semántica en lenguaje natural
-El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa" seguida de de paréntesis sin argumentos. Por otro lado el bloque empieza con "{" y termina "}", en su interior pueden aparecer variables locales, subprogramas o sentencias.
 
-Las variables locales deben declararse entre unas marcas de inicio y fin, notadas como "var" y "finvar" respectivamente. Una vez dentro de las marcas, podemos declarar variables al estilo de C, e inicializarlas /in situ/:
+#+INCLUDE: "./P1/bnf.txt" src
+
+* Definición de la semántica en lenguaje natural
+
+El programa comienza con una cabecera inicial y un bloque. La cabecera inicial esta formada por la palabra reservada "programa()". Por otro lado, el bloque empieza con "{" y termina con "}", y en su interior pueden aparecer variables locales, subprogramas o sentencias.
+
+Las variables locales deben declararse entre unas marcas de inicio y fin, notadas como ~var~ y ~finvar~ respectivamente. Una vez dentro de las marcas, podemos declarar variables al estilo de C, e inicializarlas /in situ/:
 
 #+begin_src
 <tipo> <id>;
@@ -41,11 +42,26 @@ Las variables locales deben declararse entre unas marcas de inicio y fin, notada
 
 Los subprogramas son siempre funciones que devuelven algo. Constan de una cabecera ~<tipo> <nombre>(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave 'devolver'.
 
-Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (si, otro, mientras, casos). Las instrucciones de control tienen una expresion y una sentencia. La sintaxis del 'switch' es una copia de la de C, teniendo en cuenta que los caso solo pueden ser números enteros.
+Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (/si/, /otro/, /mientras/, /casos/). Las instrucciones de control contienen una expresion y una sentencia, y su sintaxis es la misma que la de C. Notamos que los casos en el /switch/ solo pueden ser números enteros.
 
-La expresión puede encontrarse entre paréntesis, y puede ir precedido de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
+Una expresión puede encontrarse entre paréntesis, y puede ir precedida de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
 
-Por último, tenemos un tipo especial similar a los arrays de C, que representa un agregado de datos del mismo tipo, ya sea unidimensional o bidimensional.
+Por último, tenemos un tipo especial similar a los arrays de C, que representa un agregado de datos del mismo tipo, ya sea unidimensional o bidimensional, cuya sintaxis es la siguiente:
+
+#+begin_src
+// Declaración
+<tipo> <id>[<tamaño>];  // 1-D
+<tipo> <id>[<tamaño1>, <tamaño2>];  //2-D
+
+// Acceso
+<id>[<pos>];  // 1-D
+<id>[<pos1>, <pos2>];  // 2-D
+#+end_src
+
+#+BEGIN_COMMENT
+Falta poner la descripción de todos los operadores, y posiblemente de todas las estructuras
+de control.
+#+END_COMMENT
 
 * Tabla de tokens
 #+INCLUDE: "./P1/tokens.org"

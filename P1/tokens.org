@@ -26,11 +26,11 @@
 | ~PARIZQ~        | ~"("~                                                          | ~278~  |                                   |
 | ~PARDCH~        | ~")"~                                                          | ~279~  |                                   |
 | ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                       | ~280~  |                                   |
-| ~CONSTANTE~     | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:real_num 1:verdadero~          |
+| ~CONSTANTE~     | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~ \vert ~"falso"~       |        | ~0:num 1:verdadero~          |
 |                 | \vert ~\'[^\']\'~                                              | ~281~  | ~2:falso 3:cte_caracter~          |
 | ~RETURN~        | ~"devolver"~                                                   | ~282~  |                                   |
 | ~OPBIN~         | ~[<>]=?~ \vert ~[=!]=~ \vert ~"*"~                             | ~283~  | ~0:> 1:< 2:<= 3:>= 4:== 5:!= 6:*~ |
 |                 | \vert ~"/"~\vert ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~   |        | ~7:/ 8:^ 9:~\vert\vert ~10:&&~    |
 | ~OPUNARIOIZQ~   | ~"!"~                                                          | ~284~  |                                   |
-| ~MASMENOS~      | ~+~ \vert ~-~                                                  | ~285~  |                                   |
+| ~MASMENOS~      | ~+~ \vert ~-~                                                  | ~285~  | ~0:+ 1:-~              |
 | ~CADENA~        | ~\"[^\"]*\"~                                                   | ~286~  |                                   |

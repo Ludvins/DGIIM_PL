@@ -1,0 +1,11 @@
+programa() {
+  var
+    entero a = -3;
+    real b = 3.2;
+    buleano c = verdadero;
+    caracter d = 'h'
+    a ^ b
+    ?!
+  finvar
+  salida "esto es una prueba"
+}
