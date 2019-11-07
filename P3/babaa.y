@@ -109,26 +109,26 @@
                               |   <Sentencia_entrada>
                               |   <Sentencia_salida> ;
 <Sentencia_asignacion>        : <Identificador_comp> = <Expresion> PYC ;
-<Sentencia_if>                : si PARIZQ <Expresion> PARDCH <Sentencia> <Sentencia_else> ;
-<Sentencia_else>              : otro <Sentencia> ;
-<Sentencia_while>             : mientras PARIZQ <Expresion> PARDCH <Sentencia> ;
-<Sentencia_switch>            : casos PARIZQ <Expresion> PARDCH <Bloque_switch> ;
+<Sentencia_if>                : IF PARIZQ <Expresion> PARDCH <Sentencia> <Sentencia_else> ;
+<Sentencia_else>              : ELSE <Sentencia> ;
+<Sentencia_while>             : WHILE PARIZQ <Expresion> PARDCH <Sentencia> ;
+<Sentencia_switch>            : SWITCH PARIZQ <Expresion> PARDCH <Bloque_switch> ;
 <Bloque_switch>               : LLAVEIZQ  <Opciones>  LLAVEDCH ;
 <Opciones>                    : <Opciones> <Opcion>
                               |   <Opcion> <Opcion_pred>
                               |   <Opcion_pred> ;
-<Opcion>                      : caso <Natural>: <Sentencias> ;
-<Opcion_pred>                 : predeterminado: <Sentencias> ;
-<Sentencia_break>             : roto PYC ;
-<Sentencia_return>            : devolver <Expresion> ;
-<Sentencia_entrada>           : entrada <Lista_id> PYC ;
+<Opcion>                      : CASE <Natural>: <Sentencias> ;
+<Opcion_pred>                 : PREDET: <Sentencias> ;
+<Sentencia_break>             : BREAL PYC ;
+<Sentencia_return>            : RETURN <Expresion> ;
+<Sentencia_entrada>           : CIN <Lista_id> PYC ;
 <Lista_id>                    : <Lista_id>, <Identificador_comp>
                               |   <Identificador_comp> ;
 <Lista_exp_cad>               : <Lista_exp_cad>, <Exp_cad>
                               |   <Exp_cad> ;
 <Exp_cad>                     : <Expresion>
                               |   <Cadena> ;
-<Sentencia_salida>            : salida <Lista_exp_cad> PYC ;
+<Sentencia_salida>            : COUT <Lista_exp_cad> PYC ;
 
 %%
 
