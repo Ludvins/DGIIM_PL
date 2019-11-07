@@ -26,8 +26,8 @@
 | ~PARIZQ~        | ~"("~                                                        | ~278~  |                                    |
 | ~PARDCH~        | ~")"~                                                        | ~279~  |                                    |
 | ~IDENTIFICADOR~ | ~[a-zA-Z_][a-zA-Z0-9_]*~                                     | ~280~  |                                    |
-| ~CONSTANTE~     | ~-?[0-9]+(.[0-9]+)?~ \vert ~"verdadero"~                     | ~281~  | ~0:num 1:verdadero~                |
-|                 | \vert ~"falso"~ \vert ~\'[^\']\'~                            |        | ~2:falso 3:cte_caracter~           |
+| ~CONSTANTE~     | ~[0-9]+(\.[0-9]+)?~ \vert ~"verdadero"~                      | ~281~  | ~0:entero 1:real 2:verdadero~      |
+|                 | \vert ~"falso"~ \vert ~\'[^\']\'~                            |        | ~3:falso 4:cte_caracter~           |
 | ~RETURN~        | ~"devolver"~                                                 | ~282~  |                                    |
 | ~OPBIN~         | ~[<>]=?~ \vert ~[=!]=~ \vert ~"*"~                           | ~283~  | ~0:> 1:< 2:<= 3:>= 4:== 5:!=~      |
 |                 | \vert ~"/"~\vert ~"^"~ \vert ~"~ \vert\vert ~"~ \vert ~"&&"~ |        | ~6:* 7:/ 8:^ 9:~\vert\vert ~10:&&~ |
