@@ -6,8 +6,8 @@
 | ~LLAVEDCH~      | ~"}"~                                                        | ~259~  |                                    |
 | ~INILOCAL~      | ~"var"~                                                      | ~260~  |                                    |
 | ~FINLOCAL~      | ~"finvar"~                                                   | ~261~  |                                    |
-| ~TIPO~          | ~"entero"~ \vert ~"real"~ ~                                  | ~262~  | ~0:entero 1:real~                  |
-|                 | ~\vert ~"buleano"~ \vert ~"caracter"~                        |        | ~2:buleano 3:caracter~             |
+| ~TIPO~          | ~"entero"~ \vert ~"real"~                                    | ~262~  | ~0:entero 1:real~                  |
+|                 | \vert ~"buleano"~ \vert ~"caracter"~                         |        | ~2:buleano 3:caracter~             |
 | ~IF~            | ~"si"~                                                       | ~263~  |                                    |
 | ~ELSE~          | ~"otro"~                                                     | ~264~  |                                    |
 | ~WHILE~         | ~"mientras"~                                                 | ~265~  |                                    |
