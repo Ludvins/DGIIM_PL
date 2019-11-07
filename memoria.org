@@ -4,7 +4,7 @@
 #+AUTHOR: Luis Antonio Ortega Andrés @@latex: \\@@Guillermo Galindo Ortuño @@latex: \\@@ Johanna Capote Robayna@@latex: \\@@Antonio Coín Castro
 
 #+LATEX_HEADER:\setlength{\parindent}{0in}
-#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=1.0in]{geometry}
 #+LATEX_HEADER: \usepackage{mathtools}
 
 * Descripción del lenguaje
@@ -40,7 +40,8 @@ Las variables locales deben declararse entre unas marcas de inicio y fin, notada
 <tipo> <id> = <expr>;
 #+end_src
 
-Los subprogramas son siempre funciones que devuelven algo. Constan de una cabecera ~<tipo> <nombre>(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave ~devolver~.
+Los subprogramas son siempre funciones que devuelven algo. Constan de una
+cabecera ~<tipo> <nombre>~ ~(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave ~devolver~.
 
 Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (/si/, /otro/, /mientras/, /casos/). Las instrucciones de control contienen una expresion y una sentencia, y su sintaxis es la misma que la de C. Notamos que los casos en el /switch/ solo pueden ser números enteros.
 
