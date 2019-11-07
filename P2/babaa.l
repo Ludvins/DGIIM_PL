@@ -48,7 +48,8 @@ cadena    \"[^\"]*\"
 {opbin}             {is_attr = 1; strcpy(attr, yytext); return OPBIN;}
 {cadena}            return CADENA;
 "verdadero"|"falso" {is_attr = 1; strcpy(attr, yytext); return CONSTANTE;}
-[0-9]+(.[0-9]+)?    {is_attr = 1; strcpy(attr, "num"); return CONSTANTE;}
+[0-9]+              {is_attr = 1; strcpy(attr, "entero"); return CONSTANTE;}
+[0-9]+(\.[0-9]+)?   {is_attr = 1; strcpy(attr, "real"); return CONSTANTE;}
 \'[^\']\'           {is_attr = 1; strcpy(attr, "cte_caracter"); return CONSTANTE;}
 {id}                return IDENTIFICADOR;
 

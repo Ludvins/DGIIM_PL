@@ -6,6 +6,7 @@ programa() {
     caracter d = 'h'
     a ^ b
     ?!
+    b=-3+2;
   finvar
   salida "esto es una prueba"
 }
