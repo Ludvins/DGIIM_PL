@@ -43,10 +43,7 @@ Las variables locales deben declararse entre unas marcas de inicio y fin, notada
 Los subprogramas son siempre funciones que devuelven algo. Constan de una
 cabecera ~<tipo> <nombre>~ ~(<argumentos>)~, donde los argumentos pueden ser 0 o más, separados por comas. El cuerpo de los subprogramas vuelve a ser un bloque, lo que permite anidamiento. Se devuelven los datos con la palabra clave ~devolver~.
 
-Las sentencias pueden ser un bloque, una expresión o las instrucciones de
-control (/si/, /otro/, /mientras/, /casos/). Las instrucciones de control
-contienen una expresion y una sentencia, y su sintaxis es la misma que la de C.
-Notamos que los casos en el /switch/ solo pueden ser números enteros.
+Las sentencias pueden ser un bloque, una expresión o las instrucciones de control (/si/, /otro/, /mientras/, /casos/). Las instrucciones de control contienen una expresion y una sentencia, y su sintaxis es la misma que la de C. Notamos que los casos en el /switch/ solo pueden ser números enteros.
 
 Una expresión puede encontrarse entre paréntesis, y puede ir precedida de una operación unaria o combinar dos expresiones con una operación binaria. Además puede ser una constante o un identificador.
 

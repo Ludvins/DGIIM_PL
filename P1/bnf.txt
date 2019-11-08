@@ -116,12 +116,12 @@
 <Opcion>                      ::= caso <Natural>: <Sentencias>
 <Opcion_pred>                 ::= predeterminado: <Sentencias>
 <Sentencia_break>             ::= roto;
-<Sentencia_return>            ::= devolver <Expresion>
+<Sentencia_return>            ::= devolver <Expresion>;
 <Sentencia_entrada>           ::= entrada <Lista_id>;
 <Lista_id>                    ::= <Lista_id>, <Identificador_comp>
                               |   <Identificador_comp>
 <Lista_exp_cad>               ::= <Lista_exp_cad>, <Exp_cad>
                               |   <Exp_cad>
 <Exp_cad>                     ::= <Expresion>
-                              |   <Cadena>
+                              |   <Cadena_const>
 <Sentencia_salida>            ::= salida <Lista_exp_cad>;
