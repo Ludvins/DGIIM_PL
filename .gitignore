@@ -1,4 +1,3 @@
 resources
 *.tex
-*.pdf
 .auctex-auto/
