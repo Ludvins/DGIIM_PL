@@ -1,9 +1,40 @@
 programa() {
   var
-    entero a = -3;
-    real b = -3.1+2
-    buleano c = verdadero;
-    caracter d = 'h';
+    entero a;
+    real b,c;
+    buleano d;
+    caracter e;
+    entero f[3];
   finvar
-  salida "esto es una prueba";
+
+  a = -3;
+  b = -3*2;
+  c = 3/-2;
+  d = verdadero;
+  e = 'h';
+  f = {1, 2, -3};
+  f[a * 3] = 2;
+
+  subprograma!!!!!!
+
+  si (!(- a + 3 * 5) == -3) {
+    salida "El valor de a es -3";
+  }
+  otro
+    entrada b, f[0];
+
+  casos(a - 3) {
+    caso 1:
+    caso 2:
+      salida "2";
+      roto;
+    caso 3: salida a-3;
+    predeterminado:
+    caso 3:
+      roto;
+  }
+
+  si ((a * -3 == 4) && d || !d ^ d)
+    mientras (!d)
+      a = a + 3*-2;
 }

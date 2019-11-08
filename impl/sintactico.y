@@ -1,3 +1,17 @@
+%{
+
+int yylex();  // Para evitar warning al compilar
+void yyerror(char * msg);
+
+%}
+
+/* // Elementos de yyval (ej yyval.lexema)
+%union{
+  char * lexema;
+  struct atributos atrib;
+}*/
+
+%define parse.error verbose
 
 %token CABECERA
 %token INILOCAL FINLOCAL
@@ -17,6 +31,8 @@
 %left OPBIN
 %right OPUNARIOIZQ
 %left MASMENOS
+
+%start programa
 
 %%
 
@@ -46,7 +62,8 @@ declar_de_subprogs          : /* empty */
 declar_subprog              : cabecera_subprog bloque
 ;
 
-declar_de_variables_locales : marca_ini_declar_variables
+declar_de_variables_locales : /* empty */
+                            | marca_ini_declar_variables
                               variables_locales
                               marca_fin_declar_variables
 ;
@@ -103,7 +120,7 @@ expresion                   : PARIZQ expresion PARDCH
                             | CONSTANTE
                             | NATURAL
                             | op_unario_izquierda expresion
-                            | expresion OPBIN expresion
+                            | expresion op_binario expresion
                             | agregado1D
                             | agregado2D
                             | llamada_funcion
@@ -129,6 +146,10 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
 
 op_unario_izquierda         : OPUNARIOIZQ
                             | MASMENOS
+;
+
+op_binario                  : MASMENOS
+                            | OPBIN
 ;
 
 sentencias                  : /* empty */
@@ -203,9 +224,31 @@ sentencia_salida            : COUT lista_exp_cad PYC
 
 %%
 
-#include "../P2/lex.yy.c"
+#include "lex.yy.c"
 
-int yyerror(char * msg) {
-  printf("error: %s\n", msg);
-  return 1;
+void yyerror(char * msg) {
+  printf("--> línea %d: %s\n", yylineno, msg);
+}
+
+int main(int argc, char* argv[]) {
+  char filename[256];
+
+  if (argc >= 2) {
+    strcpy(filename, argv[1]);
+    yyin = fopen (filename, "rt");
+    if (yyin == NULL) {
+      printf ("El fichero %s no se puede abrir\n", filename);
+      exit (-1);
+    }
+  }
+  else {
+    yyin = stdin;
+  }
+
+  int val = yyparse();
+
+  if (!val)
+    printf("Programa sintácticamente correcto.\n");
+  else
+    printf("Hay errores sintácticos.\n");
 }

@@ -1,0 +1,10 @@
+- Leer práctica 3 y apéndices C, D y E
+  * Estilo YACC apéndice C
+  * Recursividad a la izquierda en la gramática.
+  * Separar OPBIN (??) y establecer asociatividad y precedencia según la tabla del apéndice D
+  * Traducir ejempo apéndice E a BABAA y probarlo.
+
+- Arreglar problema con switch (no funcionan varios case)
+  * Entender el archivo y.output (make debug)
+
+- Añadir producciones de error (yyerrork)

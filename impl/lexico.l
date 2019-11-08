@@ -3,7 +3,7 @@
 //#define LEXICO
 
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 #include "y.tab.h"  // Códigos de tokens generados por YACC
 
 #ifdef LEXICO

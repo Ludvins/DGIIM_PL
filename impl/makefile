@@ -6,18 +6,18 @@ CFLAGS=-lfl
 .PHONY: clean
 
 sintactico: y.tab.c lex.yy.c
-	$(CC) $^ -o $@
+	$(CC) $< -o $@
 
-y.tab.h y.tab.c: babaa.y
+y.tab.h y.tab.c: sintactico.y
 	$(YACC) -d $<
 
-debug: babaa.y
+debug: sintactico.y
 	$(YACC) -v $<
 
 lexico: lex.yy.c y.tab.h
 	$(CC) $< -o $@ $(CFLAGS)
 
-lex.yy.c: babaa.l
+lex.yy.c: lexico.l
 	$(LEX) $<
 
 clean:
