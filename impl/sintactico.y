@@ -78,15 +78,16 @@ marca_ini_declar_variables  : INILOCAL
 marca_fin_declar_variables  : FINLOCAL
 ;
 
-variables_locales           : variables_locales cuerpo_declar_variable pyc
-                            | cuerpo_declar_variable pyc
+variables_locales           : variables_locales cuerpo_declar_variable PYC
+                            | cuerpo_declar_variable PYC
 ;
 
 cuerpo_declar_variable      : TIPO lista_id
+                            | error
 ;
 
 acceso_array                : CORCHIZQ expresion CORCHDCH
-                            | CORCHIZQ expresion coma expresion CORCHDCH
+                            | CORCHIZQ expresion COMA expresion CORCHDCH
 ;
 
 identificador_comp          : IDENTIFICADOR
@@ -94,7 +95,7 @@ identificador_comp          : IDENTIFICADOR
 ;
 
 acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH
-                            | CORCHIZQ NATURAL coma NATURAL CORCHDCH
+                            | CORCHIZQ NATURAL COMA NATURAL CORCHDCH
 ;
 
 identificador_comp_cte      : IDENTIFICADOR
@@ -108,11 +109,12 @@ lista_argumentos            : /* empty */
                             | argumentos
 ;
 
-argumentos                  : argumentos coma argumento
+argumentos                  : argumentos COMA argumento
                             | argumento
 ;
 
 argumento                   : TIPO identificador_comp_cte
+                            | error
 ;
 
 tipo_comp                   : TIPO
@@ -128,19 +130,20 @@ expresion                   : PARIZQ expresion PARDCH
                             | agregado1D
                             | agregado2D
                             | llamada_funcion
+                            | error
 ;
 
 agregado1D                  : LLAVEIZQ expresiones LLAVEDCH
 ;
 
-agregado2D                  : LLAVEIZQ listas pyc expresiones LLAVEDCH
+agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH
 ;
 
-listas                      : listas pyc expresiones
+listas                      : listas PYC expresiones
                             | expresiones
 ;
 
-expresiones                 : expresiones coma expresion
+expresiones                 : expresiones COMA expresion
                             | expresion
 ;
 
@@ -170,12 +173,13 @@ sentencia                   : bloque
                             | sentencia_llamada_funcion
                             | sentencia_entrada
                             | sentencia_salida
+                            | error
 ;
 
-sentencia_llamada_funcion   : llamada_funcion pyc
+sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
-sentencia_asignacion        : identificador_comp ASIG expresion pyc
+sentencia_asignacion        : identificador_comp ASIG expresion PYC
 ;
 
 sentencia_if                : IF PARIZQ expresion PARDCH
@@ -203,26 +207,26 @@ opciones                    : opciones opcion
                             | opcion
 ;
 
-opcion                      : CASE NATURAL pyp sentencias
+opcion                      : CASE NATURAL PYP sentencias
 ;
 
-opcion_pred                 : PREDET pyp sentencias
+opcion_pred                 : PREDET PYP sentencias
 ;
 
-sentencia_break             : BREAK pyc
+sentencia_break             : BREAK PYC
 ;
 
-sentencia_return            : RETURN expresion pyc
+sentencia_return            : RETURN expresion PYC
 ;
 
-sentencia_entrada           : CIN lista_id pyc
+sentencia_entrada           : CIN lista_id PYC
 ;
 
-lista_id                    : lista_id coma identificador_comp
+lista_id                    : lista_id COMA identificador_comp
                             | identificador_comp
 ;
 
-lista_exp_cad               : lista_exp_cad coma exp_cad
+lista_exp_cad               : lista_exp_cad COMA exp_cad
                             | exp_cad
 ;
 
@@ -230,20 +234,9 @@ exp_cad                     : expresion
                             | CADENA
 ;
 
-sentencia_salida            : COUT lista_exp_cad pyc
+sentencia_salida            : COUT lista_exp_cad PYC
 ;
 
-pyc                         : PYC
-                            | error
-;
-
-pyp                         : PYP
-                            | error
-;
-
-coma                        : COMA
-                            | error
-;
 
 %%
 

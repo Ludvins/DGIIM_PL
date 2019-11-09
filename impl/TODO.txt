@@ -1,5 +1,6 @@
-- Leer práctica 3 y apéndices C, D y E
-  * Separar OPBIN y establecer asociatividad y precedencia según la tabla del apéndice D
-  * Traducir ejempo apéndice E a BABAA y probarlo.
+- Separar OPBIN y establecer asociatividad y precedencia según la tabla del apéndice D.
+  Modificar la tabla de tokens para reflejar los cambios.
 
-- Añadir producciones de error (yyerrork), apéndice D.
+- Añadir producciones de error (tabla guión práctica 3).
+
+- Traducir ejempo apéndice E a BABAA y probarlo.
