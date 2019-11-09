@@ -19,7 +19,9 @@
 
 tipo      "entero"|"real"|"buleano"|"caracter"
 id        [a-zA-Z_][a-zA-Z0-9_]*
-opbin     [<>]=?|[=!]=|"*"|"/"|"^"|"||"|"&&"|"**"
+opig      [=!]=
+oprel     [<>]=?
+opmul     "*"|"/"|"%"|"**"
 masmenos  "+"|"-"
 cadena    \"[^\"]*\"
 
@@ -51,7 +53,14 @@ cadena    \"[^\"]*\"
 "!"                 return OPUNARIOIZQ;
 {masmenos}          {SET_ATTR(yytext); return MASMENOS;}
 {tipo}              {SET_ATTR(yytext); return TIPO;}
-{opbin}             {SET_ATTR(yytext); return OPBIN;}
+
+"||"                return ORL;
+"&&"                return ANDL;
+"^"                 return ORE;
+{opig}              {SET_ATTR(yytext); return OPIG;}
+{oprel}             {SET_ATTR(yytext); return OPREL;}
+{opmul}             {SET_ATTR(yytext); return OPMUL;}
+
 {cadena}            return CADENA;
 "verdadero"|"falso" {SET_ATTR(yytext); return CONSTANTE;}
 [0-9]+              return NATURAL;

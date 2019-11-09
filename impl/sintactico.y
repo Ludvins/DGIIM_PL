@@ -32,9 +32,15 @@ void yyerror(const char * msg);
 %token RETURN
 %token CIN COUT
 
-%left OPBIN
-%right OPUNARIOIZQ
+%left ORL
+%left ANDL
+%left ORE
+%left OPIG
+%left OPREL
 %left MASMENOS
+%left OPMUL
+%right OPUNARIOIZQ
+
 
 %start programa
 
@@ -156,7 +162,12 @@ op_unario_izquierda         : OPUNARIOIZQ
 ;
 
 op_binario                  : MASMENOS
-                            | OPBIN
+                            | ORL
+                            | ANDL
+                            | ORE
+                            | OPIG
+                            | OPREL
+                            | OPMUL
 ;
 
 sentencias                  : /* empty */
