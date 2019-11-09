@@ -50,20 +50,20 @@ cadena    \"[^\"]*\"
 "("                 return PARIZQ;
 ")"                 return PARDCH;
 "devolver"          return RETURN;
-"!"                 return OPUNARIOIZQ;
+"!"                 return NOT;
 {masmenos}          {SET_ATTR(yytext); return MASMENOS;}
 {tipo}              {SET_ATTR(yytext); return TIPO;}
 
-"||"                return ORL;
-"&&"                return ANDL;
-"^"                 return ORE;
+"||"                return OR;
+"&&"                return AND;
+"^"                 return XOR;
 {opig}              {SET_ATTR(yytext); return OPIG;}
 {oprel}             {SET_ATTR(yytext); return OPREL;}
 {opmul}             {SET_ATTR(yytext); return OPMUL;}
 
+[0-9]+              return NATURAL;
 {cadena}            return CADENA;
 "verdadero"|"falso" {SET_ATTR(yytext); return CONSTANTE;}
-[0-9]+              return NATURAL;
 [0-9]+\.[0-9]+      {SET_ATTR("real_num"); return CONSTANTE;}
 \'[^\']\'           {SET_ATTR("cte_caracter"); return CONSTANTE;}
 {id}                return IDENTIFICADOR;

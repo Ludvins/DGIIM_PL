@@ -32,14 +32,14 @@ void yyerror(const char * msg);
 %token RETURN
 %token CIN COUT
 
-%left ORL
-%left ANDL
-%left ORE
+%left OR
+%left AND
+%left XOR
 %left OPIG
 %left OPREL
 %left MASMENOS
 %left OPMUL
-%right OPUNARIOIZQ
+%right NOT
 
 
 %start programa
@@ -128,11 +128,18 @@ tipo_comp                   : TIPO
 ;
 
 expresion                   : PARIZQ expresion PARDCH
+                            | NOT expresion
+                            | MASMENOS expresion
+                            | expresion OR expresion
+                            | expresion AND expresion
+                            | expresion XOR expresion
+                            | expresion MASMENOS expresion
+                            | expresion OPIG expresion
+                            | expresion OPREL expresion
+                            | expresion OPMUL expresion
                             | identificador_comp
                             | CONSTANTE
                             | NATURAL
-                            | op_unario_izquierda expresion
-                            | expresion op_binario expresion
                             | agregado1D
                             | agregado2D
                             | llamada_funcion
@@ -155,19 +162,6 @@ expresiones                 : expresiones COMA expresion
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
                             | IDENTIFICADOR PARIZQ PARDCH
-;
-
-op_unario_izquierda         : OPUNARIOIZQ
-                            | MASMENOS
-;
-
-op_binario                  : MASMENOS
-                            | ORL
-                            | ANDL
-                            | ORE
-                            | OPIG
-                            | OPREL
-                            | OPMUL
 ;
 
 sentencias                  : /* empty */

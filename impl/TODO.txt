@@ -1,5 +1,4 @@
-- Separar OPBIN y establecer asociatividad y precedencia según la tabla del apéndice D.
-  Modificar la tabla de tokens para reflejar los cambios.
+- Modificar tabla de tokens para separar OPBIN.
 
 - Añadir producciones de error (tabla guión práctica 3).
 
