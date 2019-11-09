@@ -2,8 +2,6 @@
 // Descomentar la siguiente línea si queremos hacer únicamente análisis léxico
 //#define LEXICO
 
-#include <stdio.h>
-#include <string.h>
 #include "y.tab.h"  // Códigos de tokens generados por YACC
 
 #ifdef LEXICO
@@ -21,7 +19,7 @@
 
 tipo      "entero"|"real"|"buleano"|"caracter"
 id        [a-zA-Z_][a-zA-Z0-9_]*
-opbin     [<>]=?|[=!]=|"*"|"/"|"^"|"||"|"&&"
+opbin     [<>]=?|[=!]=|"*"|"/"|"^"|"||"|"&&"|"**"
 masmenos  "+"|"-"
 cadena    \"[^\"]*\"
 
@@ -63,7 +61,7 @@ cadena    \"[^\"]*\"
 
 [ \t]+              ;
 \n                  ;
-.                   {; printf("(Línea %d) Error léxico: token %s no reconocido.\n",
+.                   {; printf("(Línea %d) error léxico: token %s no reconocido.\n",
                               yylineno, yytext);}
 
 %%
@@ -71,17 +69,18 @@ cadena    \"[^\"]*\"
 // Solo se ejecuta el main cuando estamos haciendo únicamente análisis léxico
 #ifdef LEXICO
   int main(int argc, char* argv[]) {
-    char filename[256];
-
     if (argc >= 2) {
-      strcpy(filename, argv[1]);
-      yyin = fopen (filename, "rt");
+      yyin = fopen (argv[1], "rt");
       if (yyin == NULL) {
-        printf ("El fichero %s no se puede abrir\n", filename);
-        exit (-1);
+        printf ("El fichero %s no se puede abrir\n", argv[1]);
+        exit (1);
+      }
+      else {
+        printf("Leyendo fichero '%s'...\n", argv[1]);
       }
     }
     else {
+      printf("Leyendo entrada estándar...\n");
       yyin = stdin;
     }
 

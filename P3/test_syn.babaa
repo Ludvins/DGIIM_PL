@@ -3,22 +3,38 @@ programa() {
     entero a;
     real b,c;
     buleano d;
-    caracter e;
-    entero f[3];
+    caracter _e;
+    entero f[3], g[3, 5];
   finvar
+
+  entero[3, 5] func(entero v, entero w) {
+    devolver v ** (v * v) + w;
+  }
+
+  entero func2() {
+    var
+      entero a;
+    finvar
+    a = 2;
+
+    devolver a;
+  }
+
+  func2();
 
   a = -3;
   b = -3*2;
   c = 3/-2;
   d = verdadero;
-  e = 'h';
+  _e = 'h';
   f = {1, 2, -3};
+  g = {1, 1, 1 ; 1, 1, 1; 1, 1, 1};
   f[a * 3] = 2;
-
-  subprograma!!!!!!
+  g[3*a-2] = 2;
 
   si (!(- a + 3 * 5) == -3) {
     salida "El valor de a es -3";
+    g = func(3, 5);
   }
   otro
     entrada b, f[0];
@@ -30,8 +46,6 @@ programa() {
       roto;
     caso 3: salida a-3;
     predeterminado:
-    caso 3:
-      roto;
   }
 
   si ((a * -3 == 4) && d || !d ^ d)

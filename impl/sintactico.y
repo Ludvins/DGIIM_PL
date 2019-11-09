@@ -1,7 +1,11 @@
 %{
+#include <stdio.h>
+#include <string.h>
+
+#define YYDEBUG 0
 
 int yylex();  // Para evitar warning al compilar
-void yyerror(char * msg);
+void yyerror(const char * msg);
 
 %}
 
@@ -74,15 +78,15 @@ marca_ini_declar_variables  : INILOCAL
 marca_fin_declar_variables  : FINLOCAL
 ;
 
-variables_locales           : variables_locales cuerpo_declar_variable PYC
-                            | cuerpo_declar_variable PYC
+variables_locales           : variables_locales cuerpo_declar_variable pyc
+                            | cuerpo_declar_variable pyc
 ;
 
 cuerpo_declar_variable      : TIPO lista_id
 ;
 
 acceso_array                : CORCHIZQ expresion CORCHDCH
-                            | CORCHIZQ expresion COMA expresion CORCHDCH
+                            | CORCHIZQ expresion coma expresion CORCHDCH
 ;
 
 identificador_comp          : IDENTIFICADOR
@@ -90,7 +94,7 @@ identificador_comp          : IDENTIFICADOR
 ;
 
 acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH
-                            | CORCHIZQ NATURAL COMA NATURAL CORCHDCH
+                            | CORCHIZQ NATURAL coma NATURAL CORCHDCH
 ;
 
 identificador_comp_cte      : IDENTIFICADOR
@@ -104,7 +108,7 @@ lista_argumentos            : /* empty */
                             | argumentos
 ;
 
-argumentos                  : argumento COMA argumentos
+argumentos                  : argumentos coma argumento
                             | argumento
 ;
 
@@ -112,7 +116,7 @@ argumento                   : TIPO identificador_comp_cte
 ;
 
 tipo_comp                   : TIPO
-                            | TIPO acceso_array
+                            | TIPO acceso_array_cte
 ;
 
 expresion                   : PARIZQ expresion PARDCH
@@ -129,14 +133,14 @@ expresion                   : PARIZQ expresion PARDCH
 agregado1D                  : LLAVEIZQ expresiones LLAVEDCH
 ;
 
-agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH
+agregado2D                  : LLAVEIZQ listas pyc expresiones LLAVEDCH
 ;
 
-listas                      : listas PYC expresiones
+listas                      : listas pyc expresiones
                             | expresiones
 ;
 
-expresiones                 : expresion COMA expresiones
+expresiones                 : expresiones coma expresion
                             | expresion
 ;
 
@@ -163,11 +167,15 @@ sentencia                   : bloque
                             | sentencia_switch
                             | sentencia_break
                             | sentencia_return
+                            | sentencia_llamada_funcion
                             | sentencia_entrada
                             | sentencia_salida
 ;
 
-sentencia_asignacion        : identificador_comp ASIG expresion PYC
+sentencia_llamada_funcion   : llamada_funcion pyc
+;
+
+sentencia_asignacion        : identificador_comp ASIG expresion pyc
 ;
 
 sentencia_if                : IF PARIZQ expresion PARDCH
@@ -184,34 +192,37 @@ sentencia_while             : WHILE PARIZQ expresion PARDCH sentencia
 sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch
 ;
 
-bloque_switch               : LLAVEIZQ opciones LLAVEDCH
+bloque_switch               : LLAVEIZQ opciones_y_pred LLAVEDCH
+;
+
+opciones_y_pred             : opciones opcion_pred
+                            | opciones
 ;
 
 opciones                    : opciones opcion
-                            | opcion opcion_pred
-                            | opcion_pred
+                            | opcion
 ;
 
-opcion                      : CASE NATURAL PYP sentencias
+opcion                      : CASE NATURAL pyp sentencias
 ;
 
-opcion_pred                 : PREDET PYP sentencias
+opcion_pred                 : PREDET pyp sentencias
 ;
 
-sentencia_break             : BREAK PYC
+sentencia_break             : BREAK pyc
 ;
 
-sentencia_return            : RETURN expresion PYC
+sentencia_return            : RETURN expresion pyc
 ;
 
-sentencia_entrada           : CIN lista_id PYC
+sentencia_entrada           : CIN lista_id pyc
 ;
 
-lista_id                    : lista_id COMA identificador_comp
+lista_id                    : lista_id coma identificador_comp
                             | identificador_comp
 ;
 
-lista_exp_cad               : lista_exp_cad COMA exp_cad
+lista_exp_cad               : lista_exp_cad coma exp_cad
                             | exp_cad
 ;
 
@@ -219,36 +230,25 @@ exp_cad                     : expresion
                             | CADENA
 ;
 
-sentencia_salida            : COUT lista_exp_cad PYC
+sentencia_salida            : COUT lista_exp_cad pyc
+;
+
+pyc                         : PYC
+                            | error
+;
+
+pyp                         : PYP
+                            | error
+;
+
+coma                        : COMA
+                            | error
 ;
 
 %%
 
 #include "lex.yy.c"
 
-void yyerror(char * msg) {
-  printf("--> línea %d: %s\n", yylineno, msg);
-}
-
-int main(int argc, char* argv[]) {
-  char filename[256];
-
-  if (argc >= 2) {
-    strcpy(filename, argv[1]);
-    yyin = fopen (filename, "rt");
-    if (yyin == NULL) {
-      printf ("El fichero %s no se puede abrir\n", filename);
-      exit (-1);
-    }
-  }
-  else {
-    yyin = stdin;
-  }
-
-  int val = yyparse();
-
-  if (!val)
-    printf("Programa sintácticamente correcto.\n");
-  else
-    printf("Hay errores sintácticos.\n");
+void yyerror(const char * msg) {
+  printf("(Línea %d) %s\n", yylineno, msg);
 }

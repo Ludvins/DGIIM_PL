@@ -31,7 +31,7 @@
 <Cabecera_subprog>            ::= <Tipo_comp> <Identificador>(<Lista_argumentos>)
 <Lista_argumentos>            ::= <Argumentos>
                               |
-<Argumentos>                  ::= <Argumento> , <Argumentos>
+<Argumentos>                  ::= <Argumentos> , <Argumento>
                               |   <Argumento>
 <Argumento>                   ::= <Tipo> <Identificador_comp_cte>
 <Booleano>                    ::= verdadero | falso
@@ -57,7 +57,7 @@
                               |   buleano
                               |   caracter
 <Tipo_comp>                   ::= <Tipo>
-                              |   <Tipo><Acceso_array>
+                              |   <Tipo><Acceso_array_cte>
 <Identificador>               ::= <Identificador> <Alfanum>
                               |   <Caracter>
 <Expresion>                   ::= (<Expresion>)
@@ -72,7 +72,7 @@
 <Agregado2D>                  ::= {<Listas> ; <Expresiones>}
 <Listas>                      ::= <Listas> ; <Expresiones>
                               |   <Expresiones>
-<Expresiones>                 ::= <Expresion>, <Expresiones>
+<Expresiones>                 ::= <Expresiones>, <Expresion>
                               |   <Expresion>
 <Llamada_funcion>             ::= <Identificador>(<Expresiones>)
                               |   <Identificador>()
@@ -86,6 +86,7 @@
                               |   *
                               |   /
                               |   +
+                              |   **
                               |   -
                               |   ^
                               |   <
@@ -101,18 +102,21 @@
                               |   <Sentencia switch>
                               |   <Sentencia_break>
                               |   <Sentencia_return>
+                              |   <Sentencia_llamada_funcion>
                               |   <Sentencia_entrada>
                               |   <Sentencia_salida>
+<Sentencia_llamada_funcion>   |   <Llamada_funcion>;
 <Sentencia_asignacion>        ::= <Identificador_comp> = <Expresion>;
 <Sentencia_if>                ::= si (<Expresion>) <Sentencia> <Sentencia_else>
 <Sentencia_else>              ::= otro <Sentencia>
                               |
 <Sentencia_while>             ::= mientras (<Expresion>) <Sentencia>
 <Sentencia_switch>            ::= casos (<Expresion>) <Bloque_switch>
-<Bloque_switch>               ::= { <Opciones> }
+<Bloque_switch>               ::= { <Opciones_y_pred> }
+<Opciones_y_pred>             ::= <Opciones> <Opcion_pred>
+                              |   <Opciones>
 <Opciones>                    ::= <Opciones> <Opcion>
-                              |   <Opcion> <Opcion_pred>
-                              |   <Opcion_pred>
+                              |   <Opcion>
 <Opcion>                      ::= caso <Natural>: <Sentencias>
 <Opcion_pred>                 ::= predeterminado: <Sentencias>
 <Sentencia_break>             ::= roto;
