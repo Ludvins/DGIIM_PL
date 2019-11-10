@@ -1,5 +1,8 @@
-- Modificar tabla de tokens para separar OPBIN.
-
+- Modificar tabla de tokens con la separación de OPBIN.
 - Añadir producciones de error (tabla guión práctica 3).
 
-- Traducir ejempo apéndice E a BABAA y probarlo.
+OPCIONAL (PREGUNTAR AL PROFESOR):
+
+- Añadir la regla
+      expresion --> expresion acceso_array
+  y solucionar los conflictos que aparecen.

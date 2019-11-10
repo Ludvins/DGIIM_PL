@@ -20,8 +20,8 @@ void yyerror(const char * msg);
 %token CABECERA
 %token INILOCAL FINLOCAL
 %token LLAVEIZQ LLAVEDCH
-%token CORCHIZQ CORCHDCH
 %token PARIZQ PARDCH
+%token CORCHIZQ CORCHDCH
 %token PYC COMA PYP
 %token TIPO
 %token IDENTIFICADOR
@@ -40,7 +40,6 @@ void yyerror(const char * msg);
 %left MASMENOS
 %left OPMUL
 %right NOT
-
 
 %start programa
 
@@ -127,6 +126,10 @@ tipo_comp                   : TIPO
                             | TIPO acceso_array_cte
 ;
 
+llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
+                            | IDENTIFICADOR PARIZQ PARDCH
+;
+
 expresion                   : PARIZQ expresion PARDCH
                             | NOT expresion
                             | MASMENOS expresion
@@ -158,10 +161,6 @@ listas                      : listas PYC expresiones
 
 expresiones                 : expresiones COMA expresion
                             | expresion
-;
-
-llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
-                            | IDENTIFICADOR PARIZQ PARDCH
 ;
 
 sentencias                  : /* empty */
@@ -224,7 +223,7 @@ sentencia_break             : BREAK PYC
 sentencia_return            : RETURN expresion PYC
 ;
 
-sentencia_entrada           : CIN lista_id PYC
+sentencia_entrada           : CIN CADENA COMA lista_id PYC
 ;
 
 lista_id                    : lista_id COMA identificador_comp

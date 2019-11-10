@@ -37,7 +37,7 @@ programa() {
     g = func(3, 5);
   }
   otro
-    entrada b, f[0];
+    entrada "introduce algo:", b, f[0];
 
   casos(a - 3) {
     caso 1:
