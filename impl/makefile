@@ -5,7 +5,7 @@ CFLAGS = -lfl
 YCCFLAGS = -d
 
 OBJ = obj
-.PHONY: clean sintactico lexico debug
+.PHONY: all clean sintactico lexico debug
 
 all: sintactico
 

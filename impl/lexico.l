@@ -21,7 +21,7 @@ tipo      "entero"|"real"|"buleano"|"caracter"
 id        [a-zA-Z_][a-zA-Z0-9_]*
 opig      [=!]=
 oprel     [<>]=?
-opmul     "*"|"/"|"%"|"**"
+opmul     "*"|"/"|"**"
 masmenos  "+"|"-"
 cadena    \"[^\"]*\"
 

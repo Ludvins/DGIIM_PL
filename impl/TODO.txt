@@ -1,4 +1,3 @@
-- Modificar tabla de tokens con la separación de OPBIN.
 - Añadir producciones de error (tabla guión práctica 3).
 
 OPCIONAL (PREGUNTAR AL PROFESOR):
