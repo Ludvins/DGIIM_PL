@@ -17,9 +17,9 @@
 <Cabecera_programa>           ::= programa()
 <Inicio_de_bloque>            ::= {
 <Fin_de_bloque>               ::= }
-<Variables_locales>           ::= <Variables_locales> <Cuerpo_declar_variable>;
-                              |   <Cuerpo_declar_variable>;
-<Cuerpo_declar_variable>      ::= <Tipo> <Lista_id>
+<Variables_locales>           ::= <Variables_locales> <Cuerpo_declar_variable>
+                              |   <Cuerpo_declar_variable>
+<Cuerpo_declar_variable>      ::= <Tipo> <Lista_id>;
 <Acceso_array>                ::= [<Expresion>]
                               |   [<Expresion>,<Expresion>]
 <Identificador_comp>          ::= <Identificador>

@@ -83,11 +83,11 @@ marca_ini_declar_variables  : INILOCAL
 marca_fin_declar_variables  : FINLOCAL
 ;
 
-variables_locales           : variables_locales cuerpo_declar_variable PYC
-                            | cuerpo_declar_variable PYC
+variables_locales           : variables_locales cuerpo_declar_variable
+                            | cuerpo_declar_variable
 ;
 
-cuerpo_declar_variable      : TIPO lista_id
+cuerpo_declar_variable      : TIPO lista_id PYC
                             | error
 ;
 
@@ -132,7 +132,7 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
 
 expresion                   : PARIZQ expresion PARDCH
                             | NOT expresion
-                            | MASMENOS expresion
+                            | MASMENOS expresion %prec NOT
                             | expresion OR expresion
                             | expresion AND expresion
                             | expresion XOR expresion
