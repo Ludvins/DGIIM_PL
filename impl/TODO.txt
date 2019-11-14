@@ -1,7 +1,0 @@
-- Añadir producciones de error (tabla guión práctica 3).
-
-OPCIONAL (PREGUNTAR AL PROFESOR):
-
-- Añadir la regla
-      expresion --> expresion acceso_array
-  y solucionar los conflictos que aparecen.

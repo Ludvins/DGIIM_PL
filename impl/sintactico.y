@@ -132,7 +132,7 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
 
 expresion                   : PARIZQ expresion PARDCH
                             | NOT expresion
-                            | MASMENOS expresion %prec NOT
+                            | MASMENOS expresion             %prec NOT
                             | expresion OR expresion
                             | expresion AND expresion
                             | expresion XOR expresion
