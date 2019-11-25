@@ -17,6 +17,8 @@ void yyerror(const char * msg);
 
 %define parse.error verbose
 
+// Nombres de los token
+
 %token CABECERA
 %token INILOCAL FINLOCAL
 %token LLAVEIZQ LLAVEDCH
@@ -31,6 +33,8 @@ void yyerror(const char * msg);
 %token SWITCH CASE PREDET BREAK
 %token RETURN
 %token CIN COUT
+
+// Precedencias
 
 %left OR
 %left AND
@@ -240,7 +244,6 @@ exp_cad                     : expresion
 
 sentencia_salida            : COUT lista_exp_cad PYC
 ;
-
 
 %%
 
