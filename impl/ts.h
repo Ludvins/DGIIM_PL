@@ -64,6 +64,7 @@ void insertaFuncion(char* identificador);
 void insertaParametro(char* identificador, char* nombre_dato);
 
 void insertaIf(char* etiqueta_salida, char* etiqueta_else);
+
 void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida);
 void insertaSwitch(); //TODO Parámetros
 
