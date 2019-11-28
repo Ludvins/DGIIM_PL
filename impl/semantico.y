@@ -9,6 +9,12 @@ void yyerror(const char * msg);
 
 %}
 
+/* // Elementos de yyval (ej yyval.lexema)
+%union{
+  char * lexema;
+  struct atributos atrib;
+}*/
+
 %define parse.error verbose
 
 %token CABECERA

@@ -8,10 +8,13 @@ OBJ = obj
 
 .PHONY: all clean debug
 
-all: sintactico
+all: semantico
 
 debug: YCCFLAGS += -vt
-debug: sintactico
+debug: semantico
+
+semantico: $(OBJ)/y.tab.o $(OBJ)/main.o
+	$(CC) $^ -o $@
 
 sintactico: $(OBJ)/y.tab.o $(OBJ)/main.o
 	$(CC) $^ -o $@
@@ -33,4 +36,4 @@ lex.yy.c: lexico.l y.tab.h
 
 clean:
 	-@rm -f lexico lex.yy.c
-	-@rm -f sintactico y.tab.h y.tab.c y.output $(OBJ)/*
+	-@rm -f sintactico semantico y.tab.h y.tab.c y.output $(OBJ)/*
