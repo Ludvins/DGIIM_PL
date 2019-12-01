@@ -12,7 +12,7 @@ long int tope = 0;
 /*
  * Devuelve una cadena con el tipo que corresponda en C
  */
-char * tipoCStr(TipoDato tipo) {
+char* tipoCStr(TipoDato tipo) {
     switch(tipo) {
         case entero:
         case booleano: // en C las variables booleanas son int
@@ -33,6 +33,7 @@ char * tipoCStr(TipoDato tipo) {
  * Devuelve una cadena con el tipo del parámetro
  */
 char* tipoStr(TipoDato tipo){
+
     switch (tipo) {
         case entero:
             return "entero";
@@ -57,12 +58,12 @@ char* tipoStr(TipoDato tipo){
 /* Inserta entrada en TS */
 void insertaTS(EntradaTS entrada){
 
-    if(DEBUG) {
+    if (DEBUG) {
         printf("[insertaTS] entrada con nombre '%s' en línea %d\n", entrada.nombre, linea);
         fflush(stdout);
     }
 
-    if(tope >= MAX_TS){
+    if (tope >= MAX_TS) {
         printf("[%d] Error: La tabla de símbolos está llena\n", linea);
         fflush(stdout);
         exit(2);
@@ -73,12 +74,12 @@ void insertaTS(EntradaTS entrada){
 }
 
 
-/* Halla índice de identificador de variable o procedimiento en TS
- * Nota: NO funciona con parámetro
+/* 
+ * Halla índice de identificador de variable o procedimiento en TS
 */
-int findTS(char * identificador){
+int findTS(char* identificador){
 
-    if(DEBUG){
+    if (DEBUG) {
         printf("[findTS] '%s' en línea %d\n", identificador, linea);
         fflush(stdout);
     }
