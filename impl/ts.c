@@ -338,7 +338,7 @@ void entraBloqueTS(){
         fflush(stdout);
     }
 
-    //prof++;
+    bloques_anidados++;
     const EntradaTS MARCA_BLOQUE = {marca, "[MARCA]", desconocido, 0, {NULL, NULL}, 0, 0, 0};
     insertaTS(MARCA_BLOQUE);
 
@@ -358,7 +358,7 @@ void salBloqueTS(){
         fflush(stdout);
     }
 
-    //prof--;
+    bloques_anidados--;
     for(int j = tope - 1; j >= 0; j--){
         if(TS[j].tipo_entrada == marca){
             tope = j;
