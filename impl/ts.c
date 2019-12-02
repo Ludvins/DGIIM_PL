@@ -50,7 +50,7 @@ char* imprimeTipoE(TipoEntrada tipo){
         case funcion : return "funcion";
         case variable: return "variable";
         case parametro_formal: return "parámetro";
-        case instr_control: return "instrucción de control"
+        case instr_control: return "instrucción de control";
         default: return "error";
     }
 }
