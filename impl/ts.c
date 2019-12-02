@@ -77,7 +77,7 @@ void insertaTS(EntradaTS entrada){
 /* 
  * Halla índice de identificador de variable o procedimiento en TS
 */
-int findTS(char* identificador){
+int encuentraTS(char* identificador){
 
     if (DEBUG) {
         printf("[findTS] '%s' en línea %d\n", identificador, linea);
@@ -89,4 +89,72 @@ int findTS(char* identificador){
             return j; // Devuelve primera ocurrencia de abajo a arriba
 
     return -1;
+}
+
+/*
+ * Comprueba si un identificador está duplicado en su ámbito.
+ * 0 si no es duplicado, 1 si sí lo es
+ */
+int esDuplicado(char * identificador){
+
+    for(int j = tope - 1; j >= 0; j--){
+        if (!strcmp(TS[j].nombre, identificador) && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
+            return 1;
+        if (TS[j].tipo_entrada == marca)
+            return 0;
+  }
+}
+
+/*
+ *  Lee el tipo de dato
+ */
+TipoDato leeTipoDato(char* nombre_tipo) {
+
+  if (DEBUG) {
+    printf("[leeTipoDato] Lee tipo '%s' en línea %d\n", nombre_tipo, linea);
+    fflush(stdout);
+  }
+
+  if(!strcmp(nombre_tipo, "entero"))
+    return entero;
+  else if(!strcmp(nombre_tipo, "real"))
+    return real;
+  else if(!strcmp(nombre_tipo, "booleano"))
+    return booleano;
+  else if(!strcmp(nombre_tipo, "caracter"))
+    return caracter;
+  else if(!strcmp(nombre_tipo, "array"))
+    return array;
+
+  printf("[Linea %d] Error de implementación, '%s' no es un tipo válido\n", linea, nombre_tipo);
+  return desconocido;
+}
+
+
+/*
+ *  Introduce un identificador en la tabla de símbolos
+ */
+void insertaVarTipo(char* identificador, TipoDato tipo_dato){
+
+  if (DEBUG) {
+    printf("[insertaVar] variable '%s' con tipo '%s' en línea %d\n", identificador, imprimeTipoD(tipo_dato), linea);
+    fflush(stdout);
+  }
+
+  if(esDuplicado(identificador)){
+    printf("[%d] Error semántico: Identificador duplicado '%s'\n", linea, identificador);
+    return;
+  }
+
+  EntradaTS entrada = {
+    variable,
+    strdup(identificador),
+    tipo_dato,
+    0,
+    0,
+    0,
+    0
+  };
+
+  insertaTS(entrada);
 }

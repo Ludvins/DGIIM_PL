@@ -38,19 +38,21 @@ typedef struct {
 
 #define MAX_TS 500
 
-unsigned int  TOPE = 0;   // Tope de la pila
-unsigned int  Subprog;    // Indicador de comienzo de bloque de un subprog
+unsigned int  TOPE = 0;      // Tope de la pila
+unsigned int  Subprog;       // Indicador de comienzo de bloque de un subprog
 EntradaTS     TS[MAX_TS];    // Pila de la tabla de símbolos
+extern int linea;
 
 
 typedef struct {
     int      atrib;       // Atributo del símbolo (si tiene)
-    char*    lexema;    // Nombre del lexema
-    TipoDato tipo;   // Tipo del símbolo
+    char*    lexema;      // Nombre del lexema
+    TipoDato tipo;        // Tipo del símbolo
 } Atributos;
 
 
-#define YYSTYPE Atributos // A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
+//  A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
+#define YYSTYPE Atributos
 
 // ----------------------------------------------------------------- //
 // --- Lista de funciones y procedimientos para manejo de la TS  --- //
@@ -69,15 +71,19 @@ void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida);
 void insertaSwitch(); //TODO Parámetros
 
 TipoDato tipoTS(char* identificador);
+// Lee el tipo de dato.
 TipoDato leeTipoDato(char * nombre_tipo);
 
+// Devuelve una cadena con el tipo del parámetro.
 char* tipoStr(TipoDato tipo);
-char* tipoCStr(TipoDato tipo);    // Devuelve tipo correspodiente en C
+// Devuelve una cadena con el tipo que corresponde en C
+char* tipoCStr(TipoDato tipo);
 
-int findTS(char* identificador);
+// Halla el índice de identificador de variable o procedimiento en TS
+int encuentraTS(char* identificador);
 
-char* findGotoSalida();
-char* findGotoElse();
+char* encuentraGotoSalida();
+char* encuentraGotoElse();
 
 // ---------------------------------------------------------------- //
 // ---- Fin de funciones y procedimientos para manejo de la TS ---- //
