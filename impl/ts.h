@@ -5,7 +5,8 @@ typedef enum {
   marca,            // Indica que la entrada es una marca de principio de bloque
   funcion,          // La entrada describe una funcion
   variable,         // La entrada describe una variable local
-  parametro_formal  // La entrada describe un parámetro formal de un procedimiento o función situado en una entrada anterior de la tabla.
+  parametro_formal, // La entrada describe un parámetro formal de un procedimiento o función situado en una entrada anterior de la tabla.
+  instr_control
 } TipoEntrada;
 
 
@@ -22,17 +23,20 @@ typedef enum {
   no_asignado
 } TipoDato;
 
-
+typedef struct {
+  char* EtiquetaSalida;
+  char* EtiquetaElse;
+} DescriptorDeInstrControl;
 
 typedef struct {
-    TipoEntrada  tipo_entrada;
-    char*        nombre;
-    TipoDato     tipo_dato;
-    unsigned int parametros;
-    unsigned int dimensiones;
-    unsigned int t_dim1;
-    unsigned int t_dim2;
-
+  TipoEntrada  tipo_entrada;
+  char*        nombre;
+  TipoDato     tipo_dato;
+  unsigned int parametros;
+  DescriptorDeInstrControl etiquetas_control;
+  unsigned int dimensiones;
+  unsigned int t_dim1;
+  unsigned int t_dim2;
 } EntradaTS;
 
 
@@ -53,6 +57,21 @@ typedef struct {
 
 //  A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
 #define YYSTYPE Atributos
+
+// ----------------------------------------------------------------- //
+// ----------------------- Variables Globales  --------------------- //
+// ----------------------------------------------------------------- //
+
+// Posición en la tabla de símbolos del último procedimiento
+long int ultima_funcion = -1;
+
+// Si los parámetros del último procedimiento se han insertado como variables
+int subProg = 0;
+
+// Tope de la tabla de símbolos
+long int tope = 0;
+
+
 
 // ----------------------------------------------------------------- //
 // --- Lista de funciones y procedimientos para manejo de la TS  --- //
