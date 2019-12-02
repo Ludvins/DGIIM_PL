@@ -85,9 +85,8 @@ void insertaFuncion(char* identificador);
 void insertaParametro(char* identificador, char* nombre_dato);
 
 void insertaIf(char* etiqueta_salida, char* etiqueta_else);
-
 void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida);
-void insertaSwitch(); //TODO Parámetros
+void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida);
 
 TipoDato tipoTS(char* identificador);
 // Lee el tipo de dato.

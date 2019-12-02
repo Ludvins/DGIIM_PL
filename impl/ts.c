@@ -300,13 +300,9 @@ void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida) {
     insertaTS(entrada);
 }
 
-/*
- * Inserta el descriptor de una instrucción de control repeat/until
- */
-void insertaRepeatUntil(char * etiqueta_entrada) {
-
-    if (DEBUG) {
-        printf("[insertaRepeatUntil] etiqueta de entrada '%s' en línea %d\n", etiqueta_entrada, linea);
+void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
+        if (DEBUG) {
+        printf("[insertaSwitch] etiqueta de entrada '%s' y etiqueta de salida '%s' en línea %d\n", etiqueta_entrada, etiqueta_salida, linea);
         fflush(stdout);
     }
 
@@ -314,10 +310,10 @@ void insertaRepeatUntil(char * etiqueta_entrada) {
                           "",
                           desconocido,
                           0,
-                          {NULL, etiqueta_entrada},
+                          {etiqueta_salida, etiqueta_entrada},
                           0,
                           0,
-                          0};
+                          0 };
 
     insertaTS(entrada);
 }
@@ -397,7 +393,7 @@ void salEstructuraControl(){
 
 /* Encuentra el nombre de la etiqueta de salida de la estructura de control actual
  */
-char* findGotoSalida(){
+char* encuentraGotoSalida(){
     for (int j = tope - 1; j >= 0; j--)
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaSalida;
@@ -408,7 +404,7 @@ char* findGotoSalida(){
 
 /* Encuentra el nombre de la etiqueta de else de la estructura de control actual
  */
-char* findGotoElse(){
+char* encuentraGotoElse(){
     for (int j = tope - 1; j >= 0; j--)
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaElse;
