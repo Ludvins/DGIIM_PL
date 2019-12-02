@@ -87,6 +87,7 @@ void insertaParametro(char* identificador, char* nombre_dato);
 void insertaIf(char* etiqueta_salida, char* etiqueta_else);
 void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida);
 void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida);
+void salEstructuraControl();
 
 TipoDato tipoTS(char* identificador);
 // Lee el tipo de dato.
