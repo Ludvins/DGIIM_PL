@@ -43,7 +43,7 @@ typedef struct {
 
 #define MAX_TS 500
 #define MAX_IDS 50
-#define MAX_ELEM 50
+#define MAX_ARGS 50
 
 unsigned int  TOPE = 0;            // Tope de la pila
 unsigned int  Subprog;             // Indicador de comienzo de bloque de un subprog
@@ -58,16 +58,16 @@ typedef struct {
 } Ids;
 
 typedef struct {
-  int tope_elem;
-  TipoDato tipos[MAX_ELEM];
-} Elem;
+  int tope_arg;
+  TipoDato lista_tipos[MAX_ARGS];
+} Args;
 
 typedef struct {
   int      atrib;       // Atributo del símbolo (si tiene)
   char*    lexema;      // Nombre del lexema
   TipoDato tipo;        // Tipo del símbolo
   Ids      lid;         // Lista de identificadores
-  Args     larg;        // Lista de argumentos
+  Args     larg;        // Lista de tipos de argumentos
 } Atributos;
 
 //  A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
@@ -80,9 +80,9 @@ typedef struct {
 void entraBloqueTS();
 void salBloqueTS();
 
-void insertaVar(char* identificador, char* nombre_dato);
+void insertaVar(char* identificador, char* nombre_tipo);
 void insertaFuncion(char* identificador);
-void insertaParametro(char* identificador, char* nombre_dato);
+void insertaParametro(char* identificador, char* nombre_tipo);
 
 void insertaIf(char* etiqueta_salida, char* etiqueta_else);
 void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida);

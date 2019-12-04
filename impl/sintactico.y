@@ -19,15 +19,15 @@ void yyerror(const char * msg);
 
 // Nombres de los token
 
-%token CABECERA
+%tokenCABECERA
 %token INILOCAL FINLOCAL
 %token LLAVEIZQ LLAVEDCH
 %token PARIZQ PARDCH
 %token CORCHIZQ CORCHDCH
 %token PYC COMA PYP
-%token TIPO
-%token IDENTIFICADOR
-%token NATURAL CONSTANTE CADENA
+%token <lexema> TIPO
+%token <lexema> IDENTIFICADOR
+%token <lexema> NATURAL CONSTANTE CADENA
 %token ASIG
 %token IF ELSE WHILE
 %token SWITCH CASE PREDET BREAK
@@ -65,10 +65,10 @@ bloque                      : inicio_de_bloque
 cabecera_programa           : CABECERA
 ;
 
-inicio_de_bloque            : LLAVEIZQ
+inicio_de_bloque            : LLAVEIZQ {entraBloqueTS();}
 ;
 
-fin_de_bloque               : LLAVEDCH
+fin_de_bloque               : LLAVEDCH {salBloqueTS();}
 ;
 
 declar_de_subprogs          : /* empty */
@@ -114,25 +114,42 @@ acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH
                             | CORCHIZQ NATURAL COMA NATURAL CORCHDCH
 ;
 
-identificador_comp_cte      : IDENTIFICADOR
-                            | IDENTIFICADOR acceso_array_cte
+identificador_comp_cte      : IDENTIFICADOR {$$.lexema = $1}
+                            | IDENTIFICADOR acceso_array_cte {$$.lexema = $1}
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
+                            // TODO Modificar insertaFuncion para añadir el tipo que devuelve y
+                            // modificar tipo_comp para conseguir dicho tipo
                             insertaFuncion($2);
-                            } lista_argumentos PARDCH
+                            } lista_argumentos {
+                            // TODO Comprobar que efectivamente la lista de args es $5
+                            for (int i=0; i<$5.lid.tope_id; i++){
+                                 insertaParametro($5.lid.lista_ids[i], $5.larg.lista_tipos[i])
+                            }
+                            } PARDCH
 ;
 
 lista_argumentos            : /* empty */
                             | argumentos
-                            /* TODO Aquí deberíamos introducir los argumentos en la ts */
 ;
 
-argumento                  : argumentos COMA argumento
-                            | argumento
+argumentos                  : argumentos COMA argumento {
+                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo
+                            $$.lid.lista_ids[$$.lid.tope_id++] = $3.lexema;
+                            }
+                            | argumento {
+                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo
+                            $$.lid.lista_ids[$$.lid.tope_id++] = $1.lexema;
+                            }
 ;
 
-argumento                   : TIPO identificador_comp_cte
+argumento                   : TIPO identificador_comp_cte {
+                            // TODO Problema, como saber si es una array o no
+                            // Posible solución: Añadir parámetro a Atributos
+                            $$.tipo = leerTipoDato($1);
+                            $$.lexema = $2.lexema;
+                            }
                             | error
 ;
 
