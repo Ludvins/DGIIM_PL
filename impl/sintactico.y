@@ -9,11 +9,11 @@ void yyerror(const char * msg);
 
 %}
 
-/* // Elementos de yyval (ej yyval.lexema)
+// Elementos de yyval
 %union{
   char * lexema;
   struct atributos atrib;
-}*/
+}
 
 %define parse.error verbose
 
@@ -33,6 +33,9 @@ void yyerror(const char * msg);
 %token SWITCH CASE PREDET BREAK
 %token RETURN
 %token CIN COUT
+
+%type <atrib> lista_id
+%type <atrib> expresion
 
 // Precedencias
 
@@ -91,7 +94,11 @@ variables_locales           : variables_locales cuerpo_declar_variable
                             | cuerpo_declar_variable
 ;
 
-cuerpo_declar_variable      : TIPO lista_id PYC
+cuerpo_declar_variable      : TIPO lista_id {
+                            for (int i=0; i<$2.lid.tope_id; i++){
+                                insertaVar($2.lid.lista_ids[i], $1);
+                            }
+                            } PYC
                             | error
 ;
 
@@ -111,14 +118,17 @@ identificador_comp_cte      : IDENTIFICADOR
                             | IDENTIFICADOR acceso_array_cte
 ;
 
-cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ lista_argumentos PARDCH
+cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
+                            insertaFuncion($2);
+                            } lista_argumentos PARDCH
 ;
 
 lista_argumentos            : /* empty */
                             | argumentos
+                            /* TODO Aquí deberíamos introducir los argumentos en la ts */
 ;
 
-argumentos                  : argumentos COMA argumento
+argumento                  : argumentos COMA argumento
                             | argumento
 ;
 
@@ -130,26 +140,99 @@ tipo_comp                   : TIPO
                             | TIPO acceso_array_cte
 ;
 
-llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH
+llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
+                            $$.tipo = tipoTS($1)
+                            }
                             | IDENTIFICADOR PARIZQ PARDCH
 ;
 
-expresion                   : PARIZQ expresion PARDCH
-                            | NOT expresion
-                            | MASMENOS expresion             %prec NOT
-                            | expresion OR expresion
-                            | expresion AND expresion
-                            | expresion XOR expresion
-                            | expresion MASMENOS expresion
-                            | expresion OPIG expresion
-                            | expresion OPREL expresion
-                            | expresion OPMUL expresion
-                            | identificador_comp
-                            | CONSTANTE
-                            | NATURAL
-                            | agregado1D
-                            | agregado2D
-                            | llamada_funcion
+expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
+                            | NOT expresion {
+                            if ($2.tipo == booleano)
+                                $$.tipo = booleano;
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | MASMENOS expresion {
+                            if (esNumero($2.tipo))
+                                $$.tipo = $2.tipo;
+                            }            %prec NOT
+                            | expresion OR expresion {
+                            if ($1.tipo == booleano && $3.tipo == booleano)
+                                $$.tipo = booleano;
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | expresion AND expresion {
+                            if ($1.tipo == booleano && $3.tipo == booleano)
+                                $$.tipo = booleano;
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | expresion XOR expresion {
+                            if ($1.tipo == booleano && $3.tipo == booleano)
+                                $$.tipo = booleano;
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | expresion MASMENOS expresion {
+                            if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                if ($1.tipo == real || $3.tipo == real)
+                                    $$.tipo = real;
+                                else
+                                    $$.tipo = entero;
+                            }
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | expresion OPIG expresion {
+                            // TODO Pensar
+                            if ($1.tipo == $3.tipo)
+                                $$.tipo = booleano;
+                            else
+                                $$.tipo = desconocido;
+                            }
+                            | expresion OPREL expresion {
+                            if (esNumero($1.tipo) && esNumero($3.tipo))
+                                $$.tipo = booleano;
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | expresion OPMUL expresion {
+                            if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                if ($1.tipo == real || $3.tipo == real)
+                                    $$.tipo = real;
+                                else
+                                    $$.tipo = entero;
+                            }
+                            else
+                                // TODO Mostrar mensaje de error?
+                                $$.tipo = desconocido;
+                            }
+                            | identificador_comp {
+                            $$.tipo = $1.tipo
+                            }
+                            | CONSTANTE {
+                            $$.tipo = getTipoConstante($1);
+                            }
+                            | NATURAL{
+                            $$.tipo = entero;
+                            }
+                            | agregado1D {
+                            $$.tipo = $1.tipo
+                            }
+                            | agregado2D {
+                            $$.tipo = $1.tipo
+                            }
+                            | llamada_funcion {
+                            $$.tipo = tipoTS()
+                            }
                             | error
 ;
 

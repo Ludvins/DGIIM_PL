@@ -9,7 +9,6 @@ typedef enum {
   instr_control
 } TipoEntrada;
 
-
 // Tipo de dato.
 // Sólo aplicable cuando sea función, variable o parametroFormal
 
@@ -18,7 +17,10 @@ typedef enum {
   real,
   booleano,
   caracter,
-  array,
+  arrayentero,
+  arrayreal,
+  arraybooleano,
+  arraycaracter,
   desconocido,
   no_asignado
 } TipoDato;
@@ -38,7 +40,6 @@ typedef struct {
   unsigned int t_dim1;
   unsigned int t_dim2;
 } EntradaTS;
-
 
 #define MAX_TS 500
 #define MAX_IDS 50
@@ -66,9 +67,8 @@ typedef struct {
   char*    lexema;      // Nombre del lexema
   TipoDato tipo;        // Tipo del símbolo
   Ids      lid;         // Lista de identificadores
-  Elem     el;          // Lista de lementos
+  Args     larg;        // Lista de argumentos
 } Atributos;
-
 
 //  A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
 #define YYSTYPE Atributos
@@ -108,5 +108,26 @@ char* encuentraGotoElse();
 // ---- Fin de funciones y procedimientos para manejo de la TS ---- //
 // ---------------------------------------------------------------- //
 
+// ----------------------------------------------------------------- //
+// ----------------- Lista de funciones auxiliares ----------------- //
+// ----------------------------------------------------------------- //
+int esNumero(TipoDato tipo){
+    if (tipo == entero || tipo == real)
+        return 1;
+    else
+        return 0;
+}
+
+TipoDato getTipoConstante(char* constante){
+    switch(constante[0]){
+        case 'v':
+        case 'f':
+            return booleano;
+        case '\'':
+            return caracter;
+        default:
+            return real;
+    }
+}
 
 #endif // __TS_H_
