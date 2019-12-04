@@ -290,15 +290,28 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 sentencia_asignacion        : identificador_comp ASIG expresion PYC
 ;
 
-sentencia_if                : IF PARIZQ expresion PARDCH
-                              sentencia sentencia_else
+sentencia_if                : IF {
+  char * e_salida = etiqueta();
+  char * e_else   = etiqueta();
+  insertaIf(e_salida, e_else);
+ } PARIZQ expresion PARDCH {
+  compruebaCondicion("if", $4.tipo);
+ } sentencia sentencia_else {salEstructuraControl();}
 ;
 
 sentencia_else              : /* empty */
                             | ELSE sentencia
 ;
 
-sentencia_while             : WHILE PARIZQ expresion PARDCH sentencia
+sentencia_while             : WHILE {
+  char * e_entrada = etiqueta();
+  char * e_salida  = etiqueta();
+  insertaWhile(e_entrada, e_salida);
+ } PARIZQ {
+   compruebaCondicion("while", $4.tipo);
+ } expresion PARDCH sentencia {
+   salEstructuraControl();
+ }
 ;
 
 sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch
@@ -327,11 +340,32 @@ sentencia_break             : BREAK PYC
 sentencia_return            : RETURN expresion PYC
 ;
 
-sentencia_entrada           : CIN CADENA COMA lista_id PYC
+sentencia_entrada           : CIN CADENA COMA lista_id PYC {
+  for(int i=0; i < $4.lid.tope_id; ++i) {
+    char * id = $4.lid.lista_ids[i];
+    TipoDato tipo = tipoTS(id);
+    char * str_tipo;
+    switch(tipo) {
+      case booleano: // Los booleanos se leerán como 0 o 1 // TODO: ¿hacer que se lea como True o False?
+        // TODO: un valor booleano distinto puede provocar errores tras hacer operaciones lógicas con él, ¿gestionar?
+      case entero:
+        str_tipo = "i"; // Podrá leer enteros con signo en formato decimal (por defecto) o hexadecimal (si empieza por 0x)
+        break;
+      case real:
+        str_tipo = "lf";
+        break;
+      case caracter:
+        str_tipo = "c";
+        break;
+      default:
+        str_tipo = "i"; // TODO: lista o tipo desconocido; imprimir correctamente o provocar mensaje de error de algún tipo
+    }
+  }
+ }
 ;
 
-lista_id                    : lista_id COMA identificador_comp
-                            | identificador_comp
+lista_id                    : lista_id COMA identificador_comp {$$.lid.lista_ids[$$.lid.tope_id] = $3;$$.lid.tope_id+=1;}
+                            | identificador_comp {$$.lid.lista_ids[$$.lid.tope_id] = $1;$$.lid.tope_id+=1;}
 ;
 
 lista_exp_cad               : lista_exp_cad COMA exp_cad
