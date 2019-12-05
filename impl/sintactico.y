@@ -9,12 +9,6 @@ void yyerror(const char * msg);
 
 %}
 
-// Elementos de yyval
-%union{
-  char * lexema;
-  struct atributos atrib;
-}
-
 %define parse.error verbose
 
 // Nombres de los token
@@ -25,19 +19,14 @@ void yyerror(const char * msg);
 %token PARIZQ PARDCH
 %token CORCHIZQ CORCHDCH
 %token PYC COMA PYP
-%token <lexema> TIPO
-%token <lexema> IDENTIFICADOR
-%token <lexema> NATURAL CONSTANTE CADENA
+%token TIPO
+%token IDENTIFICADOR
+%token NATURAL CONSTANTE CADENA
 %token ASIG
 %token IF ELSE WHILE
 %token SWITCH CASE PREDET BREAK
 %token RETURN
 %token CIN COUT
-
-%type <atrib> lista_id
-%type <atrib> expresion
-%type <atrib> argumento
-%type <atrib> llamada_funcion
 
 // Precedencias
 
@@ -101,7 +90,7 @@ cuerpo_declar_variable      : tipo lista_id {
                             // TODO ahora mismo no estamos insertando las variables correctamente
                             // (no sabemos si son un array o no)
                             for (int i=0; i<$2.lid.tope_id; i++){
-                                insertaVar($2.lid.lista_ids[i], $1);
+                                insertaVar($2.lid.lista_ids[i], $1, $2.ldimensiones.lista_dims[i]);
                             }
                             } pyc
                             | error
