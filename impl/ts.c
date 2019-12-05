@@ -159,7 +159,7 @@ void insertaTS(EntradaTS entrada){
 /*
  *  Introduce un identificador en la tabla de símbolos
  */
-void insertaVarTipo(char* identificador, TipoDato tipo_dato){
+void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension){
 
     if (DEBUG) {
         printf("[insertaVar] variable '%s' con tipo '%s' en línea %d\n", identificador, imprimeTipoD(tipo_dato), linea);
@@ -176,16 +176,16 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato){
                           tipo_dato,
                           0,
                           {NULL, NULL},
-                          0,
+                          dimension,
                           0,
                           0 };
 
     insertaTS(entrada);
 }
 
-void insertaVar(char* identificador, char * nombre_tipo){
+void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension){
     TipoDato tipo_dato = leeTipoDato(nombre_tipo);
-    insertaVarTipo(identificador, tipo_dato);
+    insertaVarTipo(identificador, tipo_dato, dimension);
 }
 
 
@@ -320,7 +320,9 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
 // Inserta parámetros como variables en la TS
 void insertaParametrosComoVariables(){
     for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++)
-        insertaVarTipo(TS[ultima_funcion + i].nombre, TS[ultima_funcion + i].tipo_dato);
+        insertaVarTipo(
+            TS[ultima_funcion + i].nombre, TS[ultima_funcion + i].tipo_dato, TS[ultima_funcion + i].dimensiones
+        );
 }
 
 /*

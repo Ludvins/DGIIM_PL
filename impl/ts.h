@@ -57,11 +57,18 @@ typedef struct {
 } Tipos;
 
 typedef struct {
-  int      atrib;       // Atributo del símbolo (si tiene)
-  char*    lexema;      // Nombre del lexema
-  TipoDato tipo;        // Tipo del símbolo
-  Ids      lid;         // Lista de identificadores
-  Tipos    ltipos;        // Lista de tipos de argumentos
+  int       tope_dim;
+  unsigned* lista_dims[MAX_ARGS];
+} Dimensiones;
+
+typedef struct {
+  int      atrib;          // Atributo del símbolo (si tiene)
+  char*    lexema;         // Nombre del lexema
+  TipoDato tipo;           // Tipo del símbolo
+  Ids      lids;            // Lista de identificadores
+  Tipos    ltipos;          // Lista de tipos de argumentos
+  Dimensiones ldimensiones;   // Lista de dimensiones
+
 } Atributos;
 
 //  A partir de ahora, cada símbolo tiene una estructura de tipo atributos.
