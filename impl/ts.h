@@ -11,16 +11,15 @@ typedef enum {
 
 // Tipo de dato.
 // Sólo aplicable cuando sea función, variable o parametroFormal
-
 typedef enum {
   entero,
   real,
   booleano,
   caracter,
-  arrayentero,
-  arrayreal,
-  arraybooleano,
-  arraycaracter,
+  /* arrayentero, */
+  /* arrayreal, */
+  /* arraybooleano, */
+  /* arraycaracter, */
   desconocido,
   no_asignado
 } TipoDato;
