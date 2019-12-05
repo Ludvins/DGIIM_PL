@@ -29,7 +29,7 @@ int encuentraTS(char* identificador){
  * Comprueba si un identificador está duplicado en su ámbito.
  * 0 si no es duplicado, 1 si sí lo es
  */
-int esDuplicado(char * identificador){
+int esDuplicado(char* identificador){
 
     for(int j = TOPE - 1; j >= 0; j--){
         if (!strcmp(TS[j].nombre, identificador) && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
@@ -38,6 +38,17 @@ int esDuplicado(char * identificador){
             break;
     }
     return 0;
+}
+
+TipoDato tipoTS(char* identificador){
+
+    int p = encuentraTS(identificador);
+    if (p == -1)
+        return no_asignado;
+
+    return TS[p].tipo_dato;
+
+
 }
 // ---------------------------------------------------------------- //
 // --------------------------- Impresión -------------------------- //
@@ -186,11 +197,10 @@ void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension1, uns
     TipoDato tipo_dato = leeTipoDato(nombre_tipo);
     insertaVarTipo(identificador, tipo_dato, dimension1, dimension2);
 }
-
 /*
  * Inserta función en la tabla de símbolos
  */
-void insertaFuncion(char* identificador){
+void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, unsigned dim2_ret){
 
     if (DEBUG) {
         printf("[insertaFuncion] procedimiento '%s' en línea %d\n", identificador, linea);
@@ -204,11 +214,11 @@ void insertaFuncion(char* identificador){
 
     EntradaTS entrada = { funcion,
                           strdup(identificador),
-                          desconocido,
+                          tipo_ret,
                           0, // Inicialmente hay 0 parámetros
                           {NULL, NULL},
-                          0,
-                          0 };
+                          dim1_ret,
+                          dim2_ret };
 
     insertaTS(entrada);
     ultima_funcion = TOPE - 1;
@@ -248,8 +258,10 @@ void insertaParametro(char* identificador, char* nombre_tipo){
  * Inserta el descriptor de una instrucción de control if/else
  */
 void insertaIf(char* etiqueta_salida, char* etiqueta_else) {
-    if(DEBUG){
+
+    if (DEBUG){
         printf("[insertaIf] etiqueta de salida '%s'", etiqueta_salida);
+       
         if (etiqueta_else != NULL)
             printf(" y etiqueta de else '%s'", etiqueta_else);
 
