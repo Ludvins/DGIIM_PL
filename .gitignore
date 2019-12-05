@@ -1,3 +1,4 @@
 resources
 *.tex
 .auctex-auto/
+.vscode
