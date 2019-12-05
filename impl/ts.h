@@ -16,10 +16,6 @@ typedef enum {
   real,
   booleano,
   caracter,
-  /* arrayentero, */
-  /* arrayreal, */
-  /* arraybooleano, */
-  /* arraycaracter, */
   desconocido,
   no_asignado
 } TipoDato;
