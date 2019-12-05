@@ -31,7 +31,6 @@ typedef struct {
   TipoDato     tipo_dato;
   unsigned int parametros;
   DescriptorDeInstrControl etiquetas_control;
-  unsigned int dimensiones;
   unsigned int t_dim1;
   unsigned int t_dim2;
 } EntradaTS;
@@ -41,7 +40,7 @@ typedef struct {
 
 unsigned int  TOPE = 0;            // Tope de la pila
 unsigned int  Subprog;             // Indicador de comienzo de bloque de un subprog
-unsigned int  ultima_funcion = -1;  // Posición en la tabla de símbolos del último procedimiento
+int           ultima_funcion = -1;  // Posición en la tabla de símbolos del último procedimiento
 unsigned int  bloques_anidados = 0; // Numero de bloques anidados
 EntradaTS     TS[MAX_TS];          // Pila de la tabla de símbolos
 extern int    linea;

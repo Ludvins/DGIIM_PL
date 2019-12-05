@@ -159,7 +159,7 @@ void insertaTS(EntradaTS entrada){
 /*
  *  Introduce un identificador en la tabla de símbolos
  */
-void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension){
+void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1, unsigned dimension2){
 
     if (DEBUG) {
         printf("[insertaVar] variable '%s' con tipo '%s' en línea %d\n", identificador, imprimeTipoD(tipo_dato), linea);
@@ -176,18 +176,16 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension)
                           tipo_dato,
                           0,
                           {NULL, NULL},
-                          dimension,
-                          0,
-                          0 };
+                          dimension1,
+                          dimension2 };
 
     insertaTS(entrada);
 }
 
-void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension){
+void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension1, unsigned dimension2){
     TipoDato tipo_dato = leeTipoDato(nombre_tipo);
-    insertaVarTipo(identificador, tipo_dato, dimension);
+    insertaVarTipo(identificador, tipo_dato, dimension1, dimension2);
 }
-
 
 /*
  * Inserta función en la tabla de símbolos
@@ -209,7 +207,6 @@ void insertaFuncion(char* identificador){
                           desconocido,
                           0, // Inicialmente hay 0 parámetros
                           {NULL, NULL},
-                          0,
                           0,
                           0 };
 
@@ -241,8 +238,7 @@ void insertaParametro(char* identificador, char* nombre_tipo){
                           0,
                           {NULL, NULL},
                           0,
-                          0,
-                          0 };
+                          0};
 
     insertaTS(entrada);
     TS[ultima_funcion].parametros += 1;
@@ -267,7 +263,6 @@ void insertaIf(char* etiqueta_salida, char* etiqueta_else) {
                           0,
                           {etiqueta_salida, etiqueta_else},
                           0,
-                          0,
                           0 };
 
     insertaTS(entrada);
@@ -289,7 +284,6 @@ void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0,
                           0 };
 
     insertaTS(entrada);
@@ -307,7 +301,6 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0,
                           0 };
 
     insertaTS(entrada);
@@ -319,10 +312,15 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
 
 // Inserta parámetros como variables en la TS
 void insertaParametrosComoVariables(){
-    for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++)
+    for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++){
+        EntradaTS entrada = TS[ultima_funcion + i];
         insertaVarTipo(
-            TS[ultima_funcion + i].nombre, TS[ultima_funcion + i].tipo_dato, TS[ultima_funcion + i].dimensiones
+            entrada.nombre,
+            entrada.tipo_dato,
+            entrada.t_dim1,
+            entrada.t_dim2
         );
+    }
 }
 
 /*
@@ -336,7 +334,7 @@ void entraBloqueTS(){
     }
 
     bloques_anidados++;
-    const EntradaTS MARCA_BLOQUE = {marca, "[MARCA]", desconocido, 0, {NULL, NULL}, 0, 0, 0};
+    const EntradaTS MARCA_BLOQUE = {marca, "[MARCA]", desconocido, 0, {NULL, NULL}, 0, 0};
     insertaTS(MARCA_BLOQUE);
 
     if(Subprog){
