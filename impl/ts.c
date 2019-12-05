@@ -18,7 +18,7 @@ int encuentraTS(char* identificador){
         fflush(stdout);
     }
 
-    for(int j = tope - 1; j >= 0; j--)
+    for(int j = TOPE - 1; j >= 0; j--)
         if (!strcmp(TS[j].nombre, identificador) && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
             return j; // Devuelve primera ocurrencia de abajo a arriba
 
@@ -29,15 +29,26 @@ int encuentraTS(char* identificador){
  * Comprueba si un identificador está duplicado en su ámbito.
  * 0 si no es duplicado, 1 si sí lo es
  */
-int esDuplicado(char * identificador){
+int esDuplicado(char* identificador){
 
-    for(int j = tope - 1; j >= 0; j--){
+    for(int j = TOPE - 1; j >= 0; j--){
         if (!strcmp(TS[j].nombre, identificador) && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
             return 1;
         if (TS[j].tipo_entrada == marca)
             break;
     }
     return 0;
+}
+
+TipoDato tipoTS(char* identificador){
+
+    int p = encuentraTS(identificador);
+    if (p == -1)
+        return no_asignado;
+
+    return TS[p].tipo_dato;
+
+
 }
 // ---------------------------------------------------------------- //
 // --------------------------- Impresión -------------------------- //
@@ -61,7 +72,6 @@ char* imprimeTipoD(TipoDato tipo){
         case real: return "real";
         case booleano: return "booleano";
         case caracter: return "carácter";
-        case array: return "array";
         case desconocido: return "desconocido";
         default: return "error";
     }
@@ -71,7 +81,7 @@ void imprimeTS(){
     char sangria[100] = "\0";
     printf("Tabla de símbolos en la línea %d:\n", linea);
     fflush(stdout);
-    for (int i = 0; i < tope; i++) {
+    for (unsigned i = 0; i < TOPE; i++) {
 
         if (TS[i].tipo_entrada == marca) {
             strcat(sangria, "  ");
@@ -106,8 +116,6 @@ char* tipoCStr(TipoDato tipo) {
             return "double";
         case caracter:
             return "char";
-        case array:
-            return "Array";
         default:
             printf("[Línea %d] Error de implementación, %s no está asociado a ningún tipo nativo de C ni a una lista\n", linea, tipoStr(tipo));
             return "error"; // TODO: este error puede aparecer como consecuencia de una variable no declarada, en cuyo caso probablemente no debería mostrarse (ejemplo en el que aparece: b = b sin haber declarado b)
@@ -128,8 +136,6 @@ char* tipoStr(TipoDato tipo){
             return "booleano";
         case caracter:
             return "caracter";
-        case array:
-            return "array";
         case desconocido:
             return "desconocido";
         case no_asignado:
@@ -151,20 +157,20 @@ void insertaTS(EntradaTS entrada){
         fflush(stdout);
     }
 
-    if (tope >= MAX_TS) {
+    if (TOPE >= MAX_TS) {
         printf("[%d] Error: La tabla de símbolos está llena\n", linea);
         fflush(stdout);
         exit(2);
     }
 
-    TS[tope] = entrada;
-    tope++;
+    TS[TOPE] = entrada;
+    TOPE++;
 }
 
 /*
  *  Introduce un identificador en la tabla de símbolos
  */
-void insertaVarTipo(char* identificador, TipoDato tipo_dato){
+void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1, unsigned dimension2){
 
     if (DEBUG) {
         printf("[insertaVar] variable '%s' con tipo '%s' en línea %d\n", identificador, imprimeTipoD(tipo_dato), linea);
@@ -181,23 +187,20 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato){
                           tipo_dato,
                           0,
                           {NULL, NULL},
-                          0,
-                          0,
-                          0 };
+                          dimension1,
+                          dimension2 };
 
     insertaTS(entrada);
 }
 
-void insertaVar(char* identificador, char * nombre_tipo){
+void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension1, unsigned dimension2){
     TipoDato tipo_dato = leeTipoDato(nombre_tipo);
-    insertaVarTipo(identificador, tipo_dato);
+    insertaVarTipo(identificador, tipo_dato, dimension1, dimension2);
 }
-
-
 /*
  * Inserta función en la tabla de símbolos
  */
-void insertaFuncion(char* identificador){
+void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, unsigned dim2_ret){
 
     if (DEBUG) {
         printf("[insertaFuncion] procedimiento '%s' en línea %d\n", identificador, linea);
@@ -211,16 +214,15 @@ void insertaFuncion(char* identificador){
 
     EntradaTS entrada = { funcion,
                           strdup(identificador),
-                          desconocido,
+                          tipo_ret,
                           0, // Inicialmente hay 0 parámetros
                           {NULL, NULL},
-                          0,
-                          0,
-                          0 };
+                          dim1_ret,
+                          dim2_ret };
 
     insertaTS(entrada);
-    ultima_funcion = tope - 1;
-    subProg = 1; // Indica que hay que insertar parámetros como variables
+    ultima_funcion = TOPE - 1;
+    Subprog = 1; // Indica que hay que insertar parámetros como variables
 }
 
 /*
@@ -246,8 +248,7 @@ void insertaParametro(char* identificador, char* nombre_tipo){
                           0,
                           {NULL, NULL},
                           0,
-                          0,
-                          0 };
+                          0};
 
     insertaTS(entrada);
     TS[ultima_funcion].parametros += 1;
@@ -257,8 +258,10 @@ void insertaParametro(char* identificador, char* nombre_tipo){
  * Inserta el descriptor de una instrucción de control if/else
  */
 void insertaIf(char* etiqueta_salida, char* etiqueta_else) {
-    if(DEBUG){
+
+    if (DEBUG){
         printf("[insertaIf] etiqueta de salida '%s'", etiqueta_salida);
+       
         if (etiqueta_else != NULL)
             printf(" y etiqueta de else '%s'", etiqueta_else);
 
@@ -271,7 +274,6 @@ void insertaIf(char* etiqueta_salida, char* etiqueta_else) {
                           desconocido,
                           0,
                           {etiqueta_salida, etiqueta_else},
-                          0,
                           0,
                           0 };
 
@@ -294,7 +296,6 @@ void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0,
                           0 };
 
     insertaTS(entrada);
@@ -312,7 +313,6 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0,
                           0 };
 
     insertaTS(entrada);
@@ -324,8 +324,15 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
 
 // Inserta parámetros como variables en la TS
 void insertaParametrosComoVariables(){
-    for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++)
-        insertaVarTipo(TS[ultima_funcion + i].nombre, TS[ultima_funcion + i].tipo_dato);
+    for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++){
+        EntradaTS entrada = TS[ultima_funcion + i];
+        insertaVarTipo(
+            entrada.nombre,
+            entrada.tipo_dato,
+            entrada.t_dim1,
+            entrada.t_dim2
+        );
+    }
 }
 
 /*
@@ -339,12 +346,12 @@ void entraBloqueTS(){
     }
 
     bloques_anidados++;
-    const EntradaTS MARCA_BLOQUE = {marca, "[MARCA]", desconocido, 0, {NULL, NULL}, 0, 0, 0};
+    const EntradaTS MARCA_BLOQUE = {marca, "[MARCA]", desconocido, 0, {NULL, NULL}, 0, 0};
     insertaTS(MARCA_BLOQUE);
 
-    if(subProg){
+    if(Subprog){
         insertaParametrosComoVariables();
-        subProg = 0;
+        Subprog = 0;
     }
 }
 
@@ -359,9 +366,9 @@ void salBloqueTS(){
     }
 
     bloques_anidados--;
-    for(int j = tope - 1; j >= 0; j--){
+    for(int j = TOPE - 1; j >= 0; j--){
         if(TS[j].tipo_entrada == marca){
-            tope = j;
+            TOPE = j;
             return;
         }
     }
@@ -379,9 +386,9 @@ void salEstructuraControl(){
         fflush(stdout);
     }
 
-    for(int j = tope - 1; j >= 0; j--){
+    for(int j = TOPE - 1; j >= 0; j--){
         if(TS[j].tipo_entrada == instr_control){
-            tope = j;
+            TOPE = j;
             free(TS[j].etiquetas_control.EtiquetaSalida);
             free(TS[j].etiquetas_control.EtiquetaElse);
             return;
@@ -394,7 +401,7 @@ void salEstructuraControl(){
 /* Encuentra el nombre de la etiqueta de salida de la estructura de control actual
  */
 char* encuentraGotoSalida(){
-    for (int j = tope - 1; j >= 0; j--)
+    for (int j = TOPE - 1; j >= 0; j--)
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaSalida;
 
@@ -405,7 +412,7 @@ char* encuentraGotoSalida(){
 /* Encuentra el nombre de la etiqueta de else de la estructura de control actual
  */
 char* encuentraGotoElse(){
-    for (int j = tope - 1; j >= 0; j--)
+    for (int j = TOPE - 1; j >= 0; j--)
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaElse;
 
@@ -431,8 +438,6 @@ TipoDato leeTipoDato(char* nombre_tipo) {
         return booleano;
     else if(!strcmp(nombre_tipo, "caracter"))
         return caracter;
-    else if(!strcmp(nombre_tipo, "array"))
-        return array;
 
     printf("[Linea %d] Error de implementación, '%s' no es un tipo válido\n", linea, nombre_tipo);
     return desconocido;

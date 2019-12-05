@@ -183,7 +183,7 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                             if ($2.tipo == booleano)
                                 $$.tipo = booleano;
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | MASMENOS expresion {
@@ -194,21 +194,21 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                             if ($1.tipo == booleano && $3.tipo == booleano)
                                 $$.tipo = booleano;
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | expresion AND expresion {
                             if ($1.tipo == booleano && $3.tipo == booleano)
                                 $$.tipo = booleano;
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | expresion XOR expresion {
                             if ($1.tipo == booleano && $3.tipo == booleano)
                                 $$.tipo = booleano;
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | expresion MASMENOS expresion {
@@ -219,7 +219,7 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                                     $$.tipo = entero;
                             }
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | expresion OPIG expresion {
@@ -233,7 +233,7 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                             if (esNumero($1.tipo) && esNumero($3.tipo))
                                 $$.tipo = booleano;
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | expresion OPMUL expresion {
@@ -244,7 +244,7 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                                     $$.tipo = entero;
                             }
                             else
-                                // TODO Mostrar mensaje de error?
+                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
                                 $$.tipo = desconocido;
                             }
                             | identificador_comp {
