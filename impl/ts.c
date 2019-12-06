@@ -19,7 +19,6 @@ void insertaParametrosComoVariables(){
     }
 }
 
-
 void entraBloqueTS(){
 
     if(DEBUG){
@@ -37,8 +36,6 @@ void entraBloqueTS(){
     }
 }
 
-
-
 void salBloqueTS(){
     if(DEBUG){
         printf("Estoy saliendo de un bloque.\n");
@@ -52,7 +49,6 @@ void salBloqueTS(){
             return;
         }
     }
-
     printf("[Linea %d] Error de implementación, se intentó salir de un bloque cuando no hay\n", linea);
 }
 
@@ -74,7 +70,6 @@ void salEstructuraControl(){
     printf("[Linea %d] Error de implementación, se intentó salir de una estructura de control cuando no hay\n", linea);
 }
 
-
 char* encuentraGotoSalida(){
     for (int j = tope - 1; j >= 0; j--)
         if (TS[j].tipo_entrada == instr_control)
@@ -92,8 +87,6 @@ char* encuentraGotoElse(){
     printf("[Linea %d] Error de implementación, se intentó encontrar la etiqueta de else de la estructura de control actual cuando no la hay\n", linea);
     return NULL;
 }
-
-
 
 void insertaTS(EntradaTS entrada){
 
@@ -258,7 +251,7 @@ int encuentraTS(char* identificador){
 
     for(int j = tope - 1; j >= 0; j--)
         if (!strcmp(TS[j].nombre, identificador) && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
-            return j; // Devuelve primera ocurrencia de abajo a arriba
+            return j; 
 
     return -1;
 }
@@ -304,7 +297,6 @@ TipoDato strToTipodato(char* nombre_tipo) {
     printf("[Linea %d] Error de implementación, '%s' no es un tipo válido\n", linea, nombre_tipo);
     return desconocido;
 }
-
 
 char* tipodatoToStr(TipoDato tipo){
 
@@ -386,12 +378,6 @@ void imprimeTS(){
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
-
 int esNumero(TipoDato tipo){
     if (tipo == entero || tipo == real)
         return 1;
@@ -399,14 +385,12 @@ int esNumero(TipoDato tipo){
         return 0;
 }
 
-TipoDato getTipoConstante(char* constante){
-    switch(constante[0]){
-        case 'v':
-        case 'f':
-            return booleano;
-        case '\'':
-            return caracter;
-        default:
-            return real;
-    }
+TipoDato getTipoConstante(char constante){
+
+    if (constante == 'v' || constante == 'f')
+        return booleano;
+    if (constante == '\'')
+        return caracter;
+    return real;
+
 }
