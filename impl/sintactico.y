@@ -96,33 +96,48 @@ cuerpo_declar_variable      : tipo lista_id {
                             | error
 ;
 
-acceso_array                : CORCHIZQ expresion {
-                            // TODO Aquí vamos a tener que comprobar que expresión es un natural
-                            // Problema: en nuestros tipos solo tenemos el tipo entero
-                            } CORCHDCH
-                            | CORCHIZQ expresion {
-                            // TODO Same here
-                            } COMA expresion CORCHDCH
-;
-
-identificador_comp          : IDENTIFICADOR {$$.lexema = $1}
-                            | IDENTIFICADOR acceso_array {
-                            // TODO Aquí tenemos que almacenar de alguna forma que es un array
-                            // TODO Vamos a distinguir entre arrays2d y array1d?
-                            // (Creo que deberíamos aunque not sure)
-                            $$.lexema = $1
+acceso_array                : CORCHIZQ expresion CORCHDCH {
+                            $$.ndims = 1;
+                            }
+                            | CORCHIZQ expresion COMA expresion CORCHDCH {
+                            $$.ndims = 2;
                             }
 ;
 
-acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH
-                            | CORCHIZQ NATURAL COMA NATURAL CORCHDCH
+identificador_comp          : IDENTIFICADOR {
+                            $$.lexema = $1.lexema;
+                            $$.ndims = 0;
+                            }
+                            | IDENTIFICADOR acceso_array {
+                            $$.lexema = $1.lexema;
+                            $$.ndims = $2.ndims;
+                            }
+;
+
+acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH {
+                            $$.ndims = 1;
+                            $$.dim1 = strtoi($2.lexema);
+                            $$.dim2 = 0;
+                            }
+                            | CORCHIZQ NATURAL COMA NATURAL CORCHDCH {
+                            $$.ndims = 2;
+                            $$.dim1 = strtoi($2.lexema);
+                            $$.dim2 = strtoi($4.lexema);
+                            }
 ;
 
 identificador_comp_cte      : IDENTIFICADOR {
-                            // TODO lo mismo que en identificador_comp
-                            $$.lexema = $1
+                            $$.ndims = 0;
+                            $$.dim1 = 0;
+                            $$.dim2 = 0;
+                            $$.lexema = $1.lexema;
                             }
-                            | IDENTIFICADOR acceso_array_cte {$$.lexema = $1}
+                            | IDENTIFICADOR acceso_array_cte {
+                            $$.lexema = $1.lexema;
+                            $$.ndims = $2.ndims;
+                            $$.dim1 = $2.dim1;
+                            $$.dim2 = $2.dim2;
+                            }
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
@@ -399,11 +414,11 @@ sentencia_entrada           : CIN CADENA COMA lista_id PYC {
  }
 ;
 
-lista_id                    : lista_id COMA identificador_comp {
+lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lid.lista_ids[$$.lid.tope_id] = $3.lexema;
                             $$.lid.tope_id+=1;
                             }
-                            | identificador_comp {
+                            | identificador_comp_cte {
                             $$.lid.lista_ids[$$.lid.tope_id] = $1.lexema;
                             $$.lid.tope_id+=1;
                             }
