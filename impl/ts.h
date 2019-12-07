@@ -20,7 +20,7 @@ extern int    linea;                 // DEBUG. Linea de lectura del programa.
 // ----------------------------------------------------------------- //
 // ------------------- Declaración de estructuras ------------------ //
 // ----------------------------------------------------------------- //
-//
+
 /*
  * TipoEntrada
  * 
@@ -76,6 +76,7 @@ typedef struct {
 typedef struct {
   int        tope_id;
   char*      lista_ids[MAX_ARGS];
+  unsigned*  lista_ndims[MAX_ARGS];
   unsigned*  lista_dims1[MAX_ARGS];
   unsigned*  lista_dims2[MAX_ARGS];
 } Ids;
@@ -85,7 +86,6 @@ typedef struct {
  *
  * Lista de tipos
  */
-
 typedef struct {
   int        tope_tipo;
   TipoDato   lista_tipos[MAX_ARGS];
@@ -219,6 +219,8 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida);
  * Halla el índice de identificador de variable o función en TS.
  * 
  * Devuelve la primera ocurrencia de abajo a arriba.
+ * 
+ * En caso de no existir, devuelve -1.
  */
 int encuentraTS(char* identificador);
 
@@ -234,6 +236,11 @@ TipoDato encuentraTipo(char* identificador);
  */
 int esDuplicado(char* identificador);
 
+/*
+ * Devuelve el número de dimensiones de la entrada de la tabla de símbolos
+ *  con identificador ´identificador´. 
+ */
+unsigned nDimensiones(char* identificador);
 
 // ---------------------------------------------------------------- //
 // ---- Fin de funciones y procedimientos para manejo de la TS ---- //
