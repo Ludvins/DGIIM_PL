@@ -234,6 +234,11 @@ TipoDato encuentraTipo(char* identificador);
  */
 int esDuplicado(char* identificador);
 
+/*
+ * Devuelve el número de dimensiones de la entrada de la tabla de símbolos
+ *  con identificador ´identificador´. 
+ */
+unsigned nDimensiones(char* identificador);
 
 // ---------------------------------------------------------------- //
 // ---- Fin de funciones y procedimientos para manejo de la TS ---- //

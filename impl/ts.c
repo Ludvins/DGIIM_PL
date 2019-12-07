@@ -122,7 +122,8 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1
                           0,
                           {NULL, NULL},
                           dimension1,
-                          dimension2 };
+                          dimension2 
+                        };
 
     insertaTS(entrada);
 }
@@ -150,7 +151,8 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
                           0, // Inicialmente hay 0 parámetros
                           {NULL, NULL},
                           dim1_ret,
-                          dim2_ret };
+                          dim2_ret 
+                        };
 
     insertaTS(entrada);
     ultima_funcion = tope - 1;
@@ -177,7 +179,8 @@ void insertaParametro(char* identificador, char* nombre_tipo){
                           0,
                           {NULL, NULL},
                           0,
-                          0};
+                          0
+                        };
 
     insertaTS(entrada);
     TS[ultima_funcion].parametros += 1;
@@ -201,7 +204,8 @@ void insertaIf(char* etiqueta_salida, char* etiqueta_else) {
                           0,
                           {etiqueta_salida, etiqueta_else},
                           0,
-                          0 };
+                          0 
+                        };
 
     insertaTS(entrada);
 }
@@ -219,7 +223,8 @@ void insertaWhile(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0 };
+                          0 
+                        };
 
     insertaTS(entrada);
 }
@@ -236,7 +241,8 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
                           0,
                           {etiqueta_salida, etiqueta_entrada},
                           0,
-                          0 };
+                          0 
+                        };
 
     insertaTS(entrada);
 }
@@ -244,7 +250,7 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida) {
 int encuentraTS(char* identificador){
 
     if (DEBUG) {
-        printf("[findTS] '%s' en línea %d\n", identificador, linea);
+        printf("[encuentraTS] '%s' en línea %d\n", identificador, linea);
         fflush(stdout);
     }
 
@@ -266,10 +272,14 @@ TipoDato encuentraTipo(char* identificador){
 
 int esDuplicado(char* identificador){
 
+    if (DEBUG) {
+        printf("[esDuplicado] '%s' en línea %d\n", identificador, linea);
+        fflush(stdout);
+    }
+
     for(int j = tope - 1; j >= 0; j--){
         if (!strcmp(TS[j].nombre, identificador)
-            &&
-            (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
+          && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
             return 1;
         if (TS[j].tipo_entrada == marca)
             break;
@@ -277,20 +287,41 @@ int esDuplicado(char* identificador){
     return 0;
 }
 
+unsigned nDimensiones(char* dimensiones){
+
+    if (DEBUG) {
+        printf("[nDimensiones] '%s' en línea %d\n", identificador, linea);
+        fflush(stdout);
+    }
+    int n_dims = 0;
+
+    for(int j = tope - 1; j >= 0; j--)
+        if (strcmp(TS[j].nombre, identificador) 
+            && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion))
+            
+            if (TS[j].t_dim1 != 0)
+                n_dims++;
+            if (TS[j].t_dims2 != 0)
+                n_dims++;
+            break;
+
+    return n_dims;
+}
+
 TipoDato strToTipodato(char* nombre_tipo) {
 
     if (DEBUG) {
-        printf("[leeTipoDato] Lee tipo '%s' en línea %d\n", nombre_tipo, linea);
+        printf("[strToTipodato] Lee tipo '%s' en línea %d\n", nombre_tipo, linea);
         fflush(stdout);
     }
 
     if(!strcmp(nombre_tipo, "entero"))
         return entero;
-    else if(!strcmp(nombre_tipo, "real"))
+    if(!strcmp(nombre_tipo, "real"))
         return real;
-    else if(!strcmp(nombre_tipo, "booleano"))
+    if(!strcmp(nombre_tipo, "booleano"))
         return booleano;
-    else if(!strcmp(nombre_tipo, "caracter"))
+    if(!strcmp(nombre_tipo, "caracter"))
         return caracter;
 
     printf("[Linea %d] Error de implementación, '%s' no es un tipo válido\n", linea, nombre_tipo);
@@ -299,6 +330,10 @@ TipoDato strToTipodato(char* nombre_tipo) {
 
 char* tipodatoToStr(TipoDato tipo){
 
+    if (DEBUG) {
+        printf("[tipodatoToStr] Lee tipo '%s' en línea %d\n", nombre_tipo, linea);
+        fflush(stdout);
+    }
     switch (tipo) {
         case entero:
             return "entero";
@@ -321,7 +356,7 @@ char* tipodatoToStrC(TipoDato tipo) {
 
     switch(tipo) {
         case entero:
-        case booleano: // en C las variables booleanas son int
+        case booleano:
             return "int";
         case real:
             return "double";
@@ -329,29 +364,41 @@ char* tipodatoToStrC(TipoDato tipo) {
             return "char";
         default:
             printf("[Línea %d] Error de implementación, %s no está asociado a ningún tipo nativo de C ni a una lista\n", linea, tipodatoToStr(tipo));
-            return "error"; // TODO: este error puede aparecer como consecuencia de una variable no declarada, en cuyo caso probablemente no debería mostrarse (ejemplo en el que aparece: b = b sin haber declarado b)
+            return "error";
     }
 }
 
 char* imprimeTipoE(TipoEntrada tipo){
     switch (tipo) {
-        case marca: return "marca";
-        case funcion : return "funcion";
-        case variable: return "variable";
-        case parametro_formal: return "parámetro";
-        case instr_control: return "instrucción de control";
-        default: return "error";
+        case marca: 
+            return "marca";
+        case funcion: 
+            return "funcion";
+        case variable: 
+            return "variable";
+        case parametro_formal: 
+            return "parámetro";
+        case instr_control: 
+            return "instrucción de control";
+        default: 
+            return "error";
     }
 }
 
 char* imprimeTipoD(TipoDato tipo){
     switch (tipo) {
-        case entero: return "entero";
-        case real: return "real";
-        case booleano: return "booleano";
-        case caracter: return "carácter";
-        case desconocido: return "desconocido";
-        default: return "error";
+        case entero: 
+            return "entero";
+        case real: 
+            return "real";
+        case booleano: 
+            return "booleano";
+        case caracter: 
+            return "carácter";
+        case desconocido: 
+            return "desconocido";
+        default: 
+            return "error";
     }
 }
 
