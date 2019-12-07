@@ -100,6 +100,9 @@ typedef struct {
   TipoDato    tipo;            // Tipo del símbolo
   Ids         lids;            // Lista de identificadores
   Tipos       ltipos;          // Lista de tipos de argumentos
+  unsigned    n_dims;          // Número de dimensiones.
+  unsigned    dim1;            // Tamaño de la primera dimensión.
+  unsigned    dim2;            // Tamaño de la segunda dimensión.
 } Atributos;
 
 EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
