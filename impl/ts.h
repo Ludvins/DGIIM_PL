@@ -20,7 +20,7 @@ extern int    linea;                 // DEBUG. Linea de lectura del programa.
 // ----------------------------------------------------------------- //
 // ------------------- Declaración de estructuras ------------------ //
 // ----------------------------------------------------------------- //
-//
+
 /*
  * TipoEntrada
  * 
@@ -85,7 +85,6 @@ typedef struct {
  *
  * Lista de tipos
  */
-
 typedef struct {
   int        tope_tipo;
   TipoDato   lista_tipos[MAX_ARGS];
@@ -219,6 +218,8 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida);
  * Halla el índice de identificador de variable o función en TS.
  * 
  * Devuelve la primera ocurrencia de abajo a arriba.
+ * 
+ * En caso de no existir, devuelve -1.
  */
 int encuentraTS(char* identificador);
 
