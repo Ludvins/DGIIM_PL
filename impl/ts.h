@@ -289,12 +289,13 @@ void imprimeTS();
 int esNumero(TipoDato tipo);
 
 /*
- * Devuelve el tipo de constante. 
+ * Devuelve el tipo de dato de la constante.
  * 
- * Si es ´v´ o ´f´, devuelve ´booleano´.
- * Si es ´\´, devuelve caracter.
- * En otro caso devuelve ´real´.
+ * Comprueba el primer caracter de la constante:
+ *  Si es ´v´ o ´f´, devuelve ´booleano´.
+ *  Si es ´\´, devuelve caracter.
+ *  En otro caso devuelve ´real´.
  */
-TipoDato getTipoConstante(char constante);
+TipoDato getTipoConstante(char* constante);
 
 #endif // __TS_H_

@@ -6,7 +6,6 @@
 
 #define DEBUG 0
 
-
 void insertaParametrosComoVariables(){
     for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++){
         EntradaTS entrada = TS[ultima_funcion + i];
