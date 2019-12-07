@@ -267,7 +267,7 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                             $$.tipo = $1.tipo;
                             }
                             | CONSTANTE {
-                            $$.tipo = getTipoConstante($1[0]);
+                            $$.tipo = getTipoConstante($1);
                             }
                             | NATURAL{
                             $$.tipo = entero;

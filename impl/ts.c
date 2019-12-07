@@ -385,11 +385,11 @@ int esNumero(TipoDato tipo){
         return 0;
 }
 
-TipoDato getTipoConstante(char constante){
-
-    if (constante == 'v' || constante == 'f')
+TipoDato getTipoConstante(char* constante){
+    c = constante[0]
+    if (c == 'v' || c == 'f')
         return booleano;
-    if (constante == '\'')
+    if (c == '\'')
         return caracter;
     return real;
 
