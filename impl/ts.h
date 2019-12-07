@@ -76,7 +76,7 @@ typedef struct {
 typedef struct {
   int        tope_id;
   char*      lista_ids[MAX_ARGS];
-  unsigned   lista_ndims[MAX_ARGS];
+  unsigned*  lista_ndims[MAX_ARGS];
   unsigned*  lista_dims1[MAX_ARGS];
   unsigned*  lista_dims2[MAX_ARGS];
 } Ids;
