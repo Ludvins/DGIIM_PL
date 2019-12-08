@@ -77,11 +77,11 @@ typedef struct {
   unsigned          dim1;                     // Tamaño de la primera dimensión.
   unsigned          dim2;                     // Tamaño de la segunda dimensión.
   int               tope_listas;              // Tope de la lista de identificadores
-  char              lista_ids[MAX_ARGS];      // Lista de identificadores 
+  char              lista_ids[MAX_ARGS];      // Lista de identificadores
   unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
   unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
   unsigned          lista_dims2[MAX_ARGS];    // Lista de tamaño de la segunda dimensión
-  TipoDato          lista_tipos[MAX_ARGS]     // Lista de tipos
+  TipoDato          lista_tipos[MAX_ARGS];    // Lista de tipos
 } Atributos;
 
 EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
