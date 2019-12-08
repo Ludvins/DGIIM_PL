@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------- //
 #define MAX_TS 500
 #define MAX_ARGS 50
-typedef struct Atributos
+typedef struct Atributos;
 #define YYSTYPE Atributos            // Cada símbolo tiene una estructura de tipo atributos.
 
 unsigned int  tope = 0;              // Tope de la pila
