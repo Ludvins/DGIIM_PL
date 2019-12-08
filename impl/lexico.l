@@ -8,9 +8,10 @@
   char attr[64];
   int is_attr = 0;
   #define SET_ATTR(atrib) {strcpy(attr, atrib); is_attr = 1;}
+  #define SET_LEXEMA
 #else
   #define SET_ATTR(atrib)
-  //#define SET_LEXEMA {yylval.lexema = strdup(yytext);}
+  #define SET_LEXEMA {yylval.lexema = strdup(yytext);}
 #endif
 %}
 
@@ -50,23 +51,23 @@ cadena    \"[^\"]*\"
 "("                 return PARIZQ;
 ")"                 return PARDCH;
 "devolver"          return RETURN;
-"!"                 return NOT;
-{masmenos}          {SET_ATTR(yytext); return MASMENOS;}
-{tipo}              {SET_ATTR(yytext); return TIPO;}
+"!"                 {SET_LEXEMA; return NOT;}
+{masmenos}          {SET_LEXEMA; SET_ATTR(yytext); return MASMENOS;}
+{tipo}              {SET_LEXEMA; SET_ATTR(yytext); return TIPO;}
 
-"||"                return OR;
-"&&"                return AND;
-"^"                 return XOR;
-{opig}              {SET_ATTR(yytext); return OPIG;}
-{oprel}             {SET_ATTR(yytext); return OPREL;}
-{opmul}             {SET_ATTR(yytext); return OPMUL;}
+"||"                {SET_LEXEMA; return OR;}
+"&&"                {SET_LEXEMA; return AND;}
+"^"                 {SET_LEXEMA; return XOR;}
+{opig}              {SET_LEXEMA; SET_ATTR(yytext); return OPIG;}
+{oprel}             {SET_LEXEMA; SET_ATTR(yytext); return OPREL;}
+{opmul}             {SET_LEXEMA; SET_ATTR(yytext); return OPMUL;}
 
-[0-9]+              return NATURAL;
-{cadena}            return CADENA;
-"verdadero"|"falso" {SET_ATTR(yytext); return CONSTANTE;}
-[0-9]+\.[0-9]+      {SET_ATTR("real_num"); return CONSTANTE;}
-\'[^\']\'           {SET_ATTR("cte_caracter"); return CONSTANTE;}
-{id}                return IDENTIFICADOR;
+[0-9]+              {SET_LEXEMA; return NATURAL;}
+{cadena}            {SET_LEXEMA; return CADENA;}
+"verdadero"|"falso" {SET_LEXEMA; SET_ATTR(yytext); return CONSTANTE;}
+[0-9]+\.[0-9]+      {SET_LEXEMA; SET_ATTR("real_num"); return CONSTANTE;}
+\'[^\']\'           {SET_LEXEMA; SET_ATTR("cte_caracter"); return CONSTANTE;}
+{id}                {SET_LEXEMA; return IDENTIFICADOR;}
 
 [ \t]+              ;
 \n                  ;
