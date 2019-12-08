@@ -84,6 +84,7 @@ struct Atributos {
   TipoDato          lista_tipos[MAX_ARGS]     // Lista de tipos
 };
 
+
 EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
 
 // ----------------------------------------------------------------- //
