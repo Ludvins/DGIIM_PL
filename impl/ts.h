@@ -76,7 +76,7 @@ typedef struct {
   unsigned          n_dims;                   // Número de dimensiones.
   unsigned          dim1;                     // Tamaño de la primera dimensión.
   unsigned          dim2;                     // Tamaño de la segunda dimensión.
-  int               tope_listas;              // Tipo de la lista de identificadores
+  int               tope_listas;              // Tope de la lista de identificadores
   char              lista_ids[MAX_ARGS];      // Lista de identificadores 
   unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
   unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
