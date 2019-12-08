@@ -185,18 +185,22 @@ argumentos                  : argumentos COMA argumento {
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                            // TODO Problema, como saber si es una array o no
-                            // Posible solución: Añadir parámetro a Atributos
-                            $$.tipo = leerTipoDato($1);
-                            $$.lexema = $2.lexema;
+                            $$.tipo     = strToTipodato($1);
+                            $$.lexema   = $2.lexema;
+                            $$.dim1     = $2.dim1;
+                            $$.dim2     = $2.dim2;
                             }
                             | error
 ;
 
 tipo_comp                   : TIPO {
-                            $$.tipo = leerTipoDato($1)
+                            $$.tipo = strToTipodato($1);
                             }
-                            | TIPO acceso_array_cte
+                            | TIPO acceso_array_cte {
+                            $$.tipo = strToTipodato($1);
+                            $$.dim1 = $2.dim1;
+                            $$.dim2 = $2.dim2;
+                            }
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
