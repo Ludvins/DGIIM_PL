@@ -111,16 +111,18 @@ acceso_array                : CORCHIZQ expresion CORCHDCH {
 identificador_comp          : IDENTIFICADOR {
                             $$.lexema = $1.lexema;
                             $$.ndims = nDimensiones($1.lexema);
-                            if (!isDef && !encuentraTS($1.lexema)) {
+
+                            $$.tipo = encuentraTipo($1.lexema);
+                            if ($$.tipo == no_asignado)
                                 // Show error msg
-                            }
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
                             $$.ndims = nDimensiones($1.lexema) - $2.ndims;
-                            if (!isDef && !encuentraTS($1.lexema)) {
+
+                            $$.tipo = encuentraTipo($1.lexema);
+                            if ($$.tipo == no_asignado)
                                 // Show error msg
-                            }
                             }
 ;
 
@@ -279,7 +281,6 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                                 $$.tipo = desconocido;
                             }
                             | identificador_comp {
-                            // TODO Manage dimensions
                             $$.tipo = $1.tipo;
                             }
                             | CONSTANTE {
@@ -352,8 +353,6 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-
-                            tipoDato tipo1;
                             if ($1.tipo != $3.tipo || $1.ndims != $3.ndims) {
                                 // Show mensaje de error
                             }
@@ -411,27 +410,11 @@ sentencia_return            : RETURN expresion PYC
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
-  for(int i=0; i < $4.lid.tope_id; ++i) {
-    char * id = $4.lid.lista_ids[i];
-    TipoDato tipo = tipoTS(id);
-    char * str_tipo;
-    switch(tipo) {
-      case booleano: // Los booleanos se leerán como 0 o 1 // TODO: ¿hacer que se lea como True o False?
-        // TODO: un valor booleano distinto puede provocar errores tras hacer operaciones lógicas con él, ¿gestionar?
-      case entero:
-        str_tipo = "i"; // Podrá leer enteros con signo en formato decimal (por defecto) o hexadecimal (si empieza por 0x)
-        break;
-      case real:
-        str_tipo = "lf";
-        break;
-      case caracter:
-        str_tipo = "c";
-        break;
-      default:
-        str_tipo = "i"; // TODO: lista o tipo desconocido; imprimir correctamente o provocar mensaje de error de algún tipo
-    }
-  }
- }
+                            for(int i = 0; i < $4.lid.tope_id; ++i) {
+                                if ($4.lid.lista_ndims[i] != 0)
+                                    // Show error msg
+                            }
+                            }
 ;
 
 lista_id                    : lista_id COMA identificador_comp_cte {
