@@ -69,40 +69,21 @@ typedef struct {
 } EntradaTS;
 
 /*
- * Ids
- *
- * Lista de identificadores, y dimensiones de cada una de las variables que le corresponden.
- */
-typedef struct {
-  int        tope_id;
-  char*      lista_ids[MAX_ARGS];
-  unsigned*  lista_ndims[MAX_ARGS];
-  unsigned*  lista_dims1[MAX_ARGS];
-  unsigned*  lista_dims2[MAX_ARGS];
-} Ids;
-
-/*
- * Tipos
- *
- * Lista de tipos
- */
-typedef struct {
-  int        tope_tipo;
-  TipoDato   lista_tipos[MAX_ARGS];
-} Tipos;
-
-/*
  * Atributos
  */
 typedef struct {
-  int         atrib;           // Atributo del símbolo (si tiene)
-  char*       lexema;          // Nombre del lexema
-  TipoDato    tipo;            // Tipo del símbolo
-  Ids         lids;            // Lista de identificadores
-  Tipos       ltipos;          // Lista de tipos de argumentos
-  unsigned    n_dims;          // Número de dimensiones.
-  unsigned    dim1;            // Tamaño de la primera dimensión.
-  unsigned    dim2;            // Tamaño de la segunda dimensión.
+  int               atrib;                    // Atributo del símbolo (si tiene)
+  char*             lexema;                   // Nombre del lexema
+  TipoDato          tipo;                     // Tipo del símbolo
+  unsigned          n_dims;                   // Número de dimensiones.
+  unsigned          dim1;                     // Tamaño de la primera dimensión.
+  unsigned          dim2;                     // Tamaño de la segunda dimensión.
+  int               tope_listas;              // Tipo de la lista de identificadores
+  char              lista_ids[MAX_ARGS];      // Lista de identificadores 
+  unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
+  unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
+  unsigned          lista_dims2[MAX_ARGS];    // Lista de tamaño de la segunda dimensión
+  TipoDato          lista_tipos[MAX_ARGS]     // Lista de tipos
 } Atributos;
 
 EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
