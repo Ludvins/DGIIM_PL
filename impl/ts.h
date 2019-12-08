@@ -1,7 +1,6 @@
 #ifndef __TS_H_
 #define __TS_H_
 
-
 // ----------------------------------------------------------------- //
 // ---------------- Declaración de variables globales -------------- //
 // ----------------------------------------------------------------- //
@@ -16,14 +15,13 @@ int           ultima_funcion = -1;   // Posición en la tabla de símbolos del �
 unsigned int  bloques_anidados = 0;  // Numero de bloques anidados
 extern int    linea;                 // DEBUG. Linea de lectura del programa.
 
-
 // ----------------------------------------------------------------- //
 // ------------------- Declaración de estructuras ------------------ //
 // ----------------------------------------------------------------- //
 
 /*
  * TipoEntrada
- * 
+ *
  * Tipos de entradas presentes en la tabla de símbolos.
  */
 typedef enum {
@@ -55,7 +53,7 @@ typedef struct {
 
 /*
  * EntradaTS
- * 
+ *
  * Descripción de una entrada en la tabla de símbolos.
  */
 typedef struct {
@@ -117,17 +115,17 @@ EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
 
 /*
  * Inserta los parámetros de la ultima funcion como variables en la TS.
- * 
+ *
  * Estos parámetros se encuentran en la tabla de símbolos entre TS[ultima_funcion + 1]
  *  y TS[ultima_funcion + TS[ultima_funcion].parametros]
- * 
- * Utilizamos la función ´insertaVarTipo´ para insertar los parametros como variables. 
+ *
+ * Utilizamos la función ´insertaVarTipo´ para insertar los parametros como variables.
  */
 void insertaParametrosComoVariables();
 
 /*
  * Añade a la tabla de símbolos marca de comienzo.
- * 
+ *
  * Aumenta el contador de bloques anidados.
  * En caso de ser un subprograma, llama a ´insertaParametrosComoVariables´
  */
@@ -135,7 +133,7 @@ void entraBloqueTS();
 
 /*
  * Sal de bloque y elimina de la tabla de símbolos todos los símbolos hasta la última marca.
- * 
+ *
  * Disminuye el contador de bloques anidados.
  */
 void salBloqueTS();
@@ -181,7 +179,7 @@ void insertaVar(char* identificador, char* nombre_tipo, unsigned dimension1, uns
 
 /*
  * Inserta la función en la tabla de símbolos, requiere de el tipo y las dimensiones del valor que devuelve.
- * 
+ *
  * Comprueba si el identificador ya existe en la tabla de símbolos llamando a ´esDuplicado´.
  * Guarda en ultima_funcion la posición de esta en la tabla de símbolos.
  * Indica que es necesario insertar los parámetros como variables (sub_prog = 1)
@@ -190,7 +188,7 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
 
 /*
  * Inserta el parámetro formal en la tabla de símbolos.
- * 
+ *
  * Si no existe una función devuelve un error.
  * Aumenta el número de parámetros de dicha función en la tabla.
  */
@@ -217,16 +215,18 @@ void insertaSwitch(char* etiqueta_entrada, char* etiqueta_salida);
 
 /*
  * Halla el índice de identificador de variable o función en TS.
- * 
+ *
  * Devuelve la primera ocurrencia de abajo a arriba.
- * 
+ *
  * En caso de no existir, devuelve -1.
  */
 int encuentraTS(char* identificador);
 
 /*
- * Encuentra el identificador de variable o función en la tabla de 
+ * Encuentra el identificador de variable o función en la tabla de
  *  símbolos y devuelve su tipo.
+ *
+ * En caso de no existir, devuelve "no_asignado"
  */
 TipoDato encuentraTipo(char* identificador);
 
@@ -238,7 +238,7 @@ int esDuplicado(char* identificador);
 
 /*
  * Devuelve el número de dimensiones de la entrada de la tabla de símbolos
- *  con identificador ´identificador´. 
+ *  con identificador ´identificador´.
  */
 unsigned nDimensiones(char* identificador);
 
@@ -265,7 +265,6 @@ char* tipodatoToStr(TipoDato tipo);
  */
 char* tipodatoToStrC(TipoDato tipo);
 
-
 // -------------------------------------------------- //
 // --------------- Impresión DEBUG ------------------ //
 // -------------------------------------------------- //
@@ -285,22 +284,21 @@ char* imprimeTipoD(TipoDato tipo);
  */
 void imprimeTS();
 
-
 // -------------------------------------------------- //
 // ------------ Funciones auxiliares ---------------- //
 // -------------------------------------------------- //
 
 /*
  * Comprueba si el tipoDato es un número.
- * 
+ *
  * Devuelve 1 en caso afirmativo y 0 en caso negativo.
- * 
+ *
  */
 int esNumero(TipoDato tipo);
 
 /*
  * Devuelve el tipo de dato de la constante.
- * 
+ *
  * Comprueba el primer caracter de la constante:
  *  Si es ´v´ o ´f´, devuelve ´booleano´.
  *  Si es ´\´, devuelve caracter.
