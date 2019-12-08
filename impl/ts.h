@@ -4,9 +4,9 @@
 // ----------------------------------------------------------------- //
 // ---------------- Declaración de variables globales -------------- //
 // ----------------------------------------------------------------- //
-
 #define MAX_TS 500
 #define MAX_ARGS 50
+typedef struct Atributos
 #define YYSTYPE Atributos            // Cada símbolo tiene una estructura de tipo atributos.
 
 unsigned int  tope = 0;              // Tope de la pila
@@ -24,13 +24,13 @@ extern int    linea;                 // DEBUG. Linea de lectura del programa.
  *
  * Tipos de entradas presentes en la tabla de símbolos.
  */
-typedef enum {
+enum TipoEntrada{
   marca,            // Indica que la entrada es una marca de principio de bloque
   funcion,          // La entrada describe una funcion
   variable,         // La entrada describe una variable local
   parametro_formal, // La entrada describe un parámetro formal de una función
   instr_control
-} TipoEntrada;
+};
 
 /*
  * TipoDato
@@ -38,25 +38,25 @@ typedef enum {
  * Sólo aplicable cuando sea función, variable o parametro_formal.
  * En el caso de función corresponderá al tipo de dato que devuelve.
  */
-typedef enum {
+enum TipoDato{
   entero,    real,    booleano,    caracter,
   desconocido, no_asignado
-} TipoDato;
+};
 
 /*
  * DescriptorDeInstrControl
  */
-typedef struct {
+struct DescriptorDeInstrControl{
   char* EtiquetaSalida;
   char* EtiquetaElse;
-} DescriptorDeInstrControl;
+};
 
 /*
  * EntradaTS
  *
  * Descripción de una entrada en la tabla de símbolos.
  */
-typedef struct {
+struct EntradaTS{
   TipoEntrada               tipo_entrada;
   char*                     nombre;
   TipoDato                  tipo_dato;
@@ -64,25 +64,25 @@ typedef struct {
   DescriptorDeInstrControl  etiquetas_control;
   unsigned int              t_dim1; //Tamaño de la primera dimension (Array)
   unsigned int              t_dim2; //Tamaño de la segunda dimension (Array)
-} EntradaTS;
+};
 
 /*
  * Atributos
  */
-typedef struct {
+struct Atributos {
   int               atrib;                    // Atributo del símbolo (si tiene)
   char*             lexema;                   // Nombre del lexema
   TipoDato          tipo;                     // Tipo del símbolo
   unsigned          n_dims;                   // Número de dimensiones.
   unsigned          dim1;                     // Tamaño de la primera dimensión.
   unsigned          dim2;                     // Tamaño de la segunda dimensión.
-  int               tope_listas;              // Tope de la lista de identificadores
+  int               tope_listas;              // Tope de las sucesivas listas
   char              lista_ids[MAX_ARGS];      // Lista de identificadores 
   unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
   unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
   unsigned          lista_dims2[MAX_ARGS];    // Lista de tamaño de la segunda dimensión
   TipoDato          lista_tipos[MAX_ARGS]     // Lista de tipos
-} Atributos;
+};
 
 EntradaTS     TS[MAX_TS];      // Pila de la tabla de símbolos
 
