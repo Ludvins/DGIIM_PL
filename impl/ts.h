@@ -81,7 +81,7 @@ struct Atributos {
   unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
   unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
   unsigned          lista_dims2[MAX_ARGS];    // Lista de tamaño de la segunda dimensión
-  TipoDato          lista_tipos[MAX_ARGS]     // Lista de tipos
+  TipoDato          lista_tipos[MAX_ARGS];     // Lista de tipos
 };
 
 
