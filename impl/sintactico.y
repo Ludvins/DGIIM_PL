@@ -7,6 +7,9 @@
 int yylex();  // Para evitar warning al compilar
 void yyerror(const char * msg);
 
+// Indica si estamos en un bloque de definición de variables
+int isDef = 0;
+
 %}
 
 %define parse.error verbose
@@ -75,22 +78,23 @@ declar_de_variables_locales : /* empty */
                               marca_fin_declar_variables
 ;
 
-marca_ini_declar_variables  : INILOCAL
+marca_ini_declar_variables  : INILOCAL {
+                            isDef = 1;
+                            }
 ;
 
-marca_fin_declar_variables  : FINLOCAL
+marca_fin_declar_variables  : FINLOCAL{
+                            isDef = 0;
+                            }
 ;
 
 variables_locales           : variables_locales cuerpo_declar_variable
                             | cuerpo_declar_variable
 ;
 
-cuerpo_declar_variable      : tipo lista_id {
-                            // TODO ¿permitir declararción de variables del tipo: int i[a+b];?
-                            // TODO ahora mismo no estamos insertando las variables correctamente
-                            // (no sabemos si son un array o no)
+cuerpo_declar_variable      : TIPO lista_id {
                             for (int i=0; i<$2.lid.tope_id; i++){
-                                insertaVar($2.lid.lista_ids[i], $1, $2.ldimensiones.lista_dims[i]);
+                                insertaVar($2.lid.lista_ids[i], $1.lexema, $2.lid.lista_dims1[i], $2.lid.lista_dims2[i]);
                             }
                             } pyc
                             | error
@@ -106,37 +110,51 @@ acceso_array                : CORCHIZQ expresion CORCHDCH {
 
 identificador_comp          : IDENTIFICADOR {
                             $$.lexema = $1.lexema;
-                            $$.ndims = 0;
+                            $$.ndims = nDimensiones($1.lexema);
+
+                            $$.tipo = encuentraTipo($1.lexema);
+                            if ($$.tipo == no_asignado)
+                                // Show error msg
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
-                            $$.ndims = $2.ndims;
+                            $$.ndims = nDimensiones($1.lexema) - $2.ndims;
+
+                            $$.tipo = encuentraTipo($1.lexema);
+                            if ($$.tipo == no_asignado)
+                                // Show error msg
                             }
 ;
 
 acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH {
-                            $$.ndims = 1;
                             $$.dim1 = strtoi($2.lexema);
                             $$.dim2 = 0;
+                            $$.ndims = 1;
                             }
                             | CORCHIZQ NATURAL COMA NATURAL CORCHDCH {
-                            $$.ndims = 2;
                             $$.dim1 = strtoi($2.lexema);
                             $$.dim2 = strtoi($4.lexema);
+                            $$.ndims = 2;
                             }
 ;
 
 identificador_comp_cte      : IDENTIFICADOR {
-                            $$.ndims = 0;
                             $$.dim1 = 0;
                             $$.dim2 = 0;
                             $$.lexema = $1.lexema;
+                            if (isDef)
+                                $$.ndims = 0;
+                            else
+                                $$.ndims = nDimensiones($1.lexema);
                             }
                             | IDENTIFICADOR acceso_array_cte {
                             $$.lexema = $1.lexema;
-                            $$.ndims = $2.ndims;
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
+                            if (isDef)
+                                $$.ndims = $2.ndims;
+                            else
+                                $$.ndims = nDimensiones($1.lexema) - $2.ndims;
                             }
 ;
 
@@ -167,18 +185,22 @@ argumentos                  : argumentos COMA argumento {
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                            // TODO Problema, como saber si es una array o no
-                            // Posible solución: Añadir parámetro a Atributos
-                            $$.tipo = leerTipoDato($1);
-                            $$.lexema = $2.lexema;
+                            $$.tipo     = strToTipodato($1);
+                            $$.lexema   = $2.lexema;
+                            $$.dim1     = $2.dim1;
+                            $$.dim2     = $2.dim2;
                             }
                             | error
 ;
 
 tipo_comp                   : TIPO {
-                            $$.tipo = leerTipoDato($1)
+                            $$.tipo = strToTipodato($1);
                             }
-                            | TIPO acceso_array_cte
+                            | TIPO acceso_array_cte {
+                            $$.tipo = strToTipodato($1);
+                            $$.dim1 = $2.dim1;
+                            $$.dim2 = $2.dim2;
+                            }
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
@@ -263,7 +285,6 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
                                 $$.tipo = desconocido;
                             }
                             | identificador_comp {
-                            // TODO Manage dimensions
                             $$.tipo = $1.tipo;
                             }
                             | CONSTANTE {
@@ -336,7 +357,9 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            // TODO comprobar que coinciden los tipos y mensaje error (?)
+                            if ($1.tipo != $3.tipo || $1.ndims != $3.ndims) {
+                                // Show mensaje de error
+                            }
                             }
 ;
 
@@ -391,35 +414,27 @@ sentencia_return            : RETURN expresion PYC
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
-  for(int i=0; i < $4.lid.tope_id; ++i) {
-    char * id = $4.lid.lista_ids[i];
-    TipoDato tipo = tipoTS(id);
-    char * str_tipo;
-    switch(tipo) {
-      case booleano: // Los booleanos se leerán como 0 o 1 // TODO: ¿hacer que se lea como True o False?
-        // TODO: un valor booleano distinto puede provocar errores tras hacer operaciones lógicas con él, ¿gestionar?
-      case entero:
-        str_tipo = "i"; // Podrá leer enteros con signo en formato decimal (por defecto) o hexadecimal (si empieza por 0x)
-        break;
-      case real:
-        str_tipo = "lf";
-        break;
-      case caracter:
-        str_tipo = "c";
-        break;
-      default:
-        str_tipo = "i"; // TODO: lista o tipo desconocido; imprimir correctamente o provocar mensaje de error de algún tipo
-    }
-  }
- }
+                            for(int i = 0; i < $4.lid.tope_id; ++i) {
+                                if ($4.lid.lista_ndims[i] != 0)
+                                    // Show error msg
+                            }
+                            }
 ;
 
 lista_id                    : lista_id COMA identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id] = $3.lexema;
+                            $$.lid.lista_ids[$$.lid.tope_id]    = $3.lexema;
+                            $$.lid.lista_dims1[$$.lid.tope_id]  = $3.dim1;
+                            $$.lid.lista_dims2[$$.lid.tope_id]  = $3.dim2;
+                            $$.lid.lista_ndims[$$.lid.tope_id]  = $3.ndims;
+
                             $$.lid.tope_id+=1;
                             }
                             | identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id] = $1.lexema;
+                            $$.lid.lista_ids[$$.lid.tope_id]    = $1.lexema;
+                            $$.lid.lista_dims1[$$.lid.tope_id]  = $1.dim1;
+                            $$.lid.lista_dims2[$$.lid.tope_id]  = $1.dim2;
+                            $$.lid.lista_ndims[$$.lid.tope_id]  = $1.ndims;
+
                             $$.lid.tope_id+=1;
                             }
 ;
