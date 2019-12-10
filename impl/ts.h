@@ -39,8 +39,11 @@ typedef enum {
  * En el caso de función corresponderá al tipo de dato que devuelve.
  */
 typedef enum {
-  entero,    real,    booleano,    caracter,
-  desconocido, no_asignado
+  entero,
+  real,
+  booleano,
+  caracter,
+  desconocido
 } TipoDato;
 
 /*

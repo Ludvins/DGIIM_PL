@@ -50,7 +50,7 @@ void salBloqueTS(){
             return;
         }
     }
-    printf("[Linea %d] Error de implementación, se intentó salir de un bloque cuando no hay\n", yylineno);
+    printf("(Linea %d) Error de implementación: se intentó salir de un bloque cuando no hay\n", yylineno);
 }
 
 void salEstructuraControl(){
@@ -68,7 +68,7 @@ void salEstructuraControl(){
         }
     }
 
-    printf("[Linea %d] Error de implementación, se intentó salir de una estructura de control cuando no hay\n", yylineno);
+    printf("(Linea %d) Error de implementación: se intentó salir de una estructura de control cuando no hay\n", yylineno);
 }
 
 char* encuentraGotoSalida(){
@@ -76,7 +76,7 @@ char* encuentraGotoSalida(){
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaSalida;
 
-    printf("[Linea %d] Error de implementación, se intentó encontrar la etiqueta de salida de la estructura de control actual cuando no la hay\n", yylineno);
+    printf("(Linea %d) Error de implementación: se intentó encontrar la etiqueta de salida de la estructura de control actual cuando no la hay\n", yylineno);
     return NULL;
 }
 
@@ -85,7 +85,7 @@ char* encuentraGotoElse(){
         if (TS[j].tipo_entrada == instr_control)
             return TS[j].etiquetas_control.EtiquetaElse;
 
-    printf("[yylineno %d] Error de implementación, se intentó encontrar la etiqueta de else de la estructura de control actual cuando no la hay\n", yylineno);
+    printf("[yylineno %d] Error de implementación: se intentó encontrar la etiqueta de else de la estructura de control actual cuando no la hay\n", yylineno);
     return NULL;
 }
 
@@ -97,7 +97,7 @@ void insertaTS(EntradaTS entrada){
     }
 
     if (tope >= MAX_TS) {
-        printf("[%d] Error: La tabla de símbolos está llena\n", yylineno);
+        printf("(Línea %d) Error: La tabla de símbolos está llena\n", yylineno);
         fflush(stdout);
         exit(2);
     }
@@ -114,7 +114,7 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1
     }
 
     if(esDuplicado(identificador)){
-        printf("[%d] Error semántico: Identificador duplicado '%s'\n", yylineno, identificador);
+        printf("(Línea %d) Error semántico: Identificador duplicado '%s'\n", yylineno, identificador);
         return;
     }
 
@@ -143,7 +143,7 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
     }
 
     if(esDuplicado(identificador)){
-        printf("[%d] Error semántico: Identificador duplicado '%s'\n", yylineno, identificador);
+        printf("(Línea %d) Error semántico: Identificador duplicado '%s'\n", yylineno, identificador);
         return;
     }
 
@@ -169,7 +169,7 @@ void insertaParametro(char* identificador, char* nombre_tipo, unsigned dim1, uns
     }
 
     if (ultima_funcion == -1) {
-        printf("[%d] Error de implementación: Parámetro formal '%s' sin procedimiento anterior\n",
+        printf("(Línea %d) Error de implementación: Parámetro formal '%s' sin procedimiento anterior\n",
                yylineno, identificador);
         return;
     }
@@ -267,7 +267,7 @@ TipoDato encuentraTipo(char* identificador){
 
     int p = encuentraTS(identificador);
     if (p == -1)
-        return no_asignado;
+        return desconocido;
 
     return TS[p].tipo_dato;
 }
@@ -328,7 +328,7 @@ TipoDato strToTipodato(char* nombre_tipo) {
     if(!strcmp(nombre_tipo, "caracter"))
         return caracter;
 
-    printf("[Linea %d] Error de implementación, '%s' no es un tipo válido\n", yylineno, nombre_tipo);
+    printf("(Linea %d) Error de implementación: '%s' no es un tipo válido\n", yylineno, nombre_tipo);
     return desconocido;
 }
 
@@ -349,8 +349,6 @@ char* tipodatoToStr(TipoDato tipo){
             return "caracter";
         case desconocido:
             return "desconocido";
-        case no_asignado:
-            return "no-asignado";
         default:
             return "error";
     }
@@ -367,7 +365,7 @@ char* tipodatoToStrC(TipoDato tipo) {
         case caracter:
             return "char";
         default:
-            printf("[Línea %d] Error de implementación, %s no está asociado a ningún tipo nativo de C ni a una lista\n", yylineno, tipodatoToStr(tipo));
+            printf("(Línea %d) Error de implementación: %s no está asociado a ningún tipo nativo de C ni a una lista\n", yylineno, tipodatoToStr(tipo));
             return "error";
     }
 }

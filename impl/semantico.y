@@ -10,7 +10,7 @@ int yylex();  // Para evitar warning al compilar
 void yyerror(const char * msg);
 
 // Macro para imprimir errores semánticos
-#define semprintf(f_, ...) {fprintf(stderr, "(Línea %d) Error semántico: ", yylineno); fprintf(stderr, (f_), ##__VA_ARGS__); fflush(stderr); }
+#define semprintf(f_, ...) {printf("(Línea %d) Error semántico: ", yylineno); printf((f_), ##__VA_ARGS__);}
 
 // Indica si estamos en un bloque de definición de variables
 int isDef = 0;
@@ -118,16 +118,15 @@ identificador_comp          : IDENTIFICADOR {
                             $$.n_dims = nDimensiones($1.lexema);
 
                             $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == no_asignado)
-                                // Show error msg
-                                printf("1error");
+                            if ($$.tipo == desconocido)
+                                semprintf("El identificador %s no está declarado en este ámbito.\n", $1.lexema);
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
                             $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
 
                             $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == no_asignado)
+                            if ($$.tipo == desconocido)
                                 // Show error msg
                                 printf("2error");
                             }
@@ -207,7 +206,7 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                                 printf("yerror");
                             else
                                 // Comprobar atributos
-                                printf("zerror");
+                                printf("%d zerror", yylineno);
 
                             // TODO Actualizar
                             $$.tipo = encuentraTipo($1.lexema);
@@ -239,22 +238,22 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.n_dims = $2.n_dims;
 
                                 if ($2.tipo != booleano) {
-                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                 }
                             }
                             | MASMENOS expresion
                             {
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                 }
                                 if (esNumero($2.tipo))
                                     $$.tipo = $2.tipo;
                                 else {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                     $$.tipo = desconocido;
                                 }
                             }
@@ -263,7 +262,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -275,11 +274,11 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion XOR expresion
@@ -287,11 +286,11 @@ expresion                   : PARIZQ expresion PARDCH
                                  if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion MASMENOS expresion
@@ -303,11 +302,11 @@ expresion                   : PARIZQ expresion PARDCH
                                     else
                                         $$.tipo = entero;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != $3.n_dims){
-                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s.\n", $2.lexema);
                                 } else {
                                     $$.n_dims = $1.n_dims;
                                 }
@@ -317,11 +316,11 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == $3.tipo)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion OPREL expresion
@@ -329,11 +328,11 @@ expresion                   : PARIZQ expresion PARDCH
                                 if (esNumero($1.tipo) && esNumero($3.tipo))
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador binario %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion OPMUL expresion
@@ -344,13 +343,26 @@ expresion                   : PARIZQ expresion PARDCH
                                     else
                                         $$.tipo = entero;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
+
+                                // A partir de aquí está mal.
                                 if ($1.n_dims != $3.n_dims){
-                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s.\n", $2.lexema);
                                 } else {
+                                    if (!strcmp("**", $2.lexema)) {
+                                      if ($1.n_dims == 2)
+                                        $$.n_dims = 2;
+                                      else
+                                        semprintf("El operador %s solo puede actuar sobre Arrays2D.\n", $2.lexema);
+                                    }
+                                    else if (!strcmp("/", $2.lexema)){
+
+                                    }
+                                    else {
                                     $$.n_dims = $1.n_dims;
+                                    }
                                 }
                             }
                             | identificador_comp
@@ -446,8 +458,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo || $1.n_dims != $3.n_dims) {
-                                // Show mensaje de error
-                                printf("3error");
+                                semprintf("El tipo o las dimensiones de la expresión no coinciden con las del identificador %s.\n", $1.lexema);
                             }
                             }
 ;
@@ -491,8 +502,7 @@ sentencia_return            : RETURN expresion PYC
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
                             for(int i = 0; i < $4.tope_listas; ++i) {
                                 if ($4.lista_ndims[i] != 0)
-                                    // Show error msg
-                                    printf("eerror");
+                                    semprintf("El identificador %s para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
                             }
                             }
 ;
