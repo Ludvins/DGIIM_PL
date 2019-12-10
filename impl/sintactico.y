@@ -215,92 +215,163 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                             }
 ;
 
-expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
-                            | NOT expresion {
-                            if ($2.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
-                                $$.tipo = desconocido;
-                            }
-                            | MASMENOS expresion {
-                            if (esNumero($2.tipo))
+expresion                   : PARIZQ expresion PARDCH 
+                            {
                                 $$.tipo = $2.tipo;
-                            }            %prec NOT
-                            | expresion OR expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                                $$.n_dims = $2.n_dims;
                             }
-                            | expresion AND expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | NOT expresion 
+                            {                   
+                                $$.tipo = $2.tipo             
+                                $$.n_dims = $2.n_dims;
+
+                                if ($2.tipo != booleano) {
+                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($2.n_dims != 0) {
+                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                }
                             }
-                            | expresion XOR expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | MASMENOS expresion 
+                            {                                
+                                if ($2.n_dims != 0) {
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                }
+                                if (esNumero($2.tipo))
+                                    $$.tipo = $2.tipo;                                
+                                else {
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    $$.tipo = desconocido;
+                                }
+                            }            
+                            | expresion OR expresion 
+                            {
+                                if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | expresion MASMENOS expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo)){
-                                if ($1.tipo == real || $3.tipo == real)
-                                    $$.tipo = real;
-                                else
-                                    $$.tipo = entero;
+                            | expresion AND expresion 
+                            {
+                                if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion XOR expresion 
+                            {
+                                 if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | expresion OPIG expresion {
-                            // TODO Pensar
-                            if ($1.tipo == $3.tipo)
-                                $$.tipo = booleano;
-                            else
-                                $$.tipo = desconocido;
+                            | expresion MASMENOS expresion 
+                            {
+
+                                if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                    if ($1.tipo == real || $3.tipo == real)
+                                        $$.tipo = real;
+                                    else
+                                        $$.tipo = entero;
+                                } else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != $3.n_dims){
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2);
+                                } else {
+                                    $$.n_dims = $1.n_dims;
+                                }
                             }
-                            | expresion OPREL expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo))
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion OPIG expresion 
+                            {
+                                if ($1.tipo == $3.tipo)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | expresion OPMUL expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo)){
-                                if ($1.tipo == real || $3.tipo == real)
-                                    $$.tipo = real;
-                                else
-                                    $$.tipo = entero;
+                            | expresion OPREL expresion 
+                            {
+                                if (esNumero($1.tipo) && esNumero($3.tipo))
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion OPMUL expresion 
+                            {
+                                if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                    if ($1.tipo == real || $3.tipo == real)
+                                        $$.tipo = real;
+                                    else
+                                        $$.tipo = entero;
+                                } else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != $3.n_dims){
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2);
+                                } else {
+                                    $$.n_dims = $1.n_dims;
+                                }
                             }
-                            | identificador_comp {
-                            $$.tipo = $1.tipo;
+                            | identificador_comp 
+                            {
+                                $$.tipo = $1.tipo;
+                                $$.n_dims = $1.n_dims;
                             }
-                            | CONSTANTE {
-                            $$.tipo = getTipoConstante($1);
+                            | CONSTANTE 
+                            {
+                                $$.tipo = getTipoConstante($1);
+                                $$.n_dims = 0;
                             }
-                            | NATURAL{
-                            $$.tipo = entero;
+                            | NATURAL
+                            {
+                                $$.tipo = entero;
+                                $$.n_dims = 0;
+
                             }
-                            | agregado1D {
-                            $$.tipo = $1.tipo;
+                            | agregado1D 
+                            {
+                                $$.tipo = $1.tipo;                                
+                                $$.n_dims = 1;
+
                             }
-                            | agregado2D {
-                            $$.tipo = $1.tipo;
+                            | agregado2D 
+                            {
+                                $$.tipo = $1.tipo;
+                                $$.n_dims = 2;
+
                             }
-                            | llamada_funcion {
-                            $$.tipo = tipoTS($1.lexema);
+                            | llamada_funcion 
+                            {
+                                $$.tipo = encuentraTipo($1.lexema);
+                                $$.n_dims = $2.n_dims;
                             }
                             | error
 ;
