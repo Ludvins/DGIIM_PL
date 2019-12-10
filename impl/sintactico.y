@@ -93,8 +93,8 @@ variables_locales           : variables_locales cuerpo_declar_variable
 ;
 
 cuerpo_declar_variable      : TIPO lista_id {
-                            for (int i=0; i<$2.lid.tope_id; i++){
-                                insertaVar($2.lid.lista_ids[i], $1.lexema, $2.lid.lista_dims1[i], $2.lid.lista_dims2[i]);
+                            for (int i=0; i<$2.tope_listas; i++){
+                                insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
                             }
                             } pyc
                             | error
@@ -115,6 +115,7 @@ identificador_comp          : IDENTIFICADOR {
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
+                                printf("error");
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
@@ -123,6 +124,7 @@ identificador_comp          : IDENTIFICADOR {
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
+                                printf("error");
                             }
 ;
 
@@ -191,112 +193,203 @@ tipo_comp                   : TIPO {
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
-                            // TODO Comprobar que las expresiones son del tipo de los argumentos
-                            // de la función?
+                            int indice = encuentraTS()
+
+                            if (indice == -1)
+                                // Show error msg
+                                printf("error");
+                            else if (TS[i].tipo_entrada != funcion)
+                                // Show error msg
+                                printf("error");
+                            else
+                                // Comprobar atributos
+                                printf("error");
+
+                            // TODO Actualizar
                             $$.tipo = tipoTS($1)
                             $$.lexema = $1
                             }
                             | IDENTIFICADOR PARIZQ PARDCH {
+                            int indice = encuentraTS()
+
+                            if (indice == -1)
+                                // Show error msg
+                                printf("error");
+                            else if (TS[i].tipo_entrada != funcion)
+                                // Show error msg
+                                printf("error");
+
                             $$.tipo = tipoTS($1)
                             $$.lexema = $1
                             }
 ;
 
-expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
-                            | NOT expresion {
-                            if ($2.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
-                                $$.tipo = desconocido;
-                            }
-                            | MASMENOS expresion {
-                            if (esNumero($2.tipo))
+expresion                   : PARIZQ expresion PARDCH
+                            {
                                 $$.tipo = $2.tipo;
-                            }            %prec NOT
-                            | expresion OR expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                                $$.n_dims = $2.n_dims;
                             }
-                            | expresion AND expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | NOT expresion
+                            {
+                                $$.tipo = $2.tipo
+                                $$.n_dims = $2.n_dims;
+
+                                if ($2.tipo != booleano) {
+                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($2.n_dims != 0) {
+                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                }
                             }
-                            | expresion XOR expresion {
-                            if ($1.tipo == booleano && $3.tipo == booleano)
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | MASMENOS expresion
+                            {
+                                if ($2.n_dims != 0) {
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                }
+                                if (esNumero($2.tipo))
+                                    $$.tipo = $2.tipo;
+                                else {
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    $$.tipo = desconocido;
+                                }
                             }
-                            | expresion MASMENOS expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo)){
-                                if ($1.tipo == real || $3.tipo == real)
-                                    $$.tipo = real;
-                                else
-                                    $$.tipo = entero;
+                            | expresion OR expresion
+                            {
+                                if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion AND expresion
+                            {
+                                if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | expresion OPIG expresion {
-                            // TODO Pensar
-                            if ($1.tipo == $3.tipo)
-                                $$.tipo = booleano;
-                            else
-                                $$.tipo = desconocido;
+                            | expresion XOR expresion
+                            {
+                                 if ($1.tipo == booleano && $3.tipo == booleano)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | expresion OPREL expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo))
-                                $$.tipo = booleano;
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion MASMENOS expresion
+                            {
+
+                                if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                    if ($1.tipo == real || $3.tipo == real)
+                                        $$.tipo = real;
+                                    else
+                                        $$.tipo = entero;
+                                } else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != $3.n_dims){
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2);
+                                } else {
+                                    $$.n_dims = $1.n_dims;
+                                }
                             }
-                            | expresion OPMUL expresion {
-                            if (esNumero($1.tipo) && esNumero($3.tipo)){
-                                if ($1.tipo == real || $3.tipo == real)
-                                    $$.tipo = real;
-                                else
-                                    $$.tipo = entero;
+                            | expresion OPIG expresion
+                            {
+                                if ($1.tipo == $3.tipo)
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            else
-                                semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($2.tipo), tipoStr($3.tipo),$1);
-                                $$.tipo = desconocido;
+                            | expresion OPREL expresion
+                            {
+                                if (esNumero($1.tipo) && esNumero($3.tipo))
+                                    $$.tipo = booleano;
+                                else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != 0 || $3.n_dims != 0){
+                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2);
+                                }
                             }
-                            | identificador_comp {
-                            $$.tipo = $1.tipo;
+                            | expresion OPMUL expresion
+                            {
+                                if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                    if ($1.tipo == real || $3.tipo == real)
+                                        $$.tipo = real;
+                                    else
+                                        $$.tipo = entero;
+                                } else {
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    $$.tipo = desconocido;
+                                }
+                                if ($1.n_dims != $3.n_dims){
+                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s\n", $2);
+                                } else {
+                                    $$.n_dims = $1.n_dims;
+                                }
                             }
-                            | CONSTANTE {
-                            $$.tipo = getTipoConstante($1);
+                            | identificador_comp
+                            {
+                                $$.tipo = $1.tipo;
+                                $$.n_dims = $1.n_dims;
                             }
-                            | NATURAL{
-                            $$.tipo = entero;
+                            | CONSTANTE
+                            {
+                                $$.tipo = getTipoConstante($1);
+                                $$.n_dims = 0;
                             }
-                            | agregado1D {
-                            $$.tipo = $1.tipo;
+                            | NATURAL
+                            {
+                                $$.tipo = entero;
+                                $$.n_dims = 0;
+
                             }
-                            | agregado2D {
-                            $$.tipo = $1.tipo;
+                            | agregado1D
+                            {
+                                $$.tipo = $1.tipo;
+                                $$.n_dims = 1;
+
                             }
-                            | llamada_funcion {
-                            $$.tipo = tipoTS($1.lexema);
+                            | agregado2D
+                            {
+                                $$.tipo = $1.tipo;
+                                $$.n_dims = 2;
+
+                            }
+                            | llamada_funcion
+                            {
+                                $$.tipo = encuentraTipo($1.lexema);
+                                $$.n_dims = $2.n_dims;
                             }
                             | error
 ;
 
 agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
-                            TipoDato tipo = $2.larg.lista_tipos[0];
+                            TipoDato tipo = $2.lista_tipos[0];
                             int correct = 1;
-                            for (int i = 1; i < $2.larg.tope_arg; i++) {
-                                if (tipo != $2.larg.lista_tipos[i])
+                            for (int i = 1; i < $2.tope_listas; i++) {
+                                if (tipo != $2.lista_tipos[i])
                                     correct = 0;
                                     break;
                             }
@@ -316,10 +409,14 @@ listas                      : listas PYC expresiones
 ;
 
 expresiones                 : expresiones COMA expresion {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo;
+                            $$.lista_tipos[$$.tope_listas] = $3.tipo;
+                            $$.lista_ndims[$$.tope_listas] = $3.ndims;
+                            $$.tope_listas += 1;
                             }
                             | expresion {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo;
+                            $$.lista_tipos[$$.tope_listas] = $1.tipo;
+                            $$.lista_ndims[$$.tope_listas] = $1.ndims;
+                            $$.tope_listas += 1;
                             }
 ;
 
@@ -346,6 +443,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo || $1.ndims != $3.ndims) {
                                 // Show mensaje de error
+                                printf("error");
                             }
                             }
 ;
@@ -401,28 +499,29 @@ sentencia_return            : RETURN expresion PYC
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
-                            for(int i = 0; i < $4.lid.tope_id; ++i) {
-                                if ($4.lid.lista_ndims[i] != 0)
+                            for(int i = 0; i < $4.tope_listas; ++i) {
+                                if ($4.lista_ndims[i] != 0)
                                     // Show error msg
+                                    printf("error");
                             }
                             }
 ;
 
 lista_id                    : lista_id COMA identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id]    = $3.lexema;
-                            $$.lid.lista_dims1[$$.lid.tope_id]  = $3.dim1;
-                            $$.lid.lista_dims2[$$.lid.tope_id]  = $3.dim2;
-                            $$.lid.lista_ndims[$$.lid.tope_id]  = $3.ndims;
+                            $$.lista_ids[$$.tope_listas]    = $3.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $3.ndims;
 
-                            $$.lid.tope_id+=1;
+                            $$.tope_listas+=1;
                             }
                             | identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id]    = $1.lexema;
-                            $$.lid.lista_dims1[$$.lid.tope_id]  = $1.dim1;
-                            $$.lid.lista_dims2[$$.lid.tope_id]  = $1.dim2;
-                            $$.lid.lista_ndims[$$.lid.tope_id]  = $1.ndims;
+                            $$.lista_ids[$$.tope_listas]    = $1.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $1.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $1.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $1.ndims;
 
-                            $$.lid.tope_id+=1;
+                            $$.tope_listas+=1;
                             }
 ;
 
