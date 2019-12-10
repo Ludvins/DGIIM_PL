@@ -409,9 +409,10 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
                                     correct = 0;
                                     break;
                             }
-                            // TODO Está mal, debería ser array of tipo
                             if (correct)
                                 $$.tipo = tipo;
+                            else
+                                semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo");
                             }
 ;
 
