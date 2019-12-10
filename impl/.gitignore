@@ -2,5 +2,5 @@
 lex.yy.c
 y.tab.h
 y.tab.c
-sintactico
+semantico
 obj/

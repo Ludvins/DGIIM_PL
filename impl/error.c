@@ -132,7 +132,7 @@ int operador_especifico(char *s) {
 
 // Imprime la línea donde se ha producido un error
 void linea_error() {
-  fprintf(stderr, "[%d] ", linea);
+  fprintf(stderr, "[%d] ", yylineno);
 }
 
 
@@ -148,7 +148,6 @@ void lerror(const char * msg) {
 // It only does errors and not warnings.
 void yyerror(const char *msg)
 {
-  error++;
   char *space;
   char *strs[100];
   int numstrs;

@@ -1,11 +1,16 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "ts.h"
 
 #define YYDEBUG 0
 
 int yylex();  // Para evitar warning al compilar
 void yyerror(const char * msg);
+
+// Macro para imprimir errores semánticos
+#define semprintf(f_, ...) {fprintf(stderr, "(Línea %d) Error semántico: ", yylineno); fprintf(stderr, (f_), ##__VA_ARGS__); fflush(stderr); }
 
 // Indica si estamos en un bloque de definición de variables
 int isDef = 0;
@@ -50,8 +55,8 @@ programa                    : cabecera_programa bloque
 ;
 
 bloque                      : inicio_de_bloque
-                              declar_de_variables_locales
-                              declar_de_subprogs
+                              declar_de_variables_locales {if (DEBUG) imprimeTS();}
+                              declar_de_subprogs {if (DEBUG) imprimeTS();}
                               sentencias
                               fin_de_bloque
 ;
@@ -96,47 +101,47 @@ cuerpo_declar_variable      : TIPO lista_id {
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
                             }
-                            } pyc
+                            } PYC
                             | error
 ;
 
 acceso_array                : CORCHIZQ expresion CORCHDCH {
-                            $$.ndims = 1;
+                            $$.n_dims = 1;
                             }
                             | CORCHIZQ expresion COMA expresion CORCHDCH {
-                            $$.ndims = 2;
+                            $$.n_dims = 2;
                             }
 ;
 
 identificador_comp          : IDENTIFICADOR {
                             $$.lexema = $1.lexema;
-                            $$.ndims = nDimensiones($1.lexema);
+                            $$.n_dims = nDimensiones($1.lexema);
 
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
-                                printf("error");
+                                printf("1error");
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
-                            $$.ndims = nDimensiones($1.lexema) - $2.ndims;
+                            $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
 
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
-                                printf("error");
+                                printf("2error");
                             }
 ;
 
 acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH {
-                            $$.dim1 = strtoi($2.lexema);
+                            $$.dim1 = atoi($2.lexema);
                             $$.dim2 = 0;
-                            $$.ndims = 1;
+                            $$.n_dims = 1;
                             }
                             | CORCHIZQ NATURAL COMA NATURAL CORCHDCH {
-                            $$.dim1 = strtoi($2.lexema);
-                            $$.dim2 = strtoi($4.lexema);
-                            $$.ndims = 2;
+                            $$.dim1 = atoi($2.lexema);
+                            $$.dim2 = atoi($4.lexema);
+                            $$.n_dims = 2;
                             }
 ;
 
@@ -145,18 +150,18 @@ identificador_comp_cte      : IDENTIFICADOR {
                             $$.dim2 = 0;
                             $$.lexema = $1.lexema;
                             if (isDef)
-                                $$.ndims = 0;
+                                $$.n_dims = 0;
                             else
-                                $$.ndims = nDimensiones($1.lexema);
+                                $$.n_dims = nDimensiones($1.lexema);
                             }
                             | IDENTIFICADOR acceso_array_cte {
                             $$.lexema = $1.lexema;
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
                             if (isDef)
-                                $$.ndims = $2.ndims;
+                                $$.n_dims = $2.n_dims;
                             else
-                                $$.ndims = nDimensiones($1.lexema) - $2.ndims;
+                                $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
                             }
 ;
 
@@ -174,53 +179,52 @@ argumentos                  : argumentos COMA argumento
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                                insertaParametros($2.lexema, $1.lexema, $2.dim1, $2.dim2);
-                                imprimeTS();
+                                insertaParametro($2.lexema, $1.lexema, $2.dim1, $2.dim2);
                             }
                             | error
 ;
 
 tipo_comp                   : TIPO {
-                            $$.tipo = strToTipodato($1);
-                            $$.dim1 = 0
-                            $$.dim2 = 0
+                            $$.tipo = strToTipodato($1.lexema);
+                            $$.dim1 = 0;
+                            $$.dim2 = 0;
                             }
                             | TIPO acceso_array_cte {
-                            $$.tipo = strToTipodato($1);
+                            $$.tipo = strToTipodato($1.lexema);
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
                             }
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
-                            int indice = encuentraTS()
+                            int indice = encuentraTS($1.lexema);
 
                             if (indice == -1)
                                 // Show error msg
-                                printf("error");
-                            else if (TS[i].tipo_entrada != funcion)
+                                printf("xerror");
+                            else if (TS[indice].tipo_entrada != funcion)
                                 // Show error msg
-                                printf("error");
+                                printf("yerror");
                             else
                                 // Comprobar atributos
-                                printf("error");
+                                printf("zerror");
 
                             // TODO Actualizar
-                            $$.tipo = tipoTS($1)
-                            $$.lexema = $1
+                            $$.tipo = encuentraTipo($1.lexema);
+                            $$.lexema = $1.lexema;
                             }
                             | IDENTIFICADOR PARIZQ PARDCH {
-                            int indice = encuentraTS()
+                            int indice = encuentraTS($1.lexema);
 
                             if (indice == -1)
                                 // Show error msg
-                                printf("error");
-                            else if (TS[i].tipo_entrada != funcion)
+                                printf("aerror");
+                            else if (TS[indice].tipo_entrada != funcion)
                                 // Show error msg
-                                printf("error");
+                                printf("berror");
 
-                            $$.tipo = tipoTS($1)
-                            $$.lexema = $1
+                            $$.tipo = encuentraTipo($1.lexema);
+                            $$.lexema = $1.lexema;
                             }
 ;
 
@@ -231,26 +235,26 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | NOT expresion
                             {
-                                $$.tipo = $2.tipo
+                                $$.tipo = $2.tipo;
                                 $$.n_dims = $2.n_dims;
 
                                 if ($2.tipo != booleano) {
-                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    semprintf("El tipo %s no es booleano para aplicar el operador unario %s\n", tipodatoToStr($2.tipo),$1);
                                     $$.tipo = desconocido;
                                 }
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s\n", tipodatoToStr($2.tipo),$1);
                                 }
                             }
                             | MASMENOS expresion
                             {
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipodatoToStr($2.tipo),$1);
                                 }
                                 if (esNumero($2.tipo))
                                     $$.tipo = $2.tipo;
                                 else {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipoStr($2.tipo),$1);
+                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s\n", tipodatoToStr($2.tipo),$1);
                                     $$.tipo = desconocido;
                                 }
                             }
@@ -259,7 +263,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -271,7 +275,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -283,7 +287,7 @@ expresion                   : PARIZQ expresion PARDCH
                                  if ($1.tipo == booleano && $3.tipo == booleano)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos booleanos para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -299,7 +303,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     else
                                         $$.tipo = entero;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != $3.n_dims){
@@ -313,7 +317,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.tipo == $3.tipo)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -325,7 +329,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if (esNumero($1.tipo) && esNumero($3.tipo))
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador binario %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -340,7 +344,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     else
                                         $$.tipo = entero;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipoStr($1.tipo), tipoStr($3.tipo),$2);
+                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo),$2);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != $3.n_dims){
@@ -356,7 +360,7 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | CONSTANTE
                             {
-                                $$.tipo = getTipoConstante($1);
+                                $$.tipo = getTipoConstante($1.lexema);
                                 $$.n_dims = 0;
                             }
                             | NATURAL
@@ -380,7 +384,7 @@ expresion                   : PARIZQ expresion PARDCH
                             | llamada_funcion
                             {
                                 $$.tipo = encuentraTipo($1.lexema);
-                                $$.n_dims = $2.n_dims;
+                                $$.n_dims = $1.n_dims;
                             }
                             | error
 ;
@@ -410,12 +414,12 @@ listas                      : listas PYC expresiones
 
 expresiones                 : expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
-                            $$.lista_ndims[$$.tope_listas] = $3.ndims;
+                            $$.lista_ndims[$$.tope_listas] = $3.n_dims;
                             $$.tope_listas += 1;
                             }
                             | expresion {
                             $$.lista_tipos[$$.tope_listas] = $1.tipo;
-                            $$.lista_ndims[$$.tope_listas] = $1.ndims;
+                            $$.lista_ndims[$$.tope_listas] = $1.n_dims;
                             $$.tope_listas += 1;
                             }
 ;
@@ -441,35 +445,21 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            if ($1.tipo != $3.tipo || $1.ndims != $3.ndims) {
+                            if ($1.tipo != $3.tipo || $1.n_dims != $3.n_dims) {
                                 // Show mensaje de error
-                                printf("error");
+                                printf("3error");
                             }
                             }
 ;
 
-sentencia_if                : IF {
-  char * e_salida = etiqueta();
-  char * e_else   = etiqueta();
-  insertaIf(e_salida, e_else);
- } PARIZQ expresion PARDCH {
-  compruebaCondicion("if", $4.tipo);
- } sentencia sentencia_else {salEstructuraControl();}
+sentencia_if                : IF PARIZQ expresion PARDCH sentencia sentencia_else
 ;
 
 sentencia_else              : /* empty */
                             | ELSE sentencia
 ;
 
-sentencia_while             : WHILE {
-  char * e_entrada = etiqueta();
-  char * e_salida  = etiqueta();
-  insertaWhile(e_entrada, e_salida);
- } PARIZQ {
-   compruebaCondicion("while", $4.tipo);
- } expresion PARDCH sentencia {
-   salEstructuraControl();
- }
+sentencia_while             : WHILE PARIZQ expresion PARDCH sentencia
 ;
 
 sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch
@@ -502,7 +492,7 @@ sentencia_entrada           : CIN CADENA COMA lista_id PYC {
                             for(int i = 0; i < $4.tope_listas; ++i) {
                                 if ($4.lista_ndims[i] != 0)
                                     // Show error msg
-                                    printf("error");
+                                    printf("eerror");
                             }
                             }
 ;
@@ -511,7 +501,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_ids[$$.tope_listas]    = $3.lexema;
                             $$.lista_dims1[$$.tope_listas]  = $3.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
-                            $$.lista_ndims[$$.tope_listas]  = $3.ndims;
+                            $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
 
                             $$.tope_listas+=1;
                             }
@@ -519,7 +509,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_ids[$$.tope_listas]    = $1.lexema;
                             $$.lista_dims1[$$.tope_listas]  = $1.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
-                            $$.lista_ndims[$$.tope_listas]  = $1.ndims;
+                            $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
 
                             $$.tope_listas+=1;
                             }
@@ -541,5 +531,5 @@ sentencia_salida            : COUT lista_exp_cad PYC
 #include "lex.yy.c"
 
 void yyerror(const char * msg) {
-  printf("(Línea %d) %s\n", yylineno, msg);
+  printf("(Línea %d) Error sintáctico: %s\n", yylineno, msg);
 }

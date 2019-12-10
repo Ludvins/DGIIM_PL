@@ -13,10 +13,7 @@ all: semantico
 debug: YCCFLAGS += -vt
 debug: semantico
 
-semantico: $(OBJ)/y.tab.o $(OBJ)/main.o $(OBJ)/ts.o $(OBJ)/error.o
-	$(CC) $^ -o $@
-
-sintactico: $(OBJ)/y.tab.o $(OBJ)/main.o
+semantico: $(OBJ)/y.tab.o $(OBJ)/main.o $(OBJ)/ts.o
 	$(CC) $^ -o $@
 
 $(OBJ)/y.tab.o: y.tab.c lex.yy.c
@@ -31,7 +28,7 @@ $(OBJ)/ts.o: ts.c ts.h
 $(OBJ)/error.o: error.c error.h
 	$(CC) -c $< -o $@
 
-y.tab.h y.tab.c: sintactico.y
+y.tab.h y.tab.c: semantico.y
 	$(YACC) $< $(YCCFLAGS)
 
 lexico: lex.yy.c y.tab.h
@@ -42,4 +39,4 @@ lex.yy.c: lexico.l y.tab.h
 
 clean:
 	-@rm -f lexico lex.yy.c
-	-@rm -f sintactico semantico y.tab.h y.tab.c y.output $(OBJ)/*
+	-@rm -f semantico y.tab.h y.tab.c y.output $(OBJ)/*

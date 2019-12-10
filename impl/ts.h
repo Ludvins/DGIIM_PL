@@ -7,12 +7,13 @@
 
 #define MAX_TS 500
 #define MAX_ARGS 50
+#define DEBUG 0
 
-unsigned int  tope = 0;              // Tope de la pila
-unsigned int  sub_prog;              // Indicador de comienzo de bloque de un subprog
-int           ultima_funcion = -1;   // Posición en la tabla de símbolos del último procedimiento
-unsigned int  bloques_anidados = 0;  // Numero de bloques anidados
-extern int    linea;                 // DEBUG. Linea de lectura del programa.
+extern unsigned int tope;              // Tope de la pila
+unsigned int sub_prog;              // Indicador de comienzo de bloque de un subprog
+int ultima_funcion;   // Posición en la tabla de símbolos del último procedimiento
+unsigned int bloques_anidados;  // Numero de bloques anidados
+extern int yylineno;
 
 // ----------------------------------------------------------------- //
 // ------------------- Declaración de estructuras ------------------ //
@@ -76,7 +77,7 @@ typedef struct {
   unsigned          dim1;                     // Tamaño de la primera dimensión.
   unsigned          dim2;                     // Tamaño de la segunda dimensión.
   int               tope_listas;              // Tope de la lista de identificadores
-  char              lista_ids[MAX_ARGS];      // Lista de identificadores 
+  char*             lista_ids[MAX_ARGS];      // Lista de identificadores
   unsigned          lista_ndims[MAX_ARGS];    // Lista de dimensiones
   unsigned          lista_dims1[MAX_ARGS];    // Lista de tamaño de la primera dimensión
   unsigned          lista_dims2[MAX_ARGS];    // Lista de tamaño de la segunda dimensión
@@ -173,7 +174,7 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
  * Si no existe una función devuelve un error.
  * Aumenta el número de parámetros de dicha función en la tabla.
  */
-void insertaParametro(char* identificador, char* nombre_tipo);
+void insertaParametro(char* identificador, char* nombre_tipo, unsigned dim1, unsigned dim2);
 
 /*
  * Inserta el descriptor de una instrucción if/else

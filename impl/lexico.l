@@ -71,7 +71,7 @@ cadena    \"[^\"]*\"
 
 [ \t]+              ;
 \n                  ;
-.                   {; printf("(Línea %d) error léxico: token %s no reconocido.\n",
+.                   {; printf("(Línea %d) Error léxico: token %s no reconocido.\n",
                               yylineno, yytext);}
 
 %%
