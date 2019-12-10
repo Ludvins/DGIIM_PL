@@ -1,0 +1,6 @@
+programa() {
+  entero funcionA (entero a1, real a2)
+  {
+    devolver 1;
+  }
+}

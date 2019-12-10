@@ -159,42 +159,29 @@ identificador_comp_cte      : IDENTIFICADOR {
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
-                            // TODO Modificar insertaFuncion para añadir el tipo que devuelve y
-                            // modificar tipo_comp para conseguir dicho tipo
-                            insertaFuncion($2);
-                            } lista_argumentos {
-                            // TODO Comprobar que efectivamente la lista de args es $5
-                            for (int i=0; i<$5.lid.tope_id; i++){
-                                 insertaParametro($5.lid.lista_ids[i], $5.larg.lista_tipos[i])
-                            }
-                            } PARDCH
+                            insertaFuncion($2.lexema, $1.tipo, $1.dim1, $2.dim2);
+                            } lista_argumentos PARDCH
 ;
 
 lista_argumentos            : /* empty */
                             | argumentos
 ;
 
-argumentos                  : argumentos COMA argumento {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo
-                            $$.lid.lista_ids[$$.lid.tope_id++] = $3.lexema;
-                            }
-                            | argumento {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo
-                            $$.lid.lista_ids[$$.lid.tope_id++] = $1.lexema;
-                            }
+argumentos                  : argumentos COMA argumento
+                            | argumento
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                            $$.tipo     = strToTipodato($1);
-                            $$.lexema   = $2.lexema;
-                            $$.dim1     = $2.dim1;
-                            $$.dim2     = $2.dim2;
+                                insertaParametros($2.lexema, $1.lexema, $2.dim1, $2.dim2);
+                                imprimeTS();
                             }
                             | error
 ;
 
 tipo_comp                   : TIPO {
                             $$.tipo = strToTipodato($1);
+                            $$.dim1 = 0
+                            $$.dim2 = 0
                             }
                             | TIPO acceso_array_cte {
                             $$.tipo = strToTipodato($1);
