@@ -346,23 +346,23 @@ expresion                   : PARIZQ expresion PARDCH
                                     semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
-
-                                // A partir de aquí está mal.
-                                if ($1.n_dims != $3.n_dims){
-                                    semprintf("Las expresiones no tienen la misma dimension para aplicar el operador binario %s.\n", $2.lexema);
-                                } else {
-                                    if (!strcmp("**", $2.lexema)) {
-                                      if ($1.n_dims == 2)
+                                if (!strcmp("**", $2.lexema)) {
+                                    if ($1.n_dims == 2 && $3.n_dims == 2)
                                         $$.n_dims = 2;
-                                      else
+                                    else
                                         semprintf("El operador %s solo puede actuar sobre Arrays2D.\n", $2.lexema);
-                                    }
-                                    else if (!strcmp("/", $2.lexema)){
-
-                                    }
-                                    else {
-                                    $$.n_dims = $1.n_dims;
-                                    }
+                                }                                 
+                                else if (!strcmp("*", $2.lexema)) {
+                                    if ($1.n_dims != 0 && $3.n_dims != 0 && $1.n_ndims != $3.n_dims )
+                                        semprintf("El operator %s solo se puede aplicar sobre array y valores o arrays de la misma dimension.", $2.lexema);
+                                    else  
+                                        $$.n_dims = 2;
+                                }                               
+                                else if (!strcmp("/", $2.lexema)) {
+                                    if ($1.n_dims == $2.n_dims || $2.n_dims == 0) 
+                                        $$.n_dims = $1.n_dims;
+                                    else
+                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimension o cuando el segundo elemento es una variable.\n", $2.lexema);
                                 }
                             }
                             | identificador_comp

@@ -1,0 +1,15 @@
+- En el if y en el while comprobar que la condición sea de tipo booleano.
+- En el switch comprobar que lo que haya entre paréntesis sea de tipo entero
+- Comprobar los parámetros y todo el rollo en llamada_función : "Llamadas a subprogramas con número y tipo de los argumentos erróneos"
+
+COMPROBAR QUE DA ERROR CUANDO:
+- Error léxico en un tipo de la declaración de variables, generando error léxico,
+sintáctico y semántico.
+- En el cuerpo de un subprograma se declara uno de sus argumentos. Debe
+indicar que no es posible.
+
+COSAS QUE NO SABEMOS SI HAY QUE HACER (PREGUNTAR AL PROFE)
+
+- Tener en cuenta el tamaño de los arrays en:
+  * operaciones con arrays
+  * asignación de agregados
