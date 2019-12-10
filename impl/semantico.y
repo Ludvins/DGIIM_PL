@@ -118,17 +118,18 @@ identificador_comp          : IDENTIFICADOR {
                             $$.n_dims = nDimensiones($1.lexema);
 
                             $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == desconocido)
-                                semprintf("El identificador %s no está declarado en este ámbito.\n", $1.lexema);
+                            if ($$.tipo == desconocido) {
+                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            }
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
                             $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
 
                             $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == desconocido)
-                                // Show error msg
-                                printf("2error");
+                            if ($$.tipo == desconocido) {
+                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            }
                             }
 ;
 
@@ -198,29 +199,30 @@ tipo_comp                   : TIPO {
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                             int indice = encuentraTS($1.lexema);
 
-                            if (indice == -1)
-                                // Show error msg
-                                printf("xerror");
-                            else if (TS[indice].tipo_entrada != funcion)
-                                // Show error msg
-                                printf("yerror");
-                            else
-                                // Comprobar atributos
-                                printf("%d zerror", yylineno);
+                            if (indice == -1) {
+                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            }
+                            else if (TS[indice].tipo_entrada != funcion) {
+                                semprintf("El identificador '%s' no se corresponde con una función.\n", $1.lexema);
+                            }
+                            else {
+                                //TODO comprobar argumentos
+                                char* borrame = "soy un placeholder";
+                            }
 
-                            // TODO Actualizar
+
                             $$.tipo = encuentraTipo($1.lexema);
                             $$.lexema = $1.lexema;
                             }
                             | IDENTIFICADOR PARIZQ PARDCH {
                             int indice = encuentraTS($1.lexema);
 
-                            if (indice == -1)
-                                // Show error msg
-                                printf("aerror");
-                            else if (TS[indice].tipo_entrada != funcion)
-                                // Show error msg
-                                printf("berror");
+                            if (indice == -1) {
+                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            }
+                            else if (TS[indice].tipo_entrada != funcion) {
+                                semprintf("El identificador '%s' no se corresponde con una función.\n", $1.lexema);
+                            }
 
                             $$.tipo = encuentraTipo($1.lexema);
                             $$.lexema = $1.lexema;
@@ -332,12 +334,12 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion OPMUL expresion
                             {
-                                if (esNumero($1.tipo) && esNumero($3.tipo)){
+                                if (esNumero($1.tipo) && esNumero($3.tipo)) {
                                     if ($1.tipo == real || $3.tipo == real)
                                         $$.tipo = real;
                                     else
@@ -346,23 +348,27 @@ expresion                   : PARIZQ expresion PARDCH
                                     semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
+
                                 if (!strcmp("**", $2.lexema)) {
                                     if ($1.n_dims == 2 && $3.n_dims == 2)
                                         $$.n_dims = 2;
-                                    else
-                                        semprintf("El operador %s solo puede actuar sobre Arrays2D.\n", $2.lexema);
-                                }                                 
+                                    else {
+                                        semprintf("El operador %s solo puede actuar sobre arrays 2D.\n", $2.lexema);
+                                    }
+                                }
                                 else if (!strcmp("*", $2.lexema)) {
-                                    if ($1.n_dims != 0 && $3.n_dims != 0 && $1.n_ndims != $3.n_dims )
-                                        semprintf("El operator %s solo se puede aplicar sobre array y valores o arrays de la misma dimension.", $2.lexema);
-                                    else  
-                                        $$.n_dims = 2;
-                                }                               
-                                else if (!strcmp("/", $2.lexema)) {
-                                    if ($1.n_dims == $2.n_dims || $2.n_dims == 0) 
-                                        $$.n_dims = $1.n_dims;
+                                    if ($1.n_dims != 0 && $3.n_dims != 0 && $1.n_dims != $3.n_dims) {
+                                        semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
+                                    }
                                     else
-                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimension o cuando el segundo elemento es una variable.\n", $2.lexema);
+                                        $$.n_dims = 2;
+                                }
+                                else if (!strcmp("/", $2.lexema)) {
+                                    if ($1.n_dims == $2.n_dims || $2.n_dims == 0)
+                                        $$.n_dims = $1.n_dims;
+                                    else {
+                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
+                                    }
                                 }
                             }
                             | identificador_comp
@@ -411,8 +417,9 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
                             }
                             if (correct)
                                 $$.tipo = tipo;
-                            else
-                                semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo");
+                            else {
+                                semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo.\n");
+                            }
                             }
 ;
 
@@ -459,7 +466,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo || $1.n_dims != $3.n_dims) {
-                                semprintf("El tipo o las dimensiones de la expresión no coinciden con las del identificador %s.\n", $1.lexema);
+                                semprintf("El tipo o las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
                             }
                             }
 ;
@@ -503,7 +510,7 @@ sentencia_return            : RETURN expresion PYC
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
                             for(int i = 0; i < $4.tope_listas; ++i) {
                                 if ($4.lista_ndims[i] != 0)
-                                    semprintf("El identificador %s para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
+                                    semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
                             }
                             }
 ;
