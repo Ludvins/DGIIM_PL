@@ -93,8 +93,8 @@ variables_locales           : variables_locales cuerpo_declar_variable
 ;
 
 cuerpo_declar_variable      : TIPO lista_id {
-                            for (int i=0; i<$2.lid.tope_id; i++){
-                                insertaVar($2.lid.lista_ids[i], $1.lexema, $2.lid.lista_dims1[i], $2.lid.lista_dims2[i]);
+                            for (int i=0; i<$2.tope_listas; i++){
+                                insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
                             }
                             } pyc
                             | error
@@ -164,8 +164,8 @@ cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
                             insertaFuncion($2);
                             } lista_argumentos {
                             // TODO Comprobar que efectivamente la lista de args es $5
-                            for (int i=0; i<$5.lid.tope_id; i++){
-                                 insertaParametro($5.lid.lista_ids[i], $5.larg.lista_tipos[i])
+                            for (int i=0; i<$5.tope_listas; i++){
+                                 insertaParametro($5.lista_ids[i], $5.larg.lista_tipos[i])
                             }
                             } PARDCH
 ;
@@ -176,11 +176,11 @@ lista_argumentos            : /* empty */
 
 argumentos                  : argumentos COMA argumento {
                             $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo
-                            $$.lid.lista_ids[$$.lid.tope_id++] = $3.lexema;
+                            $$.lista_ids[$$.tope_listas++] = $3.lexema;
                             }
                             | argumento {
                             $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo
-                            $$.lid.lista_ids[$$.lid.tope_id++] = $1.lexema;
+                            $$.lista_ids[$$.tope_listas++] = $1.lexema;
                             }
 ;
 
@@ -414,28 +414,28 @@ sentencia_return            : RETURN expresion PYC
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id PYC {
-                            for(int i = 0; i < $4.lid.tope_id; ++i) {
-                                if ($4.lid.lista_ndims[i] != 0)
+                            for(int i = 0; i < $4.tope_listas; ++i) {
+                                if ($4.lista_ndims[i] != 0)
                                     // Show error msg
                             }
                             }
 ;
 
 lista_id                    : lista_id COMA identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id]    = $3.lexema;
-                            $$.lid.lista_dims1[$$.lid.tope_id]  = $3.dim1;
-                            $$.lid.lista_dims2[$$.lid.tope_id]  = $3.dim2;
-                            $$.lid.lista_ndims[$$.lid.tope_id]  = $3.ndims;
+                            $$.lista_ids[$$.tope_listas]    = $3.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $3.ndims;
 
-                            $$.lid.tope_id+=1;
+                            $$.tope_listas+=1;
                             }
                             | identificador_comp_cte {
-                            $$.lid.lista_ids[$$.lid.tope_id]    = $1.lexema;
-                            $$.lid.lista_dims1[$$.lid.tope_id]  = $1.dim1;
-                            $$.lid.lista_dims2[$$.lid.tope_id]  = $1.dim2;
-                            $$.lid.lista_ndims[$$.lid.tope_id]  = $1.ndims;
+                            $$.lista_ids[$$.tope_listas]    = $1.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $1.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $1.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $1.ndims;
 
-                            $$.lid.tope_id+=1;
+                            $$.tope_listas+=1;
                             }
 ;
 
