@@ -165,7 +165,7 @@ cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
                             } lista_argumentos {
                             // TODO Comprobar que efectivamente la lista de args es $5
                             for (int i=0; i<$5.tope_listas; i++){
-                                 insertaParametro($5.lista_ids[i], $5.larg.lista_tipos[i])
+                                 insertaParametro($5.lista_ids[i], $5.lista_tipos[i])
                             }
                             } PARDCH
 ;
@@ -175,11 +175,11 @@ lista_argumentos            : /* empty */
 ;
 
 argumentos                  : argumentos COMA argumento {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo
+                            $$.lista_tipos[$$.tope_listas++] = $3.tipo
                             $$.lista_ids[$$.tope_listas++] = $3.lexema;
                             }
                             | argumento {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo
+                            $$.lista_tipos[$$.tope_listas++] = $1.tipo
                             $$.lista_ids[$$.tope_listas++] = $1.lexema;
                             }
 ;
@@ -306,10 +306,10 @@ expresion                   : PARIZQ expresion PARDCH {$$.tipo = $2.tipo;}
 ;
 
 agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
-                            TipoDato tipo = $2.larg.lista_tipos[0];
+                            TipoDato tipo = $2.lista_tipos[0];
                             int correct = 1;
-                            for (int i = 1; i < $2.larg.tope_arg; i++) {
-                                if (tipo != $2.larg.lista_tipos[i])
+                            for (int i = 1; i < $2.tope_listas; i++) {
+                                if (tipo != $2.lista_tipos[i])
                                     correct = 0;
                                     break;
                             }
@@ -329,10 +329,14 @@ listas                      : listas PYC expresiones
 ;
 
 expresiones                 : expresiones COMA expresion {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $3.tipo;
+                            $$.lista_tipos[$$.tope_listas] = $3.tipo;
+                            $$.lista_ndims[$$.tope_listas] = $3.ndims;
+                            $$.tope_listas += 1;
                             }
                             | expresion {
-                            $$.larg.lista_tipos[$$.larg.tope_arg++] = $1.tipo;
+                            $$.lista_tipos[$$.tope_listas] = $1.tipo;
+                            $$.lista_ndims[$$.tope_listas] = $1.ndims;
+                            $$.tope_listas += 1;
                             }
 ;
 
