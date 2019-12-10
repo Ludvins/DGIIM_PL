@@ -3,10 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-unsigned int  tope = 0;              // Tope de la pila
-unsigned int  sub_prog = 0;              // Indicador de comienzo de bloque de un subprog
-int ultima_funcion = -1;   // Posición en la tabla de símbolos del último procedimiento
-unsigned int bloques_anidados = 0;  // Numero de bloques anidados
+unsigned int  tope = 0;                     // Tope de la pila
+unsigned int  sub_prog = 0;                 // Indicador de comienzo de bloque de un subprog
+int ultima_funcion = -1;                    // Posición en la tabla de símbolos del último procedimiento
+unsigned int bloques_anidados = 0;          // Numero de bloques anidados
 
 void insertaParametrosComoVariables(){
     for (unsigned i = 1; i <= TS[ultima_funcion].parametros; i++){
