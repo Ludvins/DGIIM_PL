@@ -89,7 +89,7 @@ programa() {
   pf[1] = 10.0;
   pc[0] = 'e';
 
-  pe = pe2 ** pe;
+  pe = pe2 ** pf2;
 
   si(pe2[0, 1] == 20)
     pe[0] = 10;
