@@ -298,9 +298,8 @@ unsigned nDimensiones(char* identificador){
     int n_dims = 0;
 
     for(int j = tope - 1; j >= 0; j--) {
-        if (strcmp(TS[j].nombre, identificador)
+        if (!strcmp(TS[j].nombre, identificador)
             && (TS[j].tipo_entrada == variable || TS[j].tipo_entrada == funcion)) {
-
               if (TS[j].t_dim1 != 0)
                   n_dims++;
               if (TS[j].t_dim2 != 0)
