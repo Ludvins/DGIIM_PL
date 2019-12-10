@@ -115,6 +115,7 @@ identificador_comp          : IDENTIFICADOR {
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
+                                printf("error");
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
@@ -123,6 +124,7 @@ identificador_comp          : IDENTIFICADOR {
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == no_asignado)
                                 // Show error msg
+                                printf("error");
                             }
 ;
 
@@ -204,12 +206,32 @@ tipo_comp                   : TIPO {
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
-                            // TODO Comprobar que las expresiones son del tipo de los argumentos
-                            // de la función?
+                            int indice = encuentraTS()
+
+                            if (indice == -1)
+                                // Show error msg
+                                printf("error");
+                            else if (TS[i].tipo_entrada != funcion)
+                                // Show error msg
+                                printf("error");
+                            else
+                                // Comprobar atributos
+                                printf("error");
+
+                            // TODO Actualizar
                             $$.tipo = tipoTS($1)
                             $$.lexema = $1
                             }
                             | IDENTIFICADOR PARIZQ PARDCH {
+                            int indice = encuentraTS()
+
+                            if (indice == -1)
+                                // Show error msg
+                                printf("error");
+                            else if (TS[i].tipo_entrada != funcion)
+                                // Show error msg
+                                printf("error");
+
                             $$.tipo = tipoTS($1)
                             $$.lexema = $1
                             }
@@ -359,6 +381,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo || $1.ndims != $3.ndims) {
                                 // Show mensaje de error
+                                printf("error");
                             }
                             }
 ;
@@ -417,6 +440,7 @@ sentencia_entrada           : CIN CADENA COMA lista_id PYC {
                             for(int i = 0; i < $4.lid.tope_id; ++i) {
                                 if ($4.lid.lista_ndims[i] != 0)
                                     // Show error msg
+                                    printf("error");
                             }
                             }
 ;
