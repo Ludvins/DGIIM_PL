@@ -1,5 +1,5 @@
-- En el if y en el while comprobar que la condición sea de tipo booleano.
-- En el switch comprobar que lo que haya entre paréntesis sea de tipo entero
++? En el if y en el while comprobar que la condición sea de tipo booleano.
++? En el switch comprobar que lo que haya entre paréntesis sea de tipo entero
 - Comprobar los parámetros y todo el rollo en llamada_función : "Llamadas a subprogramas con número y tipo de los argumentos erróneos"
 - Arreglar errores que salen al hacer ./semantico ../P4/test_sem.babaa
 
