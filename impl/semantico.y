@@ -333,47 +333,29 @@ expresion                   : PARIZQ expresion PARDCH
                                 }
 
                                 if (!strcmp("+", $2.lexema)) {
-                                    t1_izq = $1.dim1;
-                                    t2_izq = $1.dim2;
-                                    t1_der = $3.dim1;
-                                    t2_der = $3.dim2;
-
-                                    if (t1_izq = t1_der && t2_izq == t2_der ) {
-                                        $$.dim1 = t1_izq;
-                                        $$.dim2 = t2_izq;
+                                    if ($1.n_dims != 0 && $3.n_dims != 0 && ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2) ) {
+                                        semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
+                                    }
+                                    else{
                                         $$.n_dims = $1.n_dims;
-                                    } else if ($1.n_dims == 0 || $3.n_dims == 0) {
-                                        $$.dim1 = t1_izq;
-                                        $$.dim2 = t2_izq;
-                                        $$.n_dims = $1.n_dims;
-                                        if (t1_izq < t1_der)
-                                            $$.dim1 = t1_der;
-                                        if (t2_izq < t2_der)
-                                            $$.dim2 = t2_der;
-                                        if ($1.n_dims < $3.n_dims)
+                                        if ($$.n_dims < $3.n_dims)
                                             $$.n_dims = $3.n_dims;
-                                    } else {
-                                        semprintf("El tamaño de los operandos no es correcto para el operador binario +.\n");
+                                        $$.dim1 = $1.dim1;
+                                        if ($$.dim1 < $3.dim1)
+                                            $$.dim1 = $3.dim1;
+                                        $$.dim2 = $1.dim2;
+                                        if ($$.dim2 < $3.dim2)
+                                            $$.dim2 = $3.dim2;
                                     }
                                 }
                                 if (!strcmp("-", $2.lexema)) {
-                                    t1_izq = $1.dim1;
-                                    t2_izq = $1.dim2;
-                                    t1_der = $3.dim1;
-                                    t2_der = $3.dim2;
-
-                                    if (t1_izq = t1_der && t2_izq == t2_der ) {
-                                        $$.dim1 = t1_izq;
-                                        $$.dim2 = t2_izq;
-                                        $$.n_dims = $1.n_dims;
-                                    } else if ($3.n_dims == 0) {
-                                        $$.dim1 = t1_izq;
-                                        $$.dim2 = t2_izq;
+                                    if ( ($1.dim1 == $3.dim1 && $1.dim2 == $3.dim2) || $3.n_dims == 0){
+                                        $$.dim1 = $1.dim1;
+                                        $$.dim2 = $1.dim2;
                                         $$.n_dims = $1.n_dims;
                                     } else {
-                                        semprintf("El tamaño de los operandos no es correcto para el operador binario -.\n");
+                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
                                     }
-
                                 }
                             }
                             | expresion OPIG expresion
