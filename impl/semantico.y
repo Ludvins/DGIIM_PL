@@ -115,20 +115,40 @@ acceso_array                : CORCHIZQ expresion CORCHDCH {
 
 identificador_comp          : IDENTIFICADOR {
                             $$.lexema = $1.lexema;
-                            $$.n_dims = nDimensiones($1.lexema);
 
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == desconocido) {
                                 semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            } else {
+                                $$.n_dims = nDimensiones($1.lexema);
+                                unsigned i = encuentraTS($1.lexema);
+                                $$.dim1 = TS[i].t_dim1;
+                                $$.dim2 = TS[i].t_dim2;
                             }
                             }
                             | IDENTIFICADOR acceso_array {
                             $$.lexema = $1.lexema;
-                            $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
 
                             $$.tipo = encuentraTipo($1.lexema);
                             if ($$.tipo == desconocido) {
                                 semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                            } else {
+                                ndims_e = nDimensiones($1.lexema);
+                                $$.n_dims = ndims_e - $2.n_dims;
+                                unsigned i = encuentraTS($1.lexema);
+
+                                if (ndims_e ==0) {
+                                    semprintf("El identificador '%s' no corresponde a un array.\n", $1.lexema);
+                                }
+
+                                if (ndims_e == 1 && $2.n_dims == 2) {
+                                    semprintf("Intento de acceder a un array1D usando dos índices.\n");
+                                }
+
+                                if (ndims_e == 2 && $2.n_dims == 1) {
+                                    $$.dim1 = TS[i].t_dim2;
+                                    $$.dim2 = 0;
+                                }
                             }
                             }
 ;
@@ -226,6 +246,8 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
 
                             $$.tipo = encuentraTipo($1.lexema);
                             $$.n_dims = nDimensiones($1.lexema);
+                            $$.dim1 = TS[indice].t_dim1;
+                            $$.dim2 = TS[indice].t_dim2;
                             $$.lexema = $1.lexema;
                             }
 ;
@@ -234,6 +256,8 @@ expresion                   : PARIZQ expresion PARDCH
                             {
                                 $$.tipo = $2.tipo;
                                 $$.n_dims = $2.n_dims;
+                                $$.dim1 = $2.dim1;
+                                $$.dim2 = $2.dim2;
                             }
                             | NOT expresion
                             {
@@ -251,12 +275,12 @@ expresion                   : PARIZQ expresion PARDCH
                             | MASMENOS expresion
                             {
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El operador unario %s no se puede aplicar a un array.\n", $1.lexema);
                                 }
                                 if (esNumero($2.tipo))
                                     $$.tipo = $2.tipo;
                                 else {
-                                    semprintf("El tipo %s no es numerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s no es númerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                     $$.tipo = desconocido;
                                 }
                             }
@@ -380,6 +404,8 @@ expresion                   : PARIZQ expresion PARDCH
                             {
                                 $$.tipo = $1.tipo;
                                 $$.n_dims = $1.n_dims;
+                                $$.dim1 = $1.dim1;
+                                $$.dim2 = $1.dim2;
                             }
                             | CONSTANTE
                             {
@@ -396,18 +422,21 @@ expresion                   : PARIZQ expresion PARDCH
                             {
                                 $$.tipo = $1.tipo;
                                 $$.n_dims = 1;
-
+                                $$.dim1 = $1.dim1;
                             }
                             | agregado2D
                             {
                                 $$.tipo = $1.tipo;
                                 $$.n_dims = 2;
-
+                                $$.dim1 = $1.dim1;
+                                $$.dim2 = $1.dim2;
                             }
                             | llamada_funcion
                             {
                                 $$.tipo = $1.tipo;
                                 $$.n_dims = $1.n_dims;
+                                $$.dim1 = $1.dim1;
+                                $$.dim2 = $1.dim2;
                             }
                             | error
 ;
@@ -494,6 +523,8 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo || $1.n_dims != $3.n_dims) {
                                 semprintf("El tipo o las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
+                            } else if ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2){
+                                semprintf("El tamaño de '%s' no coincide con el de la expresión asignada.\n", $1.lexema);
                             }
                             }
 ;
