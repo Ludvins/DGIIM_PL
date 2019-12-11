@@ -206,11 +206,21 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                                 semprintf("El identificador '%s' no se corresponde con una función.\n", $1.lexema);
                             }
                             else {
-                                //TODO comprobar argumentos
-                                char* borrame = "soy un placeholder";
+                                if (TS[indice].parametros != $3.tope_listas) {
+                                    semprintf("La función %s requiere %d parámetros", TS[indice].parametros);
+                                }
+                                else {
+                                    for (int i = 0; i < $3.tope_listas; ++i){
+                                        if (TS[indice + i].tipo != $3.lista_tipos[i]){
+                                            semprintf("El parámetro número %d tiene tipo %s, mientras que el parámetro formal número %d tiene tipo %s",
+                                                i, tipodatoToStr($3.lista_tipos[i]), i, tipodatoToStr(TS[indice +i].tipo));
+                                        }
+                                    }
+                                }
                             }
 
                             $$.tipo = encuentraTipo($1.lexema);
+                            $$.n_dims = nDimensiones($1.lexema);
                             $$.lexema = $1.lexema;
                             }
                             | IDENTIFICADOR PARIZQ PARDCH {
@@ -224,6 +234,7 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                             }
 
                             $$.tipo = encuentraTipo($1.lexema);
+                            $$.n_dims = nDimensiones($1.lexema);
                             $$.lexema = $1.lexema;
                             }
 ;
