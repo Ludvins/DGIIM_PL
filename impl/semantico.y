@@ -359,8 +359,12 @@ expresion                   : PARIZQ expresion PARDCH
                                     if ($1.n_dims != 0 && $3.n_dims != 0 && $1.n_dims != $3.n_dims) {
                                         semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
-                                    else
-                                        $$.n_dims = 2;
+                                    else{
+                                        // MAX
+                                        $$.n_dims = $1.n_dims;
+                                        if ($$.n_dims < $3.n_dims)
+                                            $$.n_dims = $3.n_dims;
+                                    }
                                 }
                                 else if (!strcmp("/", $2.lexema)) {
                                     if ($1.n_dims == $2.n_dims || $2.n_dims == 0)
@@ -400,7 +404,7 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | llamada_funcion
                             {
-                                $$.tipo = encuentraTipo($1.lexema);
+                                $$.tipo = $1.tipo;
                                 $$.n_dims = $1.n_dims;
                             }
                             | error
