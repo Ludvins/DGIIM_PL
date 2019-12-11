@@ -207,30 +207,21 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                             }
                             else {
                                 if (TS[indice].parametros != $3.tope_listas) {
-                                    semprintf("La función %s requiere %d parámetros", TS[indice].parametros);
+                                    semprintf("La función %s requiere exactamente %d parámetros.\n", $1.lexema, TS[indice].parametros);
                                 }
                                 else {
                                     for (int i = 0; i < $3.tope_listas; ++i){
-                                        if (TS[indice + i].tipo != $3.lista_tipos[i]){
-                                            semprintf("El parámetro número %d tiene tipo %s, mientras que el parámetro formal número %d tiene tipo %s",
-                                                i, tipodatoToStr($3.lista_tipos[i]), i, tipodatoToStr(TS[indice +i].tipo));
+                                        if (TS[indice + i + 1].tipo_dato != $3.lista_tipos[i]){
+                                            semprintf("El parámetro actual número %d tiene tipo %s, mientras que el parámetro formal número %d tiene tipo %s.\n",
+                                                i + 1, tipodatoToStr($3.lista_tipos[i]), i + 1, tipodatoToStr(TS[indice + i + 1].tipo_dato));
+                                        }
+
+                                        else if (nDimensiones(TS[indice + i + 1].nombre) != $3.lista_ndims[i]) {
+                                            semprintf("El parámetro actual número %d tiene %d dimensiones, mientras que el parámetro formal número %d tiene %d dimensiones.\n",
+                                                i + 1, $3.lista_ndims[i], i + 1, nDimensiones(TS[indice + i + 1].nombre));
                                         }
                                     }
                                 }
-                            }
-
-                            $$.tipo = encuentraTipo($1.lexema);
-                            $$.n_dims = nDimensiones($1.lexema);
-                            $$.lexema = $1.lexema;
-                            }
-                            | IDENTIFICADOR PARIZQ PARDCH {
-                            int indice = encuentraTS($1.lexema);
-
-                            if (indice == -1) {
-                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
-                            }
-                            else if (TS[indice].tipo_entrada != funcion) {
-                                semprintf("El identificador '%s' no se corresponde con una función.\n", $1.lexema);
                             }
 
                             $$.tipo = encuentraTipo($1.lexema);
@@ -422,18 +413,13 @@ expresion                   : PARIZQ expresion PARDCH
 ;
 
 agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
-                            TipoDato tipo = $2.lista_tipos[0];
-                            int correct = 1;
+                            $$.tipo = $2.lista_tipos[0];
                             for (int i = 1; i < $2.tope_listas; i++) {
-                                if (tipo != $2.lista_tipos[i]){
-                                    correct = 0;
+                                if ($$.tipo != $2.lista_tipos[i]){
+                                    $$.tipo = desconocido;
+                                    semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo.\n");
                                     break;
                                 }
-                            }
-                            if (correct)
-                                $$.tipo = tipo;
-                            else {
-                                semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo.\n");
                             }
                             }
 ;
@@ -443,13 +429,10 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                             for (int i = 0; i < $4.tope_listas; i++) {
                                 if ($$.tipo != $4.lista_tipos[i]){
                                     $$.tipo = desconocido;
-                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo.\n");
                                     break;
                                 }
                             }
-                            }
-                            | LLAVEIZQ listas PYC LLAVEDCH {
-                              $$.tipo = $2.tipo;
                             }
 ;
 
@@ -475,7 +458,8 @@ listas                      : listas PYC expresiones {
                             }
 ;
 
-expresiones                 : expresiones COMA expresion {
+expresiones                 : /* empty */
+                            | expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
                             $$.lista_ndims[$$.tope_listas] = $3.n_dims;
                             $$.tope_listas += 1;
@@ -532,11 +516,11 @@ sentencia_while             : WHILE PARIZQ expresion PARDCH sentencia{
                             }
 ;
 
-sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch {
+sentencia_switch            : SWITCH PARIZQ expresion{
                             if($3.tipo != entero) {
-                              semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($3.tipo));
+                                semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($3.tipo));
                             }
-                            }
+                            } PARDCH bloque_switch
 ;
 
 bloque_switch               : LLAVEIZQ opciones_y_pred LLAVEDCH

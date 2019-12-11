@@ -1,8 +1,6 @@
-- Comprobar los parámetros y todo el rollo en llamada_función : "Llamadas a subprogramas con número y tipo de los argumentos erróneos"
-- Arreglar errores que salen al hacer ./semantico ../P4/test_sem.babaa
-
-Problemas:
-- La producción de agregado2D no permite agregados con una única fila (forzamos a que haya dos grupos de expresiones al menos)
-
 Dudas:
 - Ahora mismo no permitimos asignar a una variable de tipo un entero a un valor real, deberíamos hacerlo?
+
+- Comprobar errores de tipo en expresiones simples
+- Comprbar errores de tipo en expresiones con arrays
+- Asignar arrays 1D y 2D de varias formas.
