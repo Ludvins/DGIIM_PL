@@ -448,6 +448,9 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                                 }
                             }
                             }
+                            | LLAVEIZQ listas PYC LLAVEDCH {
+                              $$.tipo = $2.tipo;
+                            }
 ;
 
 listas                      : listas PYC expresiones {
