@@ -99,5 +99,5 @@ programa() {
     pe[0] = 10;
   otro
     pe = pe *pe;
-    pe[0] = 3*pe[1];
+  pe[0] = 3*pe[1];
 }
