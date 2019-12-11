@@ -1,6 +1,4 @@
 Dudas:
 - Ahora mismo no permitimos asignar a una variable de tipo un entero a un valor real, deberíamos hacerlo?
 
-- Comprobar errores de tipo en expresiones simples
-- Comprbar errores de tipo en expresiones con arrays
 - Asignar arrays 1D y 2D de varias formas.
