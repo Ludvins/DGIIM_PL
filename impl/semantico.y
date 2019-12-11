@@ -502,7 +502,7 @@ sentencia_asignacion        : identificador_comp ASIG expresion PYC {
 
 sentencia_if                : IF PARIZQ expresion PARDCH sentencia sentencia_else{
                             if($3.tipo != booleano){
-                              semprintf("El tipo %s, no es booleano", $3.tipo);
+                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
                             }
                             }
 ;
@@ -513,14 +513,14 @@ sentencia_else              : /* empty */
 
 sentencia_while             : WHILE PARIZQ expresion PARDCH sentencia{
                             if($3.tipo != booleano){
-                              semprintf("El tipo %s, no es booleano", $3.tipo);
+                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
                             }
                             }
 ;
 
-sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch{
-                            if($3.tipo != entero){
-                              semprintf("El tipo %s, no es entero", $3.tipo);
+sentencia_switch            : SWITCH PARIZQ expresion PARDCH bloque_switch {
+                            if($3.tipo != entero) {
+                              semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($3.tipo));
                             }
                             }
 ;
