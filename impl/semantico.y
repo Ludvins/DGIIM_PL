@@ -133,11 +133,11 @@ identificador_comp          : IDENTIFICADOR {
                             if ($$.tipo == desconocido) {
                                 semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
                             } else {
-                                ndims_e = nDimensiones($1.lexema);
+                                int ndims_e = nDimensiones($1.lexema);
                                 $$.n_dims = ndims_e - $2.n_dims;
                                 unsigned i = encuentraTS($1.lexema);
 
-                                if (ndims_e ==0) {
+                                if (ndims_e == 0) {
                                     semprintf("El identificador '%s' no corresponde a un array.\n", $1.lexema);
                                 }
 
@@ -375,14 +375,16 @@ expresion                   : PARIZQ expresion PARDCH
                                 }
 
                                 if (!strcmp("**", $2.lexema)) {
-                                    if ($1.n_dims == 2 && $3.n_dims == 2)
+                                    if ($1.n_dims == 2 && $3.n_dims == 2 && $1.dim2 == $3.dim1) {
                                         $$.n_dims = 2;
-                                    else {
+                                        $$.dim1 = $1.dim1;
+                                        $$.dim2 = $3.dim2;
+                                    } else {
                                         semprintf("El operador %s solo puede actuar sobre arrays 2D.\n", $2.lexema);
                                     }
                                 }
                                 else if (!strcmp("*", $2.lexema)) {
-                                    if ($1.n_dims != 0 && $3.n_dims != 0 && $1.n_dims != $3.n_dims) {
+                                    if ($1.n_dims != 0 && $3.n_dims != 0 && ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2) ) {
                                         semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
@@ -390,12 +392,20 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.n_dims = $1.n_dims;
                                         if ($$.n_dims < $3.n_dims)
                                             $$.n_dims = $3.n_dims;
+                                        $$.dim1 = $1.dim1;
+                                        if ($$.dim1 < $3.dim1)
+                                            $$.dim1 = $3.dim1;
+                                        $$.dim2 = $1.dim2;
+                                        if ($$.dim2 < $3.dim2)
+                                            $$.dim2 = $3.dim2;
                                     }
                                 }
                                 else if (!strcmp("/", $2.lexema)) {
-                                    if ($1.n_dims == $2.n_dims || $2.n_dims == 0)
+                                    if ( ($1.dim1 == $3.dim1 && $1.dim2 == $3.dim2) || $3.n_dims == 0){
+                                        $$.dim1 = $1.dim1;
+                                        $$.dim2 = $1.dim2;
                                         $$.n_dims = $1.n_dims;
-                                    else {
+                                    } else {
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
                                     }
                                 }
