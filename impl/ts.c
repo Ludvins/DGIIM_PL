@@ -114,6 +114,7 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1
     }
 
     if(esDuplicado(identificador)){
+        error++;
         printf("(Línea %d) Error semántico: Identificador duplicado '%s'.\n", yylineno, identificador);
         return;
     }
@@ -143,6 +144,7 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
     }
 
     if(esDuplicado(identificador)){
+        error++;
         printf("(Línea %d) Error semántico: Identificador duplicado '%s'.\n", yylineno, identificador);
         return;
     }

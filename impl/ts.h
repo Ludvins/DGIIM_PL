@@ -14,6 +14,7 @@ unsigned int sub_prog;              // Indicador de comienzo de bloque de un sub
 int ultima_funcion;   // Posición en la tabla de símbolos del último procedimiento
 unsigned int bloques_anidados;  // Numero de bloques anidados
 extern int yylineno;
+extern unsigned error;
 
 // ----------------------------------------------------------------- //
 // ------------------- Declaración de estructuras ------------------ //

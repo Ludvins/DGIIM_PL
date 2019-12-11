@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 extern FILE *yyin;
+extern unsigned error;
 int yyparse();  // Para evitar warning al compilar
 
 int main(int argc, char * argv[]) {
@@ -23,4 +24,7 @@ int main(int argc, char * argv[]) {
   yyparse();
 
   printf("---> Se ha llegado al final del programa.\n");
+  printf("Número de errores: %d.\n", error);
+
+  return error;
 }

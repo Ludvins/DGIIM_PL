@@ -1,4 +1,3 @@
-Dudas:
-- Ahora mismo no permitimos asignar a una variable de tipo un entero a un valor real, deberíamos hacerlo?
-
-- Asignar arrays 1D y 2D de varias formas.
+Falta:
+- Rehacer producciones agregado1D y agregado2D, comprobando que se hacen bien y devolviendo las dimensiones.
+- Probar a asignar arrays 1D y 2D de varias formas.
