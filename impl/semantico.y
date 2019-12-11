@@ -551,9 +551,12 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            if ($1.tipo != $3.tipo || $1.n_dims != $3.n_dims) {
-                                semprintf("El tipo o las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
-                            } else if ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2){
+                            if ($1.tipo != $3.tipo && !(esNumero($1.tipo) && esNumero($3.tipo))) {
+                                semprintf("El tipo de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
+                            } else if ($1.n_dims != $3.n_dims) {
+                                semprintf("Las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
+                            }
+                            else if ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2){
                                 semprintf("El tamaño de '%s' no coincide con el de la expresión asignada.\n", $1.lexema);
                             }
                             }
