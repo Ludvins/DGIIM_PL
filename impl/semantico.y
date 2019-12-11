@@ -210,7 +210,6 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                                 char* borrame = "soy un placeholder";
                             }
 
-
                             $$.tipo = encuentraTipo($1.lexema);
                             $$.lexema = $1.lexema;
                             }
@@ -411,9 +410,10 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
                             TipoDato tipo = $2.lista_tipos[0];
                             int correct = 1;
                             for (int i = 1; i < $2.tope_listas; i++) {
-                                if (tipo != $2.lista_tipos[i])
+                                if (tipo != $2.lista_tipos[i]){
                                     correct = 0;
                                     break;
+                                }
                             }
                             if (correct)
                                 $$.tipo = tipo;
@@ -424,12 +424,37 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
 ;
 
 agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
-                            // TODO Muy parecido a agregado1D aunque hay problemas
+                            $$.tipo = $2.tipo;
+                            for (int i = 0; i < $4.tope_listas; i++) {
+                                if ($$.tipo != $4.lista_tipos[i]){
+                                    $$.tipo = desconocido;
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    break;
+                                }
+                            }
                             }
 ;
 
-listas                      : listas PYC expresiones
-                            | expresiones
+listas                      : listas PYC expresiones {
+                            $$.tipo = $1.tipo;
+                            for (int i = 0; i < $3.tope_listas; i++) {
+                                if ($$.tipo != $3.lista_tipos[i]){
+                                    $$.tipo = desconocido;
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    break;
+                                }
+                            }
+                            }
+                            | expresiones {
+                            $$.tipo = $1.lista_tipos[0];
+                            for (int i = 1; i < $1.tope_listas; i++) {
+                                if ($$.tipo != $1.lista_tipos[i]){
+                                    $$.tipo = desconocido;
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    break;
+                                }
+                            }
+                            }
 ;
 
 expresiones                 : expresiones COMA expresion {
