@@ -3,16 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ts.h"
+#include "error.h"
 
 #define YYDEBUG 0
 
 int yylex();  // Para evitar warning al compilar
-void yyerror(const char * msg);
-unsigned error = 0;
-
-// Macro para imprimir errores semánticos
-#define semprintf(f_, ...) {error++; printf("(Línea %d) Error semántico: ", yylineno); printf((f_), ##__VA_ARGS__);}
-
 // Indica si estamos en un bloque de definición de variables
 int isDef = 0;
 
@@ -652,8 +647,3 @@ sentencia_salida            : COUT lista_exp_cad PYC
 %%
 
 #include "lex.yy.c"
-
-void yyerror(const char * msg) {
-  error++;
-  printf("(Línea %d) Error sintáctico: %s\n", yylineno, msg);
-}

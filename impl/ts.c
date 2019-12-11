@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "error.h"
 
 unsigned int  tope = 0;                     // Tope de la pila
 unsigned int  sub_prog = 0;                 // Indicador de comienzo de bloque de un subprog
@@ -114,8 +115,7 @@ void insertaVarTipo(char* identificador, TipoDato tipo_dato, unsigned dimension1
     }
 
     if(esDuplicado(identificador)){
-        error++;
-        printf("(Línea %d) Error semántico: Identificador duplicado '%s'.\n", yylineno, identificador);
+        semprintf("Identificador duplicado '%s'.\n", identificador);
         return;
     }
 
@@ -144,8 +144,7 @@ void insertaFuncion(char* identificador, TipoDato tipo_ret, unsigned dim1_ret, u
     }
 
     if(esDuplicado(identificador)){
-        error++;
-        printf("(Línea %d) Error semántico: Identificador duplicado '%s'.\n", yylineno, identificador);
+        semprintf("Identificador duplicado '%s'.\n", identificador);
         return;
     }
 

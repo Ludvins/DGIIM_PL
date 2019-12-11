@@ -13,7 +13,7 @@ all: semantico
 debug: YCCFLAGS += -vt
 debug: semantico
 
-semantico: $(OBJ)/y.tab.o $(OBJ)/main.o $(OBJ)/ts.o
+semantico: $(OBJ)/y.tab.o $(OBJ)/main.o $(OBJ)/ts.o $(OBJ)/error.o
 	$(CC) $^ -o $@
 
 $(OBJ)/y.tab.o: y.tab.c lex.yy.c

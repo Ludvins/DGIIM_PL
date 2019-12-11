@@ -1,14 +1,14 @@
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
+#include <stdio.h>
+
 extern int yylineno;
-extern char *yytext;
-extern FILE* yyout;
+extern unsigned error;
+
 // Macro para imprimir errores semánticos
-#define semprintf(f_, ...) {linea_error(); fprintf(stderr, "Error semántico: "); fprintf(stderr, (f_), ##__VA_ARGS__); fflush(stderr); }
+#define semprintf(f_, ...) {error++; printf("(Línea %d) Error semántico: ", yylineno); printf((f_), ##__VA_ARGS__);}
 
-
-void linea_error();
 void lerror(const char * msg);
 void yyerror(const char * msg);
 

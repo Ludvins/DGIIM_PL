@@ -13,6 +13,8 @@
   #define SET_ATTR(atrib)
   #define SET_LEXEMA {yylval.lexema = strdup(yytext);}
 #endif
+
+unsigned error = 0;  // Cuenta los errores del programa
 %}
 
 %option yylineno
@@ -71,8 +73,7 @@ cadena    \"[^\"]*\"
 
 [ \t]+              ;
 \n                  ;
-.                   {; error++; printf("(Línea %d) Error léxico: token %s no reconocido.\n",
-                              yylineno, yytext);}
+.                   {lerror(yytext);}
 
 %%
 
