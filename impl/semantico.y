@@ -475,7 +475,13 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
                                     semprintf("Todas las expresiones dentro de un agregado1D tienen que ser del mismo tipo.\n");
                                     break;
                                 }
+                                else if ($2.lista_ndims[i] != 0) {
+                                  semprintf("Todas las expresiones dentro de un agregado1D deben tener dimensión 0.\n");
+                                }
                             }
+
+                            $$.n_dims = 1;
+                            $$.dim1 = $2.tope_listas;
                             }
 ;
 
@@ -487,6 +493,9 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                                     semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo.\n");
                                     break;
                                 }
+                                else if ($4.lista_ndims[i] != 0) {
+                                  semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                }
                             }
                             }
 ;
@@ -496,8 +505,11 @@ listas                      : listas PYC expresiones {
                             for (int i = 0; i < $3.tope_listas; i++) {
                                 if ($$.tipo != $3.lista_tipos[i]){
                                     $$.tipo = desconocido;
-                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo.\n")
                                     break;
+                                }
+                                else if ($3.lista_ndims[i] != 0) {
+                                  semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
                                 }
                             }
                             }
@@ -506,8 +518,11 @@ listas                      : listas PYC expresiones {
                             for (int i = 1; i < $1.tope_listas; i++) {
                                 if ($$.tipo != $1.lista_tipos[i]){
                                     $$.tipo = desconocido;
-                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo\n")
+                                    semprintf("Todas las expresiones dentro de un agregado2D tienen que ser del mismo tipo.\n")
                                     break;
+                                }
+                                else if ($1.lista_ndims[i] != 0) {
+                                  semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
                                 }
                             }
                             }
@@ -547,7 +562,8 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            if ($1.tipo != $3.tipo && !(esNumero($1.tipo) && esNumero($3.tipo))) {
+                            if ($1.tipo != $3.tipo && !(esNumero($1.tipo)
+                                && esNumero($3.tipo))) {
                                 semprintf("El tipo de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
                             } else if ($1.n_dims != $3.n_dims) {
                                 semprintf("Las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);

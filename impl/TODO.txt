@@ -1,3 +1,0 @@
-Falta:
-- Rehacer producciones agregado1D y agregado2D, comprobando que se hacen bien y devolviendo las dimensiones.
-- Probar a asignar arrays 1D y 2D de varias formas.
