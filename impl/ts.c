@@ -416,7 +416,7 @@ void imprimeTS(){
         else {
             printf("%s%s: '%s'", sangria, imprimeTipoE(TS[i].tipo_entrada), TS[i].nombre);
 
-            if(TS[i].tipo_entrada == variable || TS[i].tipo_entrada == parametro_formal) {
+            if(TS[i].tipo_entrada == variable || TS[i].tipo_entrada == parametro_formal || TS[i].tipo_entrada == funcion) {
                 printf(" de tipo %s", imprimeTipoD(TS[i].tipo_dato));
                 printf(" con dimensiones %d, %d\n", TS[i].t_dim1, TS[i].t_dim2);
             }
