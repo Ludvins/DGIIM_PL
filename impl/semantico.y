@@ -306,13 +306,10 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | expresion MASMENOS expresion
                             {
-                                if (esNumero($1.tipo) && esNumero($3.tipo)){
-                                    if ($1.tipo == real || $3.tipo == real)
-                                        $$.tipo = real;
-                                    else
-                                        $$.tipo = entero;
+                                if ($1.tipo == $3.tipo){
+                                    $$.tipo = $1.tipo;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos numéricos para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("Los tipos no son iguales para aplicar el operador %s.\n", $2.lexema);
                                     $$.tipo = desconocido;
                                 }
 
@@ -338,10 +335,10 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | expresion OPIG expresion
                             {
-                                if ($1.tipo == $3.tipo || (esNumero($1.tipo) && esNumero($3.tipo)))
+                                if ($1.tipo == $3.tipo)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son compatibles para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("Los tipos no son iguales para aplicar el operador %s.\n", $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -350,10 +347,10 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | expresion OPREL expresion
                             {
-                                if (esNumero($1.tipo) && esNumero($3.tipo))
+                                if ($1.tipo == $3.tipo)
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador binario %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("Los tipos no son iguales para aplicar el operador binario %s.\n", $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
@@ -362,13 +359,10 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | expresion OPMUL expresion
                             {
-                                if (esNumero($1.tipo) && esNumero($3.tipo)) {
-                                    if ($1.tipo == real || $3.tipo == real)
-                                        $$.tipo = real;
-                                    else
-                                        $$.tipo = entero;
+                                if ($1.tipo == $3.tipo){
+                                    $$.tipo = $1.tipo;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no es numérico para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("Los tipos no son iguales para aplicar el operador %s.\n", $2.lexema);
                                     $$.tipo = desconocido;
                                 }
 
@@ -573,8 +567,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            if ($1.tipo != $3.tipo && !(esNumero($1.tipo)
-                                && esNumero($3.tipo))) {
+                            if ($1.tipo != $3.tipo) {
                                 semprintf("El tipo de la expresión no coincide con el del identificador '%s'.\n", $1.lexema);
                             } else if ($1.n_dims != $3.n_dims) {
                                 semprintf("Las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
