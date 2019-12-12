@@ -338,14 +338,14 @@ expresion                   : PARIZQ expresion PARDCH
                             }
                             | expresion OPIG expresion
                             {
-                                if ($1.tipo == $3.tipo)
+                                if ($1.tipo == $3.tipo || (esNumero($1.tipo) && esNumero($3.tipo)))
                                     $$.tipo = booleano;
                                 else {
-                                    semprintf("El tipo %s o el tipo %s no son iguales para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son compatibles para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion OPREL expresion
@@ -383,7 +383,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 }
                                 else if (!strcmp("*", $2.lexema)) {
                                     if ($1.n_dims != 0 && $3.n_dims != 0 && ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2) ) {
-                                        semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
+                                        semprintf("El operador %s solo se puede aplicar sobre dos números, un array y un número ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
                                       $$.n_dims = max($1.n_dims, $3.n_dims);
@@ -465,7 +465,7 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
 
                             if ($4.tope_listas == 0) {
                                 if ($2.dim1 > 1 && $4.tope_listas == 0) {
-                                    semprintf ("Sobra un ';' al final del agregado2D\n.");
+                                    semprintf ("Sobra un ';' al final del agregado2D.\n");
                                 }
                                 else {
                                     $$.dim1 = $2.dim1;
@@ -473,7 +473,7 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                                 }
                             } else {
                                 if ($2.dim2 != $4.tope_listas && $4.tope_listas != 0)  {
-                                    semprintf ("Todas las listas de expresiones de un agregado2D tiene que tener el mismo número de expresiones.\n");
+                                    semprintf ("Todas las listas de expresiones de un agregado2D tienen que tener el mismo número de expresiones.\n");
                                 } else {
                                     $$.dim1 = $2.dim1 +1;
                                     $$.dim2 = $2.dim2;
@@ -498,7 +498,7 @@ listas                      : listas PYC expresiones {
                             $$.tipo = $1.tipo;
 
                             if ($1.dim2 != $3.tope_listas){
-                                semprintf ("Todas las listas de expresiones de un agregado2D tiene que tener el mismo número de expresiones.\n")
+                                semprintf ("Todas las listas de expresiones de un agregado2D tienen que tener el mismo número de expresiones.\n");
                             } else
                                 $$.dim2 = $1.dim2;
                             $$.dim1 == $1.dim1 + 1;
@@ -572,7 +572,7 @@ sentencia_llamada_funcion   : llamada_funcion PYC
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             if ($1.tipo != $3.tipo && !(esNumero($1.tipo)
                                 && esNumero($3.tipo))) {
-                                semprintf("El tipo de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
+                                semprintf("El tipo de la expresión no coincide con el del identificador '%s'.\n", $1.lexema);
                             } else if ($1.n_dims != $3.n_dims) {
                                 semprintf("Las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
                             }
