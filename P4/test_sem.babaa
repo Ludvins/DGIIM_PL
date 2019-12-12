@@ -4,7 +4,7 @@ programa() {
         real vf ;
         caracter vc;
         buleano vl;
-        entero pe[10], pe2[10, 10], pe2_2[2,2];
+        entero pe[10], pe2[10, 10], pe2_2[2,2], pe_fila[1, 2];
         real pf[10], pf2[10, 10];
         caracter pc[10], pc2[10, 10];
         buleano pl[10];
@@ -90,12 +90,14 @@ programa() {
 
     pe = {1, 2, 3, 4, 5, 6, 7, 8, 9, pe2[0, 0]};
     pe2_2 = {ve, ve ; ve + 1, 2};
+    pe_fila = {ve, 1;};
 
     pe[0] = funcionF();
     pf[1] = 10.0;
     pc[0] = 'e';
 
     pf2 = pf2 ** pf2;
+    pe_fila = pe_fila ** pe2_2;
 
     si(pe2[0, 1] == 20)
         pe[0] = 10;

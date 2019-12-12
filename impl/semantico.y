@@ -200,7 +200,7 @@ tipo_comp                   : TIPO {
                             }
 ;
 
-llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
+llamada_funcion             : IDENTIFICADOR PARIZQ expresiones_o_vacio PARDCH {
                             int indice = encuentraTS($1.lexema);
 
                             if (indice == -1) {
@@ -454,7 +454,7 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
                             }
 ;
 
-agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
+agregado2D                  : LLAVEIZQ listas PYC expresiones_o_vacio LLAVEDCH {
                             $$.tipo = $2.tipo;
 
                             if ($4.tope_listas == 0) {
@@ -527,10 +527,13 @@ listas                      : listas PYC expresiones {
                             }
 ;
 
-expresiones                 : /* empty */ {
+expresiones_o_vacio         : /* empty */ {
                             $$.tope_listas = 0;
                             }
-                            | expresiones COMA expresion {
+                            | expresiones
+;
+
+expresiones                 : expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
                             $$.lista_ndims[$$.tope_listas] = $3.n_dims;
                             $$.lista_dims1[$$.tope_listas]  = $3.dim1;
