@@ -333,15 +333,9 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
-                                        $$.n_dims = $1.n_dims;
-                                        if ($$.n_dims < $3.n_dims)
-                                            $$.n_dims = $3.n_dims;
-                                        $$.dim1 = $1.dim1;
-                                        if ($$.dim1 < $3.dim1)
-                                            $$.dim1 = $3.dim1;
-                                        $$.dim2 = $1.dim2;
-                                        if ($$.dim2 < $3.dim2)
-                                            $$.dim2 = $3.dim2;
+                                        $$.n_dims = max($1.n_dims, $3.n_dims);
+                                        $$.dim1 = max($1.dim1, $3.dim1);
+                                        $$.dim2 = max($1.dim2, $3.dim2);
                                     }
                                 }
                                 if (!strcmp("-", $2.lexema)) {
@@ -404,16 +398,9 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
-                                        // MAX
-                                        $$.n_dims = $1.n_dims;
-                                        if ($$.n_dims < $3.n_dims)
-                                            $$.n_dims = $3.n_dims;
-                                        $$.dim1 = $1.dim1;
-                                        if ($$.dim1 < $3.dim1)
-                                            $$.dim1 = $3.dim1;
-                                        $$.dim2 = $1.dim2;
-                                        if ($$.dim2 < $3.dim2)
-                                            $$.dim2 = $3.dim2;
+                                      $$.n_dims = max($1.n_dims, $3.n_dims);
+                                      $$.dim1 = max($1.dim1, $3.dim1);
+                                      $$.dim2 = max($1.dim2, $3.dim2);
                                     }
                                 }
                                 else if (!strcmp("/", $2.lexema)) {

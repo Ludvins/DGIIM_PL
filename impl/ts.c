@@ -444,3 +444,17 @@ TipoDato getTipoConstante(char* constante){
         return caracter;
     return real;
 }
+
+unsigned max (unsigned a, unsigned b){
+  if (a > b){
+    return a;
+  }
+  return b;
+}
+
+unsigned min (unsigned a, unsigned b){
+  if (a < b){
+    return a;
+  }
+  return b;
+}
