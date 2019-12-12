@@ -8,8 +8,6 @@
 #define YYDEBUG 0
 
 int yylex();  // Para evitar warning al compilar
-// Indica si estamos en un bloque de definición de variables
-int isDef = 0;
 
 %}
 
@@ -79,14 +77,10 @@ declar_de_variables_locales : /* empty */
                               marca_fin_declar_variables
 ;
 
-marca_ini_declar_variables  : INILOCAL {
-                            isDef = 1;
-                            }
+marca_ini_declar_variables  : INILOCAL
 ;
 
-marca_fin_declar_variables  : FINLOCAL{
-                            isDef = 0;
-                            }
+marca_fin_declar_variables  : FINLOCAL
 ;
 
 variables_locales           : variables_locales cuerpo_declar_variable
@@ -165,24 +159,18 @@ identificador_comp_cte      : IDENTIFICADOR {
                             $$.dim1 = 0;
                             $$.dim2 = 0;
                             $$.lexema = $1.lexema;
-                            if (isDef)
-                                $$.n_dims = 0;
-                            else
-                                $$.n_dims = nDimensiones($1.lexema);
+                            $$.n_dims = 0;
                             }
                             | IDENTIFICADOR acceso_array_cte {
                             $$.lexema = $1.lexema;
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
-                            if (isDef)
-                                $$.n_dims = $2.n_dims;
-                            else
-                                $$.n_dims = nDimensiones($1.lexema) - $2.n_dims;
+                            $$.n_dims = $2.n_dims;
                             }
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
-                            insertaFuncion($2.lexema, $1.tipo, $1.dim1, $2.dim2);
+                            insertaFuncion($2.lexema, $1.tipo, $1.dim1, $1.dim2);
                             } lista_argumentos PARDCH
 ;
 
@@ -228,13 +216,13 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                                 else {
                                     for (int i = 0; i < $3.tope_listas; ++i){
                                         if (TS[indice + i + 1].tipo_dato != $3.lista_tipos[i]){
-                                            semprintf("El parámetro actual número %d tiene tipo %s, mientras que el parámetro formal número %d tiene tipo %s.\n",
-                                                i + 1, tipodatoToStr($3.lista_tipos[i]), i + 1, tipodatoToStr(TS[indice + i + 1].tipo_dato));
+                                            semprintf("En la llamada a la función %s, el parámetro actual número %d tiene tipo %s, mientras que el parámetro formal número %d tiene tipo %s.\n",
+                                                $1.lexema, i + 1, tipodatoToStr($3.lista_tipos[i]), i + 1, tipodatoToStr(TS[indice + i + 1].tipo_dato));
                                         }
 
-                                        else if (nDimensiones(TS[indice + i + 1].nombre) != $3.lista_ndims[i]) {
-                                            semprintf("El parámetro actual número %d tiene %d dimensiones, mientras que el parámetro formal número %d tiene %d dimensiones.\n",
-                                                i + 1, $3.lista_ndims[i], i + 1, nDimensiones(TS[indice + i + 1].nombre));
+                                        else if (TS[indice + i + 1].t_dim1 != $3.lista_dims1[i] || TS[indice + i + 1].t_dim2 != $3.lista_dims2[i]) {
+                                            semprintf("En la llamada a la función %s, alguno de los tamaños del parámetro actual %d no coincide con el correspondiente tamaño del parámetro formal %d.\n",
+                                                $1.lexema, i + 1, i + 1);
                                         }
                                     }
                                 }
@@ -532,11 +520,15 @@ expresiones                 : /* empty */
                             | expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
                             $$.lista_ndims[$$.tope_listas] = $3.n_dims;
+                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
                             $$.tope_listas += 1;
                             }
                             | expresion {
                             $$.lista_tipos[$$.tope_listas] = $1.tipo;
                             $$.lista_ndims[$$.tope_listas] = $1.n_dims;
+                            $$.lista_dims1[$$.tope_listas]  = $1.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $1.dim2;
                             $$.tope_listas += 1;
                             }
 ;

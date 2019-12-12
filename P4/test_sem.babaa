@@ -15,7 +15,7 @@ programa() {
             entero x1, x2;
         finvar
 
-        caracter funcionB(caracter b1, buleano b2) {
+        caracter[10, 10] funcionB(caracter b1, buleano b2[10]) {
             var
                 real xf, x2;
             finvar
@@ -82,6 +82,8 @@ programa() {
             caso 3: salida ve*4;
             predeterminado:
         }
+
+        pc2 = funcionB('h', pl);
     }
 
     entero funcionF() {
