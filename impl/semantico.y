@@ -464,7 +464,7 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                             $$.tipo = $2.tipo;
 
                             if ($4.tope_listas == 0) {
-                                if ($2.dim1 > 1 && $4.tope_listas == 0) {
+                                if ($2.dim1 > 1) {
                                     semprintf ("Sobra un ';' al final del agregado2D.\n");
                                 }
                                 else {
@@ -501,7 +501,8 @@ listas                      : listas PYC expresiones {
                                 semprintf ("Todas las listas de expresiones de un agregado2D tienen que tener el mismo número de expresiones.\n");
                             } else
                                 $$.dim2 = $1.dim2;
-                            $$.dim1 == $1.dim1 + 1;
+
+                            $$.dim1 = $1.dim1 + 1;
 
                             for (int i = 0; i < $3.tope_listas; i++) {
                                 if ($$.tipo != $3.lista_tipos[i]){
@@ -532,20 +533,22 @@ listas                      : listas PYC expresiones {
                             }
 ;
 
-expresiones                 : /* empty */
+expresiones                 : /* empty */ {
+                            $$.tope_listas = 0;
+                            }
                             | expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
                             $$.lista_ndims[$$.tope_listas] = $3.n_dims;
                             $$.lista_dims1[$$.tope_listas]  = $3.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
-                            $$.tope_listas += 1;
+                            $$.tope_listas = $1.tope_listas + 1;
                             }
                             | expresion {
                             $$.lista_tipos[$$.tope_listas] = $1.tipo;
                             $$.lista_ndims[$$.tope_listas] = $1.n_dims;
                             $$.lista_dims1[$$.tope_listas]  = $1.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
-                            $$.tope_listas += 1;
+                            $$.tope_listas = 1;
                             }
 ;
 
@@ -646,7 +649,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
 
-                            $$.tope_listas += 1;
+                            $$.tope_listas = $1.tope_listas + 1;
                             }
                             | identificador_comp_cte {
                             $$.lista_ids[$$.tope_listas]    = $1.lexema;
@@ -654,7 +657,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
 
-                            $$.tope_listas += 1;
+                            $$.tope_listas = 1;
                             }
 ;
 
