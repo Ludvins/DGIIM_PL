@@ -9,6 +9,9 @@
 
 int yylex();  // Para evitar warning al compilar
 
+// Macro para imprimir la generación de código
+#define genprintf(f_, ...) { if(!error){printf((f_), ##__VA_ARGS__); fflush(stdout);} }
+
 %}
 
 %define parse.error verbose
