@@ -321,15 +321,9 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo se puede aplicar sobre dos números, un array y un número ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
-                                        $$.n_dims = $1.n_dims;
-                                        if ($$.n_dims < $3.n_dims)
-                                            $$.n_dims = $3.n_dims;
-                                        $$.dim1 = $1.dim1;
-                                        if ($$.dim1 < $3.dim1)
-                                            $$.dim1 = $3.dim1;
-                                        $$.dim2 = $1.dim2;
-                                        if ($$.dim2 < $3.dim2)
-                                            $$.dim2 = $3.dim2;
+                                        $$.n_dims = max($1.n_dims, $3.n_dims);
+                                        $$.dim1 = max($1.dim1, $3.dim1);
+                                        $$.dim2 = max($1.dim2, $3.dim2);
                                     }
                                 }
                                 if (!strcmp("-", $2.lexema)) {
@@ -392,16 +386,9 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
-                                        // MAX
-                                        $$.n_dims = $1.n_dims;
-                                        if ($$.n_dims < $3.n_dims)
-                                            $$.n_dims = $3.n_dims;
-                                        $$.dim1 = $1.dim1;
-                                        if ($$.dim1 < $3.dim1)
-                                            $$.dim1 = $3.dim1;
-                                        $$.dim2 = $1.dim2;
-                                        if ($$.dim2 < $3.dim2)
-                                            $$.dim2 = $3.dim2;
+                                      $$.n_dims = max($1.n_dims, $3.n_dims);
+                                      $$.dim1 = max($1.dim1, $3.dim1);
+                                      $$.dim2 = max($1.dim2, $3.dim2);
                                     }
                                 }
                                 else if (!strcmp("/", $2.lexema)) {
@@ -475,6 +462,25 @@ agregado1D                  : LLAVEIZQ expresiones LLAVEDCH {
 
 agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
                             $$.tipo = $2.tipo;
+
+                            if ($4.tope_listas == 0) {
+                                if ($2.dim1 > 1 && $4.tope_listas == 0) {
+                                    semprintf ("Sobra un ';' al final del agregado2D\n.");
+                                }
+                                else {
+                                    $$.dim1 = $2.dim1;
+                                    $$.dim2 = $2.dim2;
+                                }
+                            } else {
+                                if ($2.dim2 != $4.tope_listas && $4.tope_listas != 0)  {
+                                    semprintf ("Todas las listas de expresiones de un agregado2D tiene que tener el mismo número de expresiones.\n");
+                                } else {
+                                    $$.dim1 = $2.dim1 +1;
+                                    $$.dim2 = $2.dim2;
+                                }
+                            }
+                            $$.n_dims = 2;
+
                             for (int i = 0; i < $4.tope_listas; i++) {
                                 if ($$.tipo != $4.lista_tipos[i]){
                                     $$.tipo = desconocido;
@@ -490,6 +496,13 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones LLAVEDCH {
 
 listas                      : listas PYC expresiones {
                             $$.tipo = $1.tipo;
+
+                            if ($1.dim2 != $3.tope_listas){
+                                semprintf ("Todas las listas de expresiones de un agregado2D tiene que tener el mismo número de expresiones.\n")
+                            } else
+                                $$.dim2 = $1.dim2;
+                            $$.dim1 == $1.dim1 + 1;
+
                             for (int i = 0; i < $3.tope_listas; i++) {
                                 if ($$.tipo != $3.lista_tipos[i]){
                                     $$.tipo = desconocido;
@@ -500,6 +513,7 @@ listas                      : listas PYC expresiones {
                                   semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
                                 }
                             }
+
                             }
                             | expresiones {
                             $$.tipo = $1.lista_tipos[0];
@@ -513,6 +527,8 @@ listas                      : listas PYC expresiones {
                                   semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
                                 }
                             }
+                            $$.dim1 += 1;
+                            $$.dim2 = $1.tope_listas;
                             }
 ;
 
