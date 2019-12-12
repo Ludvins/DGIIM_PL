@@ -4,7 +4,7 @@ programa() {
         real vf ;
         caracter vc;
         buleano vl;
-        entero pe[10], pe2[10, 10];
+        entero pe[10], pe2[10, 10], pe2_2[2,2];
         real pf[10], pf2[10, 10];
         caracter pc[10], pc2[10, 10];
         buleano pl[10];
@@ -37,6 +37,7 @@ programa() {
             x2 = xf* (funcionC(falso,1)-funcionC(verdadero,23)) /10.0;
 
             pe = {1, 2, 3, 4, 5, 6, 7, 8, 9, pe2[0, 0]};
+            pe2_2 = {x1, x2 ; x1 + 1, 2};
 
             mientras (x2 * funcionC(falso, 1)-xf<10.0)
                 x2 = x2*xf;
