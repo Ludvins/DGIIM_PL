@@ -291,4 +291,7 @@ int esNumero(TipoDato tipo);
  */
 TipoDato getTipoConstante(char* constante);
 
+unsigned max (unsigned a, unsigned b);
+unsigned min (unsigned a, unsigned b);
+
 #endif // __TS_H_

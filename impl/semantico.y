@@ -378,7 +378,7 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $3.dim2;
                                     } else {
-                                        semprintf("El operador %s solo puede actuar sobre arrays 2D.\n", $2.lexema);
+                                        semprintf("Las dimensiones de %s y/o %s no son las correctas para aplicar el operador %s.\n",$1.lexema, $3.lexema, $2.lexema);
                                     }
                                 }
                                 else if (!strcmp("*", $2.lexema)) {
