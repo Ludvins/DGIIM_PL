@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "error.h"
 
+#define DEBUG 0
+
 unsigned int  tope = 0;                     // Tope de la pila
 unsigned int  sub_prog = 0;                 // Indicador de comienzo de bloque de un subprog
 int ultima_funcion = -1;                    // Posición en la tabla de símbolos del último procedimiento

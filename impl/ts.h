@@ -7,7 +7,6 @@
 
 #define MAX_TS 500
 #define MAX_ARGS 50
-#define DEBUG 0
 
 extern unsigned int tope;              // Tope de la pila
 unsigned int sub_prog;              // Indicador de comienzo de bloque de un subprog
