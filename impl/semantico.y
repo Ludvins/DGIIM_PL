@@ -49,8 +49,8 @@ programa                    : cabecera_programa bloque
 ;
 
 bloque                      : inicio_de_bloque
-                              declar_de_variables_locales {if (DEBUG) imprimeTS();}
-                              declar_de_subprogs {if (DEBUG) imprimeTS();}
+                              declar_de_variables_locales
+                              declar_de_subprogs
                               sentencias
                               fin_de_bloque
 ;
@@ -132,7 +132,7 @@ identificador_comp          : IDENTIFICADOR {
                                 }
 
                                 if (ndims_e == 1 && $2.n_dims == 2) {
-                                    semprintf("Intento de acceder a un array1D usando dos índices.\n");
+                                    semprintf("Intento de acceder a un array 1D usando dos índices.\n");
                                 }
 
                                 if (ndims_e == 2 && $2.n_dims == 1) {
@@ -221,7 +221,7 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones PARDCH {
                                         }
 
                                         else if (TS[indice + i + 1].t_dim1 != $3.lista_dims1[i] || TS[indice + i + 1].t_dim2 != $3.lista_dims2[i]) {
-                                            semprintf("En la llamada a la función %s, alguno de los tamaños del parámetro actual %d no coincide con el correspondiente tamaño del parámetro formal %d.\n",
+                                            semprintf("En la llamada a la función %s, el tamaño del parámetro actual %d no coincide con el tamaño del parámetro formal %d.\n",
                                                 $1.lexema, i + 1, i + 1);
                                         }
                                     }
@@ -253,7 +253,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
                                 if ($2.n_dims != 0) {
-                                    semprintf("El tipo %s es un array y no se puede aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("No se puede aplicar el operador unario %s sobre un array.\n", tipodatoToStr($2.tipo), $1.lexema);
                                 }
                             }
                             | MASMENOS expresion
@@ -264,7 +264,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 if (esNumero($2.tipo))
                                     $$.tipo = $2.tipo;
                                 else {
-                                    semprintf("El tipo %s no es númerico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
+                                    semprintf("El tipo %s no es numérico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                     $$.tipo = desconocido;
                                 }
                             }
@@ -277,7 +277,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s\n", $2.lexema);
                                 }
                             }
                             | expresion AND expresion
@@ -289,7 +289,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion XOR expresion
@@ -301,7 +301,7 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
-                                    semprintf("Una de las dos expresiones es array y no se puede aplicar el operador binario %s.\n", $2.lexema);
+                                    semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
                             }
                             | expresion MASMENOS expresion
@@ -312,13 +312,13 @@ expresion                   : PARIZQ expresion PARDCH
                                     else
                                         $$.tipo = entero;
                                 } else {
-                                    semprintf("El tipo %s o el tipo %s no son ambos números para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
+                                    semprintf("El tipo %s o el tipo %s no son ambos numéricos para aplicar el operador %s.\n", tipodatoToStr($1.tipo), tipodatoToStr($3.tipo), $2.lexema);
                                     $$.tipo = desconocido;
                                 }
 
                                 if (!strcmp("+", $2.lexema)) {
                                     if ($1.n_dims != 0 && $3.n_dims != 0 && ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2) ) {
-                                        semprintf("El operador %s solo se puede aplicar sobre array y valores ó arrays de la misma dimensión.\n", $2.lexema);
+                                        semprintf("El operador %s solo se puede aplicar sobre dos números, un array y un número ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
                                         $$.n_dims = max($1.n_dims, $3.n_dims);
@@ -332,7 +332,7 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.dim2 = $1.dim2;
                                         $$.n_dims = $1.n_dims;
                                     } else {
-                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
+                                        semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es numérico.\n", $2.lexema);
                                     }
                                 }
                             }
@@ -631,10 +631,11 @@ sentencia_break             : BREAK PYC
 sentencia_return            : RETURN expresion PYC
 ;
 
-sentencia_entrada           : CIN CADENA COMA lista_id PYC {
+sentencia_entrada           : CIN CADENA COMA lista_id_entrada PYC {
                             for(int i = 0; i < $4.tope_listas; ++i) {
-                                if ($4.lista_ndims[i] != 0)
+                                if ($4.lista_ndims[i] != 0) {
                                     semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
+                                }
                             }
                             }
 ;
@@ -645,7 +646,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
 
-                            $$.tope_listas+=1;
+                            $$.tope_listas += 1;
                             }
                             | identificador_comp_cte {
                             $$.lista_ids[$$.tope_listas]    = $1.lexema;
@@ -653,7 +654,25 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
 
-                            $$.tope_listas+=1;
+                            $$.tope_listas += 1;
+                            }
+;
+
+lista_id_entrada            : lista_id_entrada COMA identificador_comp {
+                            $$.lista_ids[$$.tope_listas]    = $3.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
+
+                            $$.tope_listas += 1;
+                            }
+                            | identificador_comp {
+                            $$.lista_ids[$$.tope_listas]    = $1.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $1.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $1.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
+
+                            $$.tope_listas += 1;
                             }
 ;
 
