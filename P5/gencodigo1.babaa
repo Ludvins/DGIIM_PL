@@ -1,0 +1,22 @@
+programa() {
+  var
+    entero n, curr;
+  finvar
+  entrada "introduce numero : ", n;
+  salida n , " == ";
+  curr = 2;
+  mientras( curr <= n ){
+    var
+      entero d;
+    finvar
+    d = n / curr;
+
+    si(d*curr == n){
+      salida curr;
+      n = n / curr;
+    }otro{
+      curr = curr + 1;
+    }
+  }
+  salida "\n";
+}

@@ -1,0 +1,49 @@
+programa(){
+  var
+    entero n, curr, ultim, cuenta, primero;
+  finvar
+  ultim = 0;
+  cuenta = 0;
+  primero = 1;
+  entrada "introduce numero : ", n;
+  salida n, " == ";
+  mientras(curr <= n){
+    var
+      entero d;
+    finvar
+    d = n/curr;
+    si(d*curr == n){
+      si(curr != ultim){
+        ultim = curr;
+        cuenta = 1;
+      }otro{
+        cuenta = cuenta + 1;
+      }
+      n = n/curr;
+    }otro{
+      si(cuenta > 0){
+        si(primero == 0){
+          salida " *";
+        }
+        primero = 0;
+        salida " ", curr;
+        si(cuenta > 1){
+          salida "^", cuenta;
+        }
+      }
+      curr = curr + 1;
+      cuenta = 0;
+    }
+  }
+  si(cuenta > 0){
+    si(primero == 0){
+      salida " *";
+    }
+    primero = 0;
+    salida " ", curr;
+    si(cuenta > 1){
+      salida "^", cuenta;
+    }
+  }
+  salida "\n";
+}
