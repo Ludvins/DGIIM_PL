@@ -461,3 +461,7 @@ unsigned min (unsigned a, unsigned b){
   }
   return b;
 }
+
+int esMain(){
+  return bloques_anidados == 1;
+}
