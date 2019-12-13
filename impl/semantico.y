@@ -6,13 +6,18 @@
 #include "error.h"
 
 #define YYDEBUG 0
+#define TAM_BUFFER 16
 
 int yylex();  // Para evitar warning al compilar
 extern FILE * fout; // Salida para el código generado
 
 // Macro para imprimir la generación de código
-#define genprintf(f_, ...) {if(!error) {fprintf(fout, (f_), ##__VA_ARGS__); fflush(fout);} }
+#define genprintf(f_, ...) {if(!error) {fprintf(fout, (f_), ##__VA_ARGS__); fflush(fout);}}
 
+int prox_etiqueta = 0;
+int prox_temporal = 0;
+char * etiqueta();
+char * temporal();
 %}
 
 %define parse.error verbose
@@ -49,17 +54,18 @@ extern FILE * fout; // Salida para el código generado
 
 %%
 
-programa                    : cabecera_programa {
-                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n");
-                            genprintf("int main(int argc, char * argv[]) {\n");
-                            } bloque {
-                            genprintf("}\n");
+programa                    : {
+                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n");
                             }
+                              cabecera_programa
+                              bloque
 ;
 
 bloque                      : inicio_de_bloque
                               declar_de_variables_locales
-                              declar_de_subprogs
+                              declar_de_subprogs {
+                              if (esMain()) genprintf("int main() {\n");
+                              }
                               sentencias
                               fin_de_bloque
 ;
@@ -67,10 +73,14 @@ bloque                      : inicio_de_bloque
 cabecera_programa           : CABECERA
 ;
 
-inicio_de_bloque            : LLAVEIZQ {entraBloqueTS();}
+inicio_de_bloque            : LLAVEIZQ {entraBloqueTS();} {
+                            if(!esMain()) genprintf("{\n");
+                            }
 ;
 
-fin_de_bloque               : LLAVEDCH {salBloqueTS();}
+fin_de_bloque               : LLAVEDCH {salBloqueTS();} {
+                            genprintf("}\n");
+                            }
 ;
 
 declar_de_subprogs          : /* empty */
@@ -703,3 +713,15 @@ sentencia_salida            : COUT lista_exp_cad PYC
 %%
 
 #include "lex.yy.c"
+
+char * etiqueta() {
+  char * buffer = malloc(sizeof(char) * TAM_BUFFER);
+  snprintf(buffer, TAM_BUFFER, "etiq%d", prox_etiqueta++);
+  return buffer;
+}
+
+char * temporal() {
+  char * buffer = malloc(sizeof(char) * TAM_BUFFER);
+  snprintf(buffer, TAM_BUFFER, "temp%d", prox_temporal++);
+  return buffer;
+}

@@ -293,4 +293,6 @@ TipoDato getTipoConstante(char* constante);
 unsigned max (unsigned a, unsigned b);
 unsigned min (unsigned a, unsigned b);
 
+int esMain();
+
 #endif // __TS_H_

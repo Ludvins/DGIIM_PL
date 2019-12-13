@@ -12,19 +12,19 @@ int main(int argc, char * argv[]) {
   if (argc > 1) {
     yyin = fopen (argv[1], "rt");
     if (yyin == NULL) {
-      fprintf (stderr, "---> El fichero %s no se puede abrir\n", argv[1]);
+      printf ("> El fichero %s no se puede abrir\n", argv[1]);
       exit (1);
     }
     else {
-      fprintf(stderr, "---> Leyendo fichero '%s'...\n", argv[1]);
+      printf("> Leyendo fichero '%s'...\n", argv[1]);
     }
   }
   else {
-    fprintf(stderr, "---> Leyendo entrada estándar...\n");
+    printf("> Leyendo entrada estándar...\n");
     yyin = stdin;
   }
 
-  fflush(stderr);
+  fflush(stdout);
 
   char nombre[100];
 
@@ -38,15 +38,24 @@ int main(int argc, char * argv[]) {
 
   yyparse();
 
-  fprintf(stderr, "---> Se ha llegado al final del programa.\n");
-  fprintf(stderr, "Número de errores: %d.\n", error);
+  printf("> Se ha llegado al final del programa.\n");
+  printf("> Número de errores: %d.\n", error);
 
   if (!error) {
     char llamada[100];
 
-    fprintf(stderr, "Compilando programa...\n");
+    printf("> Compilando programa %s...\n", nombre);
     sprintf(llamada, "gcc %s -o salida.out", nombre);
-    system(llamada);
+    int e = system(llamada);
+
+    if (e) {
+      printf("> Se produjeron errores de compilación.\n");
+    }
+
+    else {
+      printf("> Se ha generado el ejecutable salida.out.\n");
+    }
+
   }
 
   return error;
