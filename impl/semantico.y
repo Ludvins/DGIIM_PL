@@ -8,9 +8,10 @@
 #define YYDEBUG 0
 
 int yylex();  // Para evitar warning al compilar
+extern FILE * fout; // Salida para el código generado
 
 // Macro para imprimir la generación de código
-#define genprintf(f_, ...) { if(!error){printf((f_), ##__VA_ARGS__); fflush(stdout);} }
+#define genprintf(f_, ...) {if(!error) {fprintf(fout, (f_), ##__VA_ARGS__); fflush(fout);} }
 
 %}
 
@@ -48,7 +49,12 @@ int yylex();  // Para evitar warning al compilar
 
 %%
 
-programa                    : cabecera_programa bloque
+programa                    : cabecera_programa {
+                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n");
+                            genprintf("int main(int argc, char * argv[]) {\n");
+                            } bloque {
+                            genprintf("}\n");
+                            }
 ;
 
 bloque                      : inicio_de_bloque

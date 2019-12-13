@@ -4,3 +4,5 @@ y.tab.h
 y.tab.c
 semantico
 obj/
+*.out
+salida.c
