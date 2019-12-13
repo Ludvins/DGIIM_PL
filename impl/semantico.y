@@ -628,8 +628,13 @@ sentencia_asignacion        : identificador_comp ASIG expresion PYC {
 
 sentencia_if                : IF PARIZQ expresion {
                             if($3.tipo != booleano){
-                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
+                                semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
                             }
+
+                            char* e_salida = etiqueta();
+                            char* e_else = etiqueta();
+                            insertaIf(e_salida, e_else);
+                            genprintf("if (!%s) goto %s;" $3.lexema, e_else);
                             } PARDCH sentencia sentencia_else
 ;
 
