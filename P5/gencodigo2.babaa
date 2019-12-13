@@ -6,7 +6,7 @@ programa(){
   cuenta = 0;
   primero = 1;
   entrada "introduce numero : ", n;
-  salida n, " == ";
+  salida n, "  == ";
   mientras(curr <= n){
     var
       entero d;

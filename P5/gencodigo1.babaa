@@ -3,7 +3,7 @@ programa() {
     entero n, curr;
   finvar
   entrada "introduce numero : ", n;
-  salida n , " == ";
+  salida " ", n , " == ";
   curr = 2;
   mientras( curr <= n ){
     var
@@ -12,7 +12,7 @@ programa() {
     d = n / curr;
 
     si(d*curr == n){
-      salida curr;
+      salida "* ", curr, " ";
       n = n / curr;
     }otro{
       curr = curr + 1;
