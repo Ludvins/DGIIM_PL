@@ -235,14 +235,15 @@ tipo_comp                   : TIPO {
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones_o_vacio PARDCH {
-                            genprintf("%s(", $1.lexema);
+                            char temp[1024];
+                            sprintf(temp, "%s(", $1.lexema);
                             for (int i = 0; i < $3.tope_listas; i++) {
-                              genprintf("%s", $3.lista_ids[i]);
+                              sprintf(temp + strlen(temp), "%s", $3.lista_ids[i]);
                               if (i < $3.tope_listas - 1) {
-                                genprintf(", ");
+                                sprintf(temp + strlen(temp), ", ");
                               }
                             }
-                            genprintf(");\n");
+                            sprintf(temp + strlen(temp), ");\n");
 
                             int indice = encuentraTS($1.lexema);
 
@@ -275,16 +276,17 @@ llamada_funcion             : IDENTIFICADOR PARIZQ expresiones_o_vacio PARDCH {
                             $$.n_dims = nDimensiones($1.lexema);
                             $$.dim1 = TS[indice].t_dim1;
                             $$.dim2 = TS[indice].t_dim2;
-                            $$.lexema = $1.lexema;
+                            $$.lexema = temp;
                             }
 ;
 
 expresion                   : PARIZQ expresion PARDCH
                             {
-                                $$.tipo = $2.tipo;
-                                $$.n_dims = $2.n_dims;
-                                $$.dim1 = $2.dim1;
-                                $$.dim2 = $2.dim2;
+                              $$.tipo = $2.tipo;
+                              $$.n_dims = $2.n_dims;
+                              $$.dim1 = $2.dim1;
+                              $$.dim2 = $2.dim2;
+                              $$.lexema = $2.lexema;
                             }
                             | NOT expresion
                             {
@@ -298,6 +300,10 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($2.n_dims != 0) {
                                     semprintf("No se puede aplicar el operador unario %s sobre un array.\n", tipodatoToStr($2.tipo), $1.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = !%s;\n", $$.lexema, $2.lexema);
                             }
                             | MASMENOS expresion
                             {
@@ -310,6 +316,10 @@ expresion                   : PARIZQ expresion PARDCH
                                     semprintf("El tipo %s no es numérico para aplicar el operador unario %s.\n", tipodatoToStr($2.tipo), $1.lexema);
                                     $$.tipo = desconocido;
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s%s;\n", $$.lexema, $1.lexema, $2.lexema);
                             }
                             | expresion OR expresion
                             {
@@ -322,6 +332,10 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
                                     semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s\n", $2.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s || %s;\n", $$.lexema, $1.lexema, $3.lexema);
                             }
                             | expresion AND expresion
                             {
@@ -334,6 +348,10 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
                                     semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s && %s;\n", $$.lexema, $1.lexema, $3.lexema);
                             }
                             | expresion XOR expresion
                             {
@@ -346,6 +364,10 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
                                     semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s ^ %s;\n", $$.lexema, $1.lexema, $3.lexema);
                             }
                             | expresion MASMENOS expresion
                             {
@@ -375,6 +397,10 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es numérico.\n", $2.lexema);
                                     }
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
                             }
                             | expresion OPIG expresion
                             {
@@ -387,6 +413,11 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
                                     semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+
                             }
                             | expresion OPREL expresion
                             {
@@ -399,6 +430,10 @@ expresion                   : PARIZQ expresion PARDCH
                                 if ($1.n_dims != 0 || $3.n_dims != 0){
                                     semprintf("Una de las dos expresiones es un array y no se puede aplicar el operador binario %s.\n", $2.lexema);
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
                             }
                             | expresion OPMUL expresion
                             {
@@ -437,6 +472,10 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
                                     }
                                 }
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
                             }
                             | identificador_comp
                             {
@@ -444,11 +483,25 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.n_dims = $1.n_dims;
                                 $$.dim1 = $1.dim1;
                                 $$.dim2 = $1.dim2;
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s;\n", $$.lexema, $1.lexema);
                             }
                             | CONSTANTE
                             {
                                 $$.tipo = getTipoConstante($1.lexema);
                                 $$.n_dims = 0;
+
+                                $$.lexema = temporal();
+                                char * cte = $1.lexema;
+                                if ($$.tipo == booleano) {
+                                  if (!strcmp(cte, "verdadero"))
+                                    cte = "1";
+                                  else if (!strcmp(cte, "falso"))
+                                    cte = "0";
+                                }
+                                $$.lexema = cte;
                             }
                             | NATURAL
                             {
@@ -475,6 +528,11 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.n_dims = $1.n_dims;
                                 $$.dim1 = $1.dim1;
                                 $$.dim2 = $1.dim2;
+
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                genprintf("%s = %s\n", $$.lexema, $1.lexema);
+
                             }
                             | error
 ;
@@ -611,7 +669,9 @@ sentencia                   : bloque
                             | error
 ;
 
-sentencia_llamada_funcion   : llamada_funcion PYC
+sentencia_llamada_funcion   : llamada_funcion PYC {
+                            genprintf("%s\n", $1.lexema);
+                            }
 ;
 
 sentencia_asignacion        : identificador_comp ASIG expresion PYC {
@@ -623,6 +683,7 @@ sentencia_asignacion        : identificador_comp ASIG expresion PYC {
                             else if ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2){
                                 semprintf("El tamaño de '%s' no coincide con el de la expresión asignada.\n", $1.lexema);
                             }
+                            genprintf("%s = %s;\n", $1.lexema, $3.lexema);
                             }
 ;
 
@@ -634,7 +695,7 @@ sentencia_if                : IF PARIZQ expresion {
                             char* e_salida = etiqueta();
                             char* e_else = etiqueta();
                             insertaIf(e_salida, e_else);
-                            genprintf("if (!%s) goto %s;" $3.lexema, e_else);
+                            genprintf("if (!%s) goto %s;", $3.lexema, e_else);
                             } PARDCH sentencia sentencia_else
 ;
 
@@ -696,6 +757,7 @@ sentencia_return            : RETURN expresion PYC {
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id_entrada PYC {
+                            genprintf("printf(\"%%s\", %s);\n", $2.lexema);
                             for(int i = 0; i < $4.tope_listas; ++i) {
                                 if ($4.lista_ndims[i] != 0) {
                                     semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
@@ -713,6 +775,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims1[$$.tope_listas]  = $3.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $3.tipo;
 
                             $$.tope_listas = $1.tope_listas + 1;
                             }
@@ -721,6 +784,7 @@ lista_id                    : lista_id COMA identificador_comp_cte {
                             $$.lista_dims1[$$.tope_listas]  = $1.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $1.tipo;
 
                             $$.tope_listas = 1;
                             }
@@ -731,6 +795,7 @@ lista_id_entrada            : lista_id_entrada COMA identificador_comp {
                             $$.lista_dims1[$$.tope_listas]  = $3.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $3.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $3.tipo;
 
                             $$.tope_listas += 1;
                             }
@@ -739,29 +804,53 @@ lista_id_entrada            : lista_id_entrada COMA identificador_comp {
                             $$.lista_dims1[$$.tope_listas]  = $1.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
                             $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $1.tipo;
 
                             $$.tope_listas += 1;
                             }
 ;
 
-lista_exp_cad               : lista_exp_cad COMA exp_cad //TODO
-                            | exp_cad
+lista_exp_cad               : lista_exp_cad COMA exp_cad {
+                            $$.lista_ids[$$.tope_listas]    = $3.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $3.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $3.tipo;
+
+                            $$.tope_listas += 1;
+                            }
+                            | exp_cad {
+                            $$.lista_ids[$$.tope_listas]    = $1.lexema;
+                            $$.lista_dims1[$$.tope_listas]  = $1.dim1;
+                            $$.lista_dims2[$$.tope_listas]  = $1.dim2;
+                            $$.lista_ndims[$$.tope_listas]  = $1.n_dims;
+                            $$.lista_tipos[$$.tope_listas]  = $1.tipo;
+
+                            $$.tope_listas += 1;
+                            }
 ;
 
-exp_cad                     : expresion  //TODO
-                            | CADENA
+exp_cad                     : expresion
+                            | CADENA {
+                            $$.lexema = $1.lexema;
+                            $$.tipo = cadena;
+                            }
 ;
 
 sentencia_salida            : COUT lista_exp_cad PYC { //TODO
-                            /*for(int i = 0; i < $2.tope_listas; ++i) {
-                                if ($4.lista_ndims[i] != 0) {
-                                    semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
+                            for(int i = 0; i < $2.tope_listas; ++i) {
+                                if ($2.lista_ndims[i] != 0) {
+                                    semprintf("El identificador '%s' para imprimir en la salida no tiene dimensión 0.\n", $2.lista_ids[i]);
                                 }
+                                int expr = 0;
                                 char tipo = 'd';
-                                if ($4.lista_tipos[i] == caracter)
+                                if ($2.lista_tipos[i] == caracter)
                                   tipo = 'c';
-                                genprintf("scanf(\"%%%c\", &%s);\n", tipo, $4.lista_ids[i]);
-                            }*/
+                                else if ($2.lista_tipos[i] == cadena)
+                                  tipo = 's';
+
+                                genprintf("printf(\"%%%c\", %s);\n", tipo, $2.lista_ids[i]);
+                            }
                             }
 ;
 

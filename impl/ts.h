@@ -42,6 +42,7 @@ typedef enum {
   real,
   booleano,
   caracter,
+  cadena,
   desconocido
 } TipoDato;
 
