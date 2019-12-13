@@ -72,7 +72,6 @@ typedef struct {
  * Atributos
  */
 typedef struct {
-  int               atrib;                    // Atributo del símbolo (si tiene)
   char*             lexema;                   // Nombre del lexema
   TipoDato          tipo;                     // Tipo del símbolo
   unsigned          n_dims;                   // Número de dimensiones.

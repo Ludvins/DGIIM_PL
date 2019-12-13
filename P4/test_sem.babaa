@@ -96,6 +96,7 @@ programa() {
     pf[1] = 10.0;
     pc[0] = 'e';
 
+    ve = funcionA(1, 2.0, 'a');
     pf2 = pf2 ** pf2;
     pe_fila = pe_fila ** pe2_2;
 

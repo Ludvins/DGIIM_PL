@@ -368,7 +368,7 @@ char* tipodatoToStrC(TipoDato tipo) {
         case caracter:
             return "char";
         default:
-            printf("(Línea %d) Error de implementación: %s no está asociado a ningún tipo nativo de C ni a una lista\n", yylineno, tipodatoToStr(tipo));
+            printf("(Línea %d) Error de implementación: %s no está asociado a ningún tipo nativo de C.\n", yylineno, tipodatoToStr(tipo));
             return "error";
     }
 }

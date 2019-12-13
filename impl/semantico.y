@@ -64,8 +64,8 @@ programa                    : {
 bloque                      : inicio_de_bloque
                               declar_de_variables_locales
                               declar_de_subprogs {
-                              if (esMain()) genprintf("int main() {\n");
-                              }
+                            if (esMain()) {genprintf("\nint main() {\n");}
+                            }
                               sentencias
                               fin_de_bloque
 ;
@@ -73,12 +73,14 @@ bloque                      : inicio_de_bloque
 cabecera_programa           : CABECERA
 ;
 
-inicio_de_bloque            : LLAVEIZQ {entraBloqueTS();} {
+inicio_de_bloque            : LLAVEIZQ {
+                            entraBloqueTS();
                             if(!esMain()) genprintf("{\n");
                             }
 ;
 
-fin_de_bloque               : LLAVEDCH {salBloqueTS();} {
+fin_de_bloque               : LLAVEDCH {
+                            salBloqueTS();
                             genprintf("}\n");
                             }
 ;
@@ -107,10 +109,17 @@ variables_locales           : variables_locales cuerpo_declar_variable
 ;
 
 cuerpo_declar_variable      : TIPO lista_id {
+                            genprintf("%s ", tipodatoToStrC(strToTipodato($1.lexema)));
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
+                                genprintf("%s", $2.lista_ids[i]);
+                                if (i < $2.tope_listas - 1) {
+                                  genprintf(", ");
+                                }
                             }
-                            } PYC
+                            genprintf(";\n");
+                            }
+                              PYC
                             | error
 ;
 
@@ -189,20 +198,26 @@ identificador_comp_cte      : IDENTIFICADOR {
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
+                            genprintf("%s %s(", tipodatoToStrC($1.tipo), $2.lexema);
                             insertaFuncion($2.lexema, $1.tipo, $1.dim1, $1.dim2);
-                            } lista_argumentos PARDCH
+                            } lista_argumentos PARDCH {
+                            genprintf(") ");
+                            }
 ;
 
 lista_argumentos            : /* empty */
                             | argumentos
 ;
 
-argumentos                  : argumentos COMA argumento
+argumentos                  : argumentos COMA {
+                            genprintf(", ");
+                            } argumento
                             | argumento
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                                insertaParametro($2.lexema, $1.lexema, $2.dim1, $2.dim2);
+                            genprintf("%s %s", tipodatoToStrC(strToTipodato($1.lexema)), $2.lexema)
+                            insertaParametro($2.lexema, $1.lexema, $2.dim1, $2.dim2);
                             }
                             | error
 ;
@@ -220,6 +235,15 @@ tipo_comp                   : TIPO {
 ;
 
 llamada_funcion             : IDENTIFICADOR PARIZQ expresiones_o_vacio PARDCH {
+                            genprintf("%s(", $1.lexema);
+                            for (int i = 0; i < $3.tope_listas; i++) {
+                              genprintf("%s", $3.lista_ids[i]);
+                              if (i < $3.tope_listas - 1) {
+                                genprintf(", ");
+                              }
+                            }
+                            genprintf(");\n");
+
                             int indice = encuentraTS($1.lexema);
 
                             if (indice == -1) {
@@ -555,8 +579,9 @@ expresiones_o_vacio         : /* empty */ {
 expresiones                 : expresiones COMA expresion {
                             $$.lista_tipos[$$.tope_listas] = $3.tipo;
                             $$.lista_ndims[$$.tope_listas] = $3.n_dims;
-                            $$.lista_dims1[$$.tope_listas]  = $3.dim1;
-                            $$.lista_dims2[$$.tope_listas]  = $3.dim2;
+                            $$.lista_dims1[$$.tope_listas] = $3.dim1;
+                            $$.lista_dims2[$$.tope_listas] = $3.dim2;
+                            $$.lista_ids[$$.tope_listas] = $3.lexema;
                             $$.tope_listas = $1.tope_listas + 1;
                             }
                             | expresion {
@@ -564,6 +589,7 @@ expresiones                 : expresiones COMA expresion {
                             $$.lista_ndims[$$.tope_listas] = $1.n_dims;
                             $$.lista_dims1[$$.tope_listas]  = $1.dim1;
                             $$.lista_dims2[$$.tope_listas]  = $1.dim2;
+                            $$.lista_ids[$$.tope_listas] = $1.lexema;
                             $$.tope_listas = 1;
                             }
 ;
@@ -626,7 +652,12 @@ sentencia_switch            : SWITCH PARIZQ expresion {
                             } PARDCH bloque_switch
 ;
 
-bloque_switch               : LLAVEIZQ opciones_y_pred LLAVEDCH
+bloque_switch               : LLAVEIZQ {
+                            genprintf("{");
+                            }
+                              opciones_y_pred LLAVEDCH {
+                            genprintf("}");
+                            }
 ;
 
 opciones_y_pred             : opciones opcion_pred
@@ -637,16 +668,26 @@ opciones                    : opciones opcion
                             | opcion
 ;
 
-opcion                      : CASE NATURAL PYP sentencias
+opcion                      : CASE NATURAL PYP {
+                            genprintf("case %d:\n", $2.lexema);
+                            }
+                              sentencias
 ;
 
-opcion_pred                 : PREDET PYP sentencias
+opcion_pred                 : PREDET PYP {
+                            genprintf("default:\n");
+                            }
+                              sentencias
 ;
 
-sentencia_break             : BREAK PYC
+sentencia_break             : BREAK PYC {
+                            genprintf("break;\n");
+                            }
 ;
 
-sentencia_return            : RETURN expresion PYC
+sentencia_return            : RETURN expresion PYC {
+                            genprintf("return %s;\n", $2.lexema);
+                            }
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id_entrada PYC {
@@ -654,6 +695,10 @@ sentencia_entrada           : CIN CADENA COMA lista_id_entrada PYC {
                                 if ($4.lista_ndims[i] != 0) {
                                     semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
                                 }
+                                char tipo = 'd';
+                                if ($4.lista_tipos[i] == caracter)
+                                  tipo = 'c';
+                                genprintf("scanf(\"%%%c\", &%s);\n", tipo, $4.lista_ids[i]);
                             }
                             }
 ;
@@ -694,15 +739,25 @@ lista_id_entrada            : lista_id_entrada COMA identificador_comp {
                             }
 ;
 
-lista_exp_cad               : lista_exp_cad COMA exp_cad
+lista_exp_cad               : lista_exp_cad COMA exp_cad //TODO
                             | exp_cad
 ;
 
-exp_cad                     : expresion
+exp_cad                     : expresion  //TODO
                             | CADENA
 ;
 
-sentencia_salida            : COUT lista_exp_cad PYC
+sentencia_salida            : COUT lista_exp_cad PYC { //TODO
+                            /*for(int i = 0; i < $2.tope_listas; ++i) {
+                                if ($4.lista_ndims[i] != 0) {
+                                    semprintf("El identificador '%s' para leer de la entrada no tiene dimensión 0.\n", $4.lista_ids[i]);
+                                }
+                                char tipo = 'd';
+                                if ($4.lista_tipos[i] == caracter)
+                                  tipo = 'c';
+                                genprintf("scanf(\"%%%c\", &%s);\n", tipo, $4.lista_ids[i]);
+                            }*/
+                            }
 ;
 
 %%
