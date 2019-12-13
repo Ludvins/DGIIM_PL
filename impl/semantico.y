@@ -531,7 +531,7 @@ expresion                   : PARIZQ expresion PARDCH
 
                                 $$.lexema = temporal();
                                 genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
-                                genprintf("%s = %s\n", $$.lexema, $1.lexema);
+                                genprintf("%s = %s", $$.lexema, $1.lexema);
 
                             }
                             | error
@@ -670,7 +670,7 @@ sentencia                   : bloque
 ;
 
 sentencia_llamada_funcion   : llamada_funcion PYC {
-                            genprintf("%s\n", $1.lexema);
+                            genprintf("%s", $1.lexema);
                             }
 ;
 
