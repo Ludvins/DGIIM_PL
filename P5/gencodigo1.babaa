@@ -4,7 +4,7 @@ programa() {
   finvar
 
   entrada "introduce numero : ", n;
-  salida " ", n , " == ";
+  salida " ", n , " == 1 ";
   curr = 2;
   mientras( curr <= n ){
     var
