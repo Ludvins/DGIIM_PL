@@ -712,20 +712,17 @@ sentencia_if                : IF PARIZQ {
                             if($4.tipo != booleano){
                                 semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
                             }
-
                             char* e_salida = etiqueta();
                             char* e_else = etiqueta();
                             insertaIf(e_salida, e_else);
-                            //genprintf("if (!%s) goto %s;", $4.lexema, e_else);
-                          } PARDCH {
-                            genprintf("{\n if(!%s) goto %; \n", $4.lexema, encuentraGotoElse());
-                          }sentencia{
+                            genprintf("if(!%s) goto %s;\n", $4.lexema, encuentraGotoElse());
+                            } PARDCH sentencia {
                             genprintf("goto %s;\n", encuentraGotoSalida());
                             genprintf("%s:;\n", encuentraGotoElse());
-                          } sentencia_else {
+                            } sentencia_else {
                             genprintf("%s:;\n}\n", encuentraGotoSalida());
                             salEstructuraControl();
-                          }
+                            }
 ;
 
 sentencia_else              : /* empty */
@@ -736,7 +733,7 @@ sentencia_while             : WHILE PARIZQ {
                             char * e_entrada = etiqueta();
                             char * e_salida  = etiqueta();
                             insertaWhile(e_entrada, e_salida);
-                            genprintf("{\n");
+                            genprintf("{\n%s:;\n", e_entrada);
                             } expresion {
                             if($4.tipo != booleano){
                               semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
