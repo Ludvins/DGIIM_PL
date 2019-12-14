@@ -717,7 +717,15 @@ sentencia_if                : IF PARIZQ {
                             char* e_else = etiqueta();
                             insertaIf(e_salida, e_else);
                             //genprintf("if (!%s) goto %s;", $4.lexema, e_else);
-                            } PARDCH sentencia sentencia_else
+                          } PARDCH {
+                            genprintf("{\n if(!%s) goto %; \n", $4.lexema, encuentraGotoElse());
+                          }sentencia{
+                            genprintf("goto %s;\n", encuentraGotoSalida());
+                            genprintf("%s:;\n", encuentraGotoElse());
+                          } sentencia_else {
+                            genprintf("%s:;\n}\n", encuentraGotoSalida());
+                            salEstructuraControl();
+                          }
 ;
 
 sentencia_else              : /* empty */
