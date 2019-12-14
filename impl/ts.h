@@ -52,6 +52,7 @@ typedef enum {
 typedef struct {
   char* EtiquetaSalida;
   char* EtiquetaElse;
+  #define EtiquetaEntrada EtiquetaElse
 } DescriptorDeInstrControl;
 
 /*
@@ -137,6 +138,8 @@ char* encuentraGotoSalida();
  * Encuentra el nombre de la etiqueta de ese de la estructura de control actual
  */
 char* encuentraGotoElse();
+
+#define encuentraGotoEntrada encuentraGotoElse
 
 // -------------------------------------------------- //
 // -------- Insercion en tabla de simbolos  --------- //
