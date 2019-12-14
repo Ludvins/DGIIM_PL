@@ -9,7 +9,9 @@
 #define TAM_BUFFER 16
 
 int yylex();  // Para evitar warning al compilar
-extern FILE * fout; // Salida para el código generado
+extern FILE * func_file;
+extern FILE * main_file;
+FILE * fout; // Salida para el código generado
 
 // Macro para imprimir la generación de código
 #define genprintf(f_, ...) {if(!error) {fprintf(fout, (f_), ##__VA_ARGS__); fflush(fout);}}
@@ -18,6 +20,17 @@ int prox_etiqueta = 0;
 int prox_temporal = 0;
 char * etiqueta();
 char * temporal();
+
+int prof = 0;
+void entraFuncion(){
+  prof++;
+  fout = func_file;
+}
+
+void salFuncion(){
+  if(--prof == 0)
+    fout = main_file;
+}
 %}
 
 %define parse.error verbose
@@ -55,7 +68,8 @@ char * temporal();
 %%
 
 programa                    : {
-                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n");
+                            fout = main_file;
+                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include \"dec_fun\"\n\n");
                             }
                               cabecera_programa
                               bloque
@@ -89,7 +103,9 @@ declar_de_subprogs          : /* empty */
                             | declar_de_subprogs declar_subprog
 ;
 
-declar_subprog              : cabecera_subprog bloque
+declar_subprog              : cabecera_subprog bloque {
+                            salFuncion();
+                            }
 ;
 
 declar_de_variables_locales : /* empty */
@@ -198,6 +214,7 @@ identificador_comp_cte      : IDENTIFICADOR {
 ;
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
+                            entraFuncion();
                             genprintf("%s %s(", tipodatoToStrC($1.tipo), $2.lexema);
                             insertaFuncion($2.lexema, $1.tipo, $1.dim1, $1.dim2);
                             } lista_argumentos PARDCH {

@@ -6,3 +6,4 @@ semantico
 obj/
 *.out
 salida.c
+dec_fun

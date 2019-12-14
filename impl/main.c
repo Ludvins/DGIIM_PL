@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 extern FILE *yyin;
-FILE * fout;
+FILE * main_file;
+FILE * func_file;
 extern unsigned error;
 int yyparse();  // Para evitar warning al compilar
 
@@ -34,7 +35,8 @@ int main(int argc, char * argv[]) {
   else {
     sprintf(nombre, DEFAULT_OUT);
   }
-  fout = fopen(nombre, "w");
+  main_file = fopen(nombre, "w");
+  func_file = fopen("dec_fun", "w");
 
   yyparse();
 
