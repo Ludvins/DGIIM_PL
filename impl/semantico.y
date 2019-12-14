@@ -691,48 +691,63 @@ sentencia_llamada_funcion   : llamada_funcion PYC {
                             }
 ;
 
-sentencia_asignacion        : identificador_comp ASIG expresion PYC {
-                            if ($1.tipo != $3.tipo) {
+sentencia_asignacion        : identificador_comp ASIG {
+                            genprintf("{\n");
+                            } expresion PYC {
+                            if ($1.tipo != $4.tipo) {
                                 semprintf("El tipo de la expresión no coincide con el del identificador '%s'.\n", $1.lexema);
-                            } else if ($1.n_dims != $3.n_dims) {
+                            } else if ($1.n_dims != $4.n_dims) {
                                 semprintf("Las dimensiones de la expresión no coinciden con las del identificador '%s'.\n", $1.lexema);
                             }
-                            else if ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2){
+                            else if ($1.dim1 != $4.dim1 || $1.dim2 != $4.dim2){
                                 semprintf("El tamaño de '%s' no coincide con el de la expresión asignada.\n", $1.lexema);
                             }
-                            genprintf("%s = %s;\n", $1.lexema, $3.lexema);
+                            genprintf("%s = %s;\n}\n", $1.lexema, $4.lexema);
                             }
 ;
 
-sentencia_if                : IF PARIZQ expresion {
-                            if($3.tipo != booleano){
-                                semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
+sentencia_if                : IF PARIZQ {
+                            genprintf("{\n");
+                            } expresion {
+                            if($4.tipo != booleano){
+                                semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
                             }
 
                             char* e_salida = etiqueta();
                             char* e_else = etiqueta();
                             insertaIf(e_salida, e_else);
-                            genprintf("if (!%s) goto %s;", $3.lexema, e_else);
+                            //genprintf("if (!%s) goto %s;", $4.lexema, e_else);
                             } PARDCH sentencia sentencia_else
 ;
 
-sentencia_else              : /* empty */
-                            | ELSE sentencia
+sentencia_else              : /* empty */ {
+                            genprintf("}\n");
+                            }
+                            | ELSE sentencia {
+                            genprintf("}\n");
+                            }
 ;
 
-sentencia_while             : WHILE PARIZQ expresion {
-                            if($3.tipo != booleano){
-                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($3.tipo));
+sentencia_while             : WHILE PARIZQ {
+                            genprintf("{\n");
+                            } expresion {
+                            if($4.tipo != booleano){
+                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
                             }
+                            } PARDCH sentencia {
+                            genprintf("}\n");
                             }
-                            PARDCH sentencia
 ;
 
-sentencia_switch            : SWITCH PARIZQ expresion {
-                            if($3.tipo != entero) {
-                                semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($3.tipo));
+sentencia_switch            : SWITCH PARIZQ {
+                            genprintf("{\n");
+                            } expresion {
+                            if($4.tipo != entero) {
+                                semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($4.tipo));
                             }
-                            } PARDCH bloque_switch
+                            } PARDCH bloque_switch {
+                            genprintf("}\n");
+                            }
 ;
 
 bloque_switch               : LLAVEIZQ {
@@ -768,8 +783,10 @@ sentencia_break             : BREAK PYC {
                             }
 ;
 
-sentencia_return            : RETURN expresion PYC {
-                            genprintf("return %s;\n", $2.lexema);
+sentencia_return            : RETURN {
+                            genprintf("{\n");
+                            } expresion PYC {
+                            genprintf("return %s;\n}\n", $3.lexema);
                             }
 ;
 
@@ -854,20 +871,23 @@ exp_cad                     : expresion
                             }
 ;
 
-sentencia_salida            : COUT lista_exp_cad PYC { //TODO
-                            for(int i = 0; i < $2.tope_listas; ++i) {
-                                if ($2.lista_ndims[i] != 0) {
-                                    semprintf("El identificador '%s' para imprimir en la salida no tiene dimensión 0.\n", $2.lista_ids[i]);
+sentencia_salida            : COUT {
+                            genprintf("{\n");
+                            } lista_exp_cad PYC {
+                            for(int i = 0; i < $3.tope_listas; ++i) {
+                                if ($3.lista_ndims[i] != 0) {
+                                    semprintf("El identificador '%s' para imprimir en la salida no tiene dimensión 0.\n", $3.lista_ids[i]);
                                 }
                                 int expr = 0;
                                 char tipo = 'd';
-                                if ($2.lista_tipos[i] == caracter)
+                                if ($3.lista_tipos[i] == caracter)
                                   tipo = 'c';
-                                else if ($2.lista_tipos[i] == cadena)
+                                else if ($3.lista_tipos[i] == cadena)
                                   tipo = 's';
 
-                                genprintf("printf(\"%%%c\", %s);\n", tipo, $2.lista_ids[i]);
+                                genprintf("printf(\"%%%c\", %s);\n", tipo, $3.lista_ids[i]);
                             }
+                            genprintf("}\n");
                             }
 ;
 

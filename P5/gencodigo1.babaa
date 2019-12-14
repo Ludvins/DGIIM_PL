@@ -1,19 +1,9 @@
 programa() {
   var
     entero n, curr;
-    buleano test;
   finvar
-  entero testf(entero a, caracter b) {
-    var
-      entero x;
-    finvar
-    x = 1 + 3;
-    salida "hola", x;
-    devolver x;
-  }
+
   entrada "introduce numero : ", n;
-  n = testf(n + 2, 'a') / n;
-  testf(2, 'b');
   salida " ", n , " == ";
   curr = 2;
   mientras( curr <= n ){
