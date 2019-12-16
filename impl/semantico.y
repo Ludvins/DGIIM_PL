@@ -706,11 +706,11 @@ sentencia_asignacion        : identificador_comp ASIG {
                             }
 ;
 
-sentencia_if                : IF PARIZQ 
+sentencia_if                : IF PARIZQ
                             {
                                 genprintf("{\n");
-                            } 
-                            expresion 
+                            }
+                            expresion
                             {
                                 if($4.tipo != booleano){
                                   semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
@@ -719,13 +719,13 @@ sentencia_if                : IF PARIZQ
                                 char* e_else = etiqueta();
                                 insertaIf(e_salida, e_else);
                                 genprintf("if(!%s) goto %s;\n", $4.lexema, encuentraGotoElse());
-                            } 
-                            PARDCH sentencia 
+                            }
+                            PARDCH sentencia
                             {
                                 genprintf("goto %s;\n", encuentraGotoSalida());
                                 genprintf("%s:;\n", encuentraGotoElse());
-                            } 
-                            sentencia_else 
+                            }
+                            sentencia_else
                             {
                                 genprintf("%s:;\n}\n", encuentraGotoSalida());
                                 salEstructuraControl();
@@ -737,17 +737,17 @@ sentencia_else:             /* empty */
 ;
 
 sentencia_while: WHILE PARIZQ {
-                    char * e_entrada = etiqueta();
-                    char * e_salida  = etiqueta();
+                    char* e_entrada = etiqueta();
+                    char* e_salida  = etiqueta();
                     insertaWhile(e_entrada, e_salida);
                     genprintf("{\n%s:;\n", e_entrada);
-                } 
+                }
                 expresion {
                     if($4.tipo != booleano){
                         semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
                     }
                     genprintf("if (!%s) goto %s;\n", $4.lexema, encuentraGotoSalida());
-                } 
+                }
                 PARDCH sentencia {
                     genprintf("goto %s;\n", encuentraGotoEntrada());
                     genprintf("%s:;\n}\n", encuentraGotoSalida());
@@ -757,12 +757,15 @@ sentencia_while: WHILE PARIZQ {
 
 sentencia_switch: SWITCH PARIZQ {
                     genprintf("{\n");
-                } 
+                    /* char* e_entrada = etiqueta(); */
+                    /* char* e_salida = etiqueta(); */
+                    /* insertaSwitch(e_entrada, e_salida); */
+                }
                 expresion {
                     if($4.tipo != entero) {
                         semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($4.tipo));
                     }
-                } 
+                }
                 PARDCH bloque_switch {
                     genprintf("}\n");
                 }
@@ -777,18 +780,18 @@ bloque_switch:   LLAVEIZQ {
 ;
 
 opciones_y_pred: opciones opcion_pred
-               | 
+               |
                opciones
 ;
 
 opciones: opciones opcion
-        | 
+        |
         opcion
 ;
 
 opcion: CASE NATURAL PYP {
             genprintf("case %d:\n", $2.lexema);
-        } 
+        }
         sentencias
 ;
 
@@ -805,7 +808,7 @@ sentencia_break: BREAK PYC {
 
 sentencia_return: RETURN {
                     genprintf("{\n");
-                } 
+                }
                 expresion PYC {
                     genprintf("return %s;\n}\n", $3.lexema);
                 }
