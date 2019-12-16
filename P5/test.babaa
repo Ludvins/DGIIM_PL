@@ -10,6 +10,7 @@ programa() {
             salida "1";
         caso 2:
             salida "2";
+            roto;
         predeterminado:
             salida "tus muerto";
     }
