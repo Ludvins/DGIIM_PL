@@ -1,13 +1,22 @@
 programa() {
   var
-    entero n;
+    entero n, n2;
   finvar
 
   entrada "introduce numero : ", n;
- 
+  entrada "introduce numero : ", n2;
+
     casos (n) {
         caso 1:
-            salida "1";
+            casos (n2) {
+                caso 1:
+                    salida "1";
+                caso 2:
+                    salida "2";
+                    roto;
+                predeterminado:
+                    salida "tus muerto";
+            }
         caso 2:
             salida "2";
             roto;
