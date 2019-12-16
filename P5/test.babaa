@@ -1,0 +1,19 @@
+programa() {
+  var
+    entero n;
+  finvar
+
+  entrada "introduce numero : ", n;
+ 
+    opciones (n) {
+        opcion 1:
+            salida "1";
+        opcion 2:
+            salida "2";
+        predeterminado:
+            salida "tus muerto";
+    }
+
+  salida "\n";
+}
+
