@@ -18,8 +18,8 @@ FILE * fout; // Salida para el código generado
 
 int prox_etiqueta = 0;
 int prox_temporal = 0;
-char * etiqueta();
-char * temporal();
+char* etiqueta();
+char* temporal();
 
 int prof = 0;
 void entraFuncion(){
@@ -706,95 +706,109 @@ sentencia_asignacion        : identificador_comp ASIG {
                             }
 ;
 
-sentencia_if                : IF PARIZQ {
-                            genprintf("{\n");
-                            } expresion {
-                            if($4.tipo != booleano){
-                                semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
-                            }
-                            char* e_salida = etiqueta();
-                            char* e_else = etiqueta();
-                            insertaIf(e_salida, e_else);
-                            genprintf("if(!%s) goto %s;\n", $4.lexema, encuentraGotoElse());
-                            } PARDCH sentencia {
-                            genprintf("goto %s;\n", encuentraGotoSalida());
-                            genprintf("%s:;\n", encuentraGotoElse());
-                            } sentencia_else {
-                            genprintf("%s:;\n}\n", encuentraGotoSalida());
-                            salEstructuraControl();
+sentencia_if                : IF PARIZQ 
+                            {
+                                genprintf("{\n");
+                            } 
+                            expresion 
+                            {
+                                if($4.tipo != booleano){
+                                  semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
+                                }
+                                char* e_salida = etiqueta();
+                                char* e_else = etiqueta();
+                                insertaIf(e_salida, e_else);
+                                genprintf("if(!%s) goto %s;\n", $4.lexema, encuentraGotoElse());
+                            } 
+                            PARDCH sentencia 
+                            {
+                                genprintf("goto %s;\n", encuentraGotoSalida());
+                                genprintf("%s:;\n", encuentraGotoElse());
+                            } 
+                            sentencia_else 
+                            {
+                                genprintf("%s:;\n}\n", encuentraGotoSalida());
+                                salEstructuraControl();
                             }
 ;
 
-sentencia_else              : /* empty */
+sentencia_else:             /* empty */
                             | ELSE sentencia
 ;
 
-sentencia_while             : WHILE PARIZQ {
-                            char * e_entrada = etiqueta();
-                            char * e_salida  = etiqueta();
-                            insertaWhile(e_entrada, e_salida);
-                            genprintf("{\n%s:;\n", e_entrada);
-                            } expresion {
-                            if($4.tipo != booleano){
-                              semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
-                            }
-                            genprintf("if (!%s) goto %s;\n", $4.lexema, encuentraGotoSalida());
-                            } PARDCH sentencia {
-                            genprintf("goto %s;\n", encuentraGotoEntrada());
-                            genprintf("%s:;\n}\n", encuentraGotoSalida());
-                            salEstructuraControl();
-                            }
+sentencia_while: WHILE PARIZQ {
+                    char * e_entrada = etiqueta();
+                    char * e_salida  = etiqueta();
+                    insertaWhile(e_entrada, e_salida);
+                    genprintf("{\n%s:;\n", e_entrada);
+                } 
+                expresion {
+                    if($4.tipo != booleano){
+                        semprintf("El tipo de la expresión es %s, y no es booleano para actuar como condición.\n", tipodatoToStr($4.tipo));
+                    }
+                    genprintf("if (!%s) goto %s;\n", $4.lexema, encuentraGotoSalida());
+                } 
+                PARDCH sentencia {
+                    genprintf("goto %s;\n", encuentraGotoEntrada());
+                    genprintf("%s:;\n}\n", encuentraGotoSalida());
+                    salEstructuraControl();
+                }
 ;
 
-sentencia_switch            : SWITCH PARIZQ {
-                            genprintf("{\n");
-                            } expresion {
-                            if($4.tipo != entero) {
-                                semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($4.tipo));
-                            }
-                            } PARDCH bloque_switch {
-                            genprintf("}\n");
-                            }
+sentencia_switch: SWITCH PARIZQ {
+                    genprintf("{\n");
+                } 
+                expresion {
+                    if($4.tipo != entero) {
+                        semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($4.tipo));
+                    }
+                } 
+                PARDCH bloque_switch {
+                    genprintf("}\n");
+                }
 ;
 
-bloque_switch               : LLAVEIZQ {
-                            genprintf("{");
-                            }
-                              opciones_y_pred LLAVEDCH {
-                            genprintf("}");
-                            }
+bloque_switch:   LLAVEIZQ {
+                    genprintf("{");
+                }
+                opciones_y_pred LLAVEDCH {
+                    genprintf("}");
+                }
 ;
 
-opciones_y_pred             : opciones opcion_pred
-                            | opciones
+opciones_y_pred: opciones opcion_pred
+               | 
+               opciones
 ;
 
-opciones                    : opciones opcion
-                            | opcion
+opciones: opciones opcion
+        | 
+        opcion
 ;
 
-opcion                      : CASE NATURAL PYP {
-                            genprintf("case %d:\n", $2.lexema);
-                            }
-                              sentencias
+opcion: CASE NATURAL PYP {
+            genprintf("case %d:\n", $2.lexema);
+        } 
+        sentencias
 ;
 
-opcion_pred                 : PREDET PYP {
-                            genprintf("default:\n");
-                            }
-                              sentencias
+opcion_pred: PREDET PYP {
+                genprintf("default:\n");
+            }
+            sentencias
 ;
 
-sentencia_break             : BREAK PYC {
-                            genprintf("break;\n");
-                            }
+sentencia_break: BREAK PYC {
+                    genprintf("break;\n");
+                }
 ;
 
-sentencia_return            : RETURN {
-                            genprintf("{\n");
-                            } expresion PYC {
-                            genprintf("return %s;\n}\n", $3.lexema);
-                            }
+sentencia_return: RETURN {
+                    genprintf("{\n");
+                } 
+                expresion PYC {
+                    genprintf("return %s;\n}\n", $3.lexema);
+                }
 ;
 
 sentencia_entrada           : CIN CADENA COMA lista_id_entrada PYC {
@@ -902,14 +916,14 @@ sentencia_salida            : COUT {
 
 #include "lex.yy.c"
 
-char * etiqueta() {
-  char * buffer = malloc(sizeof(char) * TAM_BUFFER);
+char* etiqueta() {
+  char* buffer = malloc(sizeof(char)* TAM_BUFFER);
   snprintf(buffer, TAM_BUFFER, "etiq%d", prox_etiqueta++);
   return buffer;
 }
 
-char * temporal() {
-  char * buffer = malloc(sizeof(char) * TAM_BUFFER);
+char* temporal() {
+  char* buffer = malloc(sizeof(char)* TAM_BUFFER);
   snprintf(buffer, TAM_BUFFER, "temp%d", prox_temporal++);
   return buffer;
 }
