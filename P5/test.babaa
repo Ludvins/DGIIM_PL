@@ -5,10 +5,10 @@ programa() {
 
   entrada "introduce numero : ", n;
  
-    opciones (n) {
-        opcion 1:
+    casos (n) {
+        caso 1:
             salida "1";
-        opcion 2:
+        caso 2:
             salida "2";
         predeterminado:
             salida "tus muerto";
