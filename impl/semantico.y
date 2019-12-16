@@ -757,14 +757,12 @@ sentencia_while: WHILE PARIZQ {
 
 sentencia_switch: SWITCH PARIZQ {
                     genprintf("{\n");
-                    /* char* e_entrada = etiqueta(); */
-                    /* char* e_salida = etiqueta(); */
-                    /* insertaSwitch(e_entrada, e_salida); */
                 }
                 expresion {
                     if($4.tipo != entero) {
                         semprintf("El tipo de la expresión es %s, y no es entero para actuar como condición del switch.\n", tipodatoToStr($4.tipo));
                     }
+                    genprintf("switch (%s)", $4.lexema);
                 }
                 PARDCH bloque_switch {
                     genprintf("}\n");
@@ -790,7 +788,7 @@ opciones: opciones opcion
 ;
 
 opcion: CASE NATURAL PYP {
-            genprintf("case %d:\n", $2.lexema);
+            genprintf("case %s:\n", $2.lexema);
         }
         sentencias
 ;
