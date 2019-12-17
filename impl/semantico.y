@@ -407,6 +407,9 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
 
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+
                                 if (!strcmp("+", $2.lexema)) {
                                     if ($1.n_dims != 0 && $3.n_dims != 0 && ($1.dim1 != $3.dim1 || $1.dim2 != $3.dim2) ) {
                                         semprintf("El operador %s solo se puede aplicar sobre dos números, un array y un número ó arrays de la misma dimensión.\n", $2.lexema);
@@ -415,6 +418,29 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.n_dims = max($1.n_dims, $3.n_dims);
                                         $$.dim1 = max($1.dim1, $3.dim1);
                                         $$.dim2 = max($1.dim2, $3.dim2);
+
+                                        switch($1.n_dims) {
+                                          case 0:
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+                                                break;
+                                              case 1:
+                                                genprintf("%s = suma_array1D_valor(%s, %s, %s, %s);\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 2:
+                                                genprintf("%s = suma_array2D_valor(%s, %s, %s, %s);\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, $3.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
+                                            break;
+                                          case 1:
+
+                                            break;
+
+                                          case 2:
+
+                                            break;
+                                        }
                                     }
                                 }
                                 if (!strcmp("-", $2.lexema)) {
@@ -426,10 +452,6 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es numérico.\n", $2.lexema);
                                     }
                                 }
-
-                                $$.lexema = temporal();
-                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
-                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
                             }
                             | expresion OPIG expresion
                             {
