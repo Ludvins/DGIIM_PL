@@ -1,9 +1,11 @@
 programa() {
   var
-    entero test[2];
+    entero n[3], m[2,2];
   finvar
 
-  test = {1, 2};
-  test = test + 5;
-  salida "array: ", test[0], test[1];
+    n = {1, 2};
+    m = {1, 2; 3, 4};
+    m[1] = {5,6};
+
+    salida n[1] + m[1, 0+1], "\n";
 }
