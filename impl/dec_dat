@@ -45,7 +45,7 @@ void* inserta_dato1D(void* array, void* elem, int pos, char* tipo) {
 
   Tipo t = transforma_tipo(tipo);
 
-  if (t == entero || t == buleano) {
+  if (t == entero || t == booleano) {
     int * a = (int*) array;
     a[pos] = *((int*) elem);
   }
@@ -59,20 +59,20 @@ void* inserta_dato1D(void* array, void* elem, int pos, char* tipo) {
   }
 }
 
-void* inserta_dato2D(void** array, void* elem, int row, int col, char* tipo) {
+void* inserta_dato2D(void* (*array), void* elem, int row, int col, char* tipo) {
 
   Tipo t = transforma_tipo(tipo);
 
-  if (t == entero || t == buleano) {
-    int * a = (int*) array;
+  if (t == entero || t == booleano) {
+    int** a = (int**) array;
     a[row][col] = *((int*) elem);
   }
   else if (t == real) {
-    double* a = (double*) array;
+    double** a = (double**) array;
     a[row][col] = *((double*) elem);
   }
   else if (t == caracter) {
-    char* a = (char*) array;
+    char** a = (char**) array;
     a[row][col] = *((char*) elem);
   }
 }

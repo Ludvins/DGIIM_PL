@@ -767,12 +767,13 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.dim1 = $1.dim1;
                                 $$.dim2 = $1.dim2;
 
+                                $$.lexema = temporal();
                                 genprintf("%s** %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                 genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $$.lexema, $$.dim1, $$.dim2, tipodatoToStr($$.tipo));
                                 int row, col;
-                                for (int i = 0; i < $1.dim1; i++) {
-                                  row = i % $$.dim2;
-                                  col = i / $$.dim2;
+                                for (int i = 0; i < $1.tope_listas; i++) {
+                                  row = i / $$.dim2;
+                                  col = i % $$.dim2;
                                   genprintf("inserta_dato2D(%s, &%s, %d, %d, \"%s\");\n", $$.lexema, $1.lista_ids[i], row, col, tipodatoToStr($1.tipo));
                                 }
                             }
@@ -840,10 +841,10 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones_o_vacio LLAVEDCH {
                             }
                             $$.n_dims = 2;
 
-                            for (int i = 0; i < $1.tope_listas; i++){
-                                $$.lista_ids[i] = $1.lista_ids[i];
+                            for (int i = 0; i < $2.tope_listas; i++){
+                                $$.lista_ids[i] = $2.lista_ids[i];
                             }
-                            $$.tope_listas = $1.tope_listas;
+                            $$.tope_listas = $2.tope_listas;
 
                             for (int i = 0; i < $4.tope_listas; i++) {
                                 if ($$.tipo != $4.lista_tipos[i]){
@@ -857,7 +858,7 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones_o_vacio LLAVEDCH {
                                     $$.lista_ids[$$.tope_listas + i] = $4.lista_ids[i];
                                 }
                             }
-                            $$.tope_listas = $4.tope_listas;
+                            $$.tope_listas = $$.tope_listas + $4.tope_listas;
                             }
 ;
 
@@ -910,6 +911,8 @@ listas                      : listas PYC expresiones {
                                 }
                             }
                             $$.tope_listas = $1.tope_listas;
+
+                            printf("tope_listas: %d, %s, %s\n", $$.tope_listas, $$.lista_ids[0],$$.lista_ids[1]);
 
                             $$.dim1 += 1;
                             $$.dim2 = $1.tope_listas;
