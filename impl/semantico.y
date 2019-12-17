@@ -539,7 +539,16 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.dim2 = $1.dim2;
 
                                 $$.lexema = temporal();
-                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                if ($$.n_dims == 0)
+                                    genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                else if ($$.n_dims == 1){
+                                    genprintf("%s* %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                    genprintf("%s = asigna_memoria1D(%d, %s);\n", $$.lexema, $$.dim1, tipodatoToStr($$.tipo));
+                                }
+                                else if ($$.n_dims == 2)
+                                    genprintf("%s** %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                    genprintf("%s = asigna_memoria2D(%d, %d, %s);\n", $$.lexema, $$.dim1, $$.dim2, tipodatoToStr($$.tipo));
+
                                 genprintf("%s = %s;\n", $$.lexema, $1.lexema);
                             }
                             | CONSTANTE

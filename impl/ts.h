@@ -75,6 +75,7 @@ typedef struct {
  */
 typedef struct {
   char*             lexema;                   // Nombre del lexema
+  char*             acceso1, acceso2;         //
   TipoDato          tipo;                     // Tipo del símbolo
   unsigned          n_dims;                   // Número de dimensiones.
   unsigned          dim1;                     // Tamaño de la primera dimensión.
