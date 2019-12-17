@@ -69,7 +69,7 @@ void salFuncion(){
 
 programa                    : {
                             fout = main_file;
-                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include \"dec_fun\"\n\n");
+                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include \"dec_fun\"\n#include \"dec_dat\"\n\n");
                             }
                               cabecera_programa
                               bloque
@@ -129,6 +129,12 @@ cuerpo_declar_variable      : TIPO lista_id {
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
                                 genprintf("%s", $2.lista_ids[i]);
+                                if ($2.lista_dims1[i] != 0) {
+                                  genprintf("[%d]", $2.lista_dims1[i]);
+                                  if ($2.lista_dims2[i] != 0) {
+                                    genprintf("[%d]", $2.lista_dims2[i]);
+                                  }
+                                }
                                 if (i < $2.tope_listas - 1) {
                                   genprintf(", ");
                                 }
@@ -234,6 +240,12 @@ argumentos                  : argumentos COMA {
 
 argumento                   : TIPO identificador_comp_cte {
                             genprintf("%s %s", tipodatoToStrC(strToTipodato($1.lexema)), $2.lexema)
+                            if ($2.dim1 != 0) {
+                              genprintf("[%d]", $2.dim1);
+                              if ($2.dim2 != 0) {
+                                genprintf("[%d]", $2.dim2);
+                              }
+                            }
                             insertaParametro($2.lexema, $1.lexema, $2.dim1, $2.dim2);
                             }
                             | error
