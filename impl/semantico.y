@@ -478,7 +478,7 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.n_dims = 2;
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $3.dim2;
-                                        genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, %s);\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2);
+                                        genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, %s);\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2, tipodatoToStr($$.tipo));
 
                                     } else {
                                         semprintf("Las dimensiones de %s y/o %s no son las correctas para aplicar el operador %s.\n",$1.lexema, $3.lexema, $2.lexema);
@@ -489,6 +489,7 @@ expresion                   : PARIZQ expresion PARDCH
                                         semprintf("El operador %s solo se puede aplicar sobre dos números, un array y un número ó arrays de la misma dimensión.\n", $2.lexema);
                                     }
                                     else{
+
                                       $$.n_dims = max($1.n_dims, $3.n_dims);
                                       $$.dim1 = max($1.dim1, $3.dim1);
                                       $$.dim2 = max($1.dim2, $3.dim2);
