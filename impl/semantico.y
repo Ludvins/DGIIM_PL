@@ -478,6 +478,8 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.n_dims = 2;
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $3.dim2;
+                                        genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, %s);\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2);
+
                                     } else {
                                         semprintf("Las dimensiones de %s y/o %s no son las correctas para aplicar el operador %s.\n",$1.lexema, $3.lexema, $2.lexema);
                                     }
@@ -504,7 +506,7 @@ expresion                   : PARIZQ expresion PARDCH
 
                                 $$.lexema = temporal();
                                 genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
-                                genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+                                /* genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema); */
                             }
                             | identificador_comp
                             {
