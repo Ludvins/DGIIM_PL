@@ -1,37 +1,9 @@
 programa() {
   var
-    entero test[2, 2], n;
+    entero test[2];
   finvar
 
-  entero factoriza(entero n, entero a[2]) {
-  var
-    entero curr[1024], i;
-  finvar
-
-  salida " ", n , " == 1 ";
-  curr[0] = 2;
-  i = 0;
-  mientras( curr[i] <= n ){
-    var
-      entero d;
-    finvar
-    d = n / curr[i];
-
-    si(d*curr[i] == n){
-      salida "* ", curr[i], " ";
-      n = n / curr[i];
-      curr[i+1] = curr[i];
-    }otro{
-      curr[i+1] = curr[i] + 1;
-    }
-    i = i + 1;
-  }
-  salida "\n";
-  }
-
-  entrada "introduce numero : ", n;
-  test[0, 0] = factoriza(n, test[0]);
-
-  test = test + n;
-  test = test / 3;
+  test = {1, 2};
+  test = test + 5;
+  salida "array: ", test[0], test[1];
 }

@@ -7,7 +7,6 @@ typedef enum {
   real,
   booleano,
   caracter,
-  cadena,
   desconocido
 } Tipo;
 
@@ -40,6 +39,24 @@ void* asigna_memoria1D(int size, char* tipo){
         default:
             return NULL;
     }
+}
+
+void* inserta_dato1D(void* array, void* elem, int pos, char* tipo) {
+
+  Tipo t = transforma_tipo(tipo);
+
+  if (t == entero || t == booleano) {
+    int * a = (int*) array;
+    a[pos] = *((int*) elem);
+  }
+  else if (t == real) {
+    double* a = (double*) array;
+    a[pos] = *((double*) elem);
+  }
+  else if (t == caracter) {
+    char* a = (char*) array;
+    a[pos] = *((char*) elem);
+  }
 }
 
 void* asigna_memoria2D(int size1, int size2, char* tipo){
@@ -263,7 +280,7 @@ void* suma_array1D_valor(void* array1, void* a, int size, char* tipo){
 
             double* a1 = (double*) array1;
             double b = *(double*) a;
-           
+
             for (int i = 0; i < size; ++i)
                 array[i] =  a1[i] + b;
             return array;
@@ -847,7 +864,7 @@ void* producto_arrays2D(void** array1, void** array2, int size1, int size2, int 
 
             double** a1 = (double**) array1;
             double** a2 = (double**) array2;
-           
+
             double sum = 0;
             for (int i = 0; i < size1; i++) {
                 for (int j = 0; j < size2; j++) {
