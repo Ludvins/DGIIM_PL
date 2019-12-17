@@ -1,0 +1,887 @@
+
+#include <stdlib.h>
+#include <string.h>
+
+typedef enum {
+  entero,
+  real,
+  booleano,
+  caracter,
+  cadena,
+  desconocido
+} Tipo;
+
+Tipo transforma_tipo(char* nombre_tipo) {
+
+    if(!strcmp(nombre_tipo, "entero"))
+        return entero;
+    if(!strcmp(nombre_tipo, "real"))
+        return real;
+    if(!strcmp(nombre_tipo, "buleano"))
+        return booleano;
+    if(!strcmp(nombre_tipo, "caracter"))
+        return caracter;
+
+    return desconocido;
+}
+
+void* asigna_memoria1D(int size, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+        case entero:
+        case booleano:
+            return (int*) malloc(size*sizeof(int));
+        case real:
+            return (double*) malloc(size*sizeof(double));
+
+        case caracter:
+            return (char*) malloc(size*sizeof(char));
+
+        default:
+            return NULL;
+    }
+}
+
+void* asigna_memoria2D(int size1, int size2, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char**) malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            return array;
+        }
+        default:
+            return NULL;
+    }
+}
+
+// -----------------------------------------------------
+//  ------------------ ARRAY 1D -----------------------
+// -----------------------------------------------------
+
+
+void* suma_arrays1D(void* array1, void* array2, int size, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int* a2 = (int*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + a2[i];
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double* a2 = (double*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + a2[i];
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char* a2 = (char*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + a2[i];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* resta_arrays1D(void* array1, void* array2, int size, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int* a2 = (int*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - a2[i];
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double* a2 = (double*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - a2[i];
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char* a2 = (char*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - a2[i];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* multiplicacion_arrays1D(void* array1, void* array2, int size, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int* a2 = (int*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * a2[i];
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double* a2 = (double*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * a2[i];
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char* a2 = (char*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * a2[i];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* division_arrays1D(void* array1, void* array2, int size, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int* a2 = (int*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / a2[i];
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double* a2 = (double*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / a2[i];
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char* a2 = (char*) array2;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / a2[i];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* suma_array1D_valor(void* array1, void* a, int size, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int b = *(int*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + b;
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double b = *(double*) a;
+           
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + b;
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char b = *(char*) a;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] + b;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* resta_array1D_valor(void* array1, void* a, int size, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int b = *(int*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - b;
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double b = *(double*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - b;
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char b = *(char*) a;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] - b;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* multiplica_array1D_valor(void* array1, void* a, int size, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int b = *(int*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * b;
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double b = *(double*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * b;
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char b = *(char*) a;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] * b;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* divide_array1D_valor(void* array1, void* a, int size, char* tipo){
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int* array = (int*) malloc(size*sizeof(int));
+
+            int* a1 = (int*) array1;
+            int b = *(int*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / b;
+            return array;
+        }
+        case real:
+        {
+            double* array = (double*) malloc(size*sizeof(double));
+
+            double* a1 = (double*) array1;
+            double b = *(double*) a;
+
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / b;
+            return array;
+        }
+        case caracter:
+        {
+            char* array = (char*) malloc(size*sizeof(char));
+
+            char* a1 = (char*) array1;
+            char b = *(char*) a;
+            for (int i = 0; i < size; ++i)
+                array[i] =  a1[i] / b;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+// -----------------------------------------------------
+//  ------------------ ARRAY 2D -----------------------
+// -----------------------------------------------------
+
+
+void* suma_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int** a2 = (int**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2[i][j];
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double** a2 = (double**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2[i][j];
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            char** a1 = (char**) array1;
+            char** a2 = (char**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2[i][j];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* resta_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int** a2 = (int**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2[i][j];
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double** a2 = (double**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2[i][j];
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            char** a1 = (char**) array1;
+            char** a2 = (char**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2[i][j];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* multiplicacion_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int** a2 = (int**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2[i][j];
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double** a2 = (double**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2[i][j];
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            char** a1 = (char**) array1;
+            char** a2 = (char**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2[i][j];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* division_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int** a2 = (int**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2[i][j];
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double** a2 = (double**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2[i][j];
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            char** a1 = (char**) array1;
+            char** a2 = (char**) array2;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2[i][j];
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* suma_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2;
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double a2 = *(double*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2;
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] + a2;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* resta_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2;
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double a2 = *(double*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2;
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] - a2;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* multiplica_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2;
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double a2 = *(double*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2;
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] * a2;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+void* divide_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2;
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double a2 = *(double*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2;
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            int** a1 = (int**) array1;
+            int a2 = *(int*) valor;
+
+            for (int i = 0; i < size1; ++i)
+                for(int j = 0; j < size2; ++j)
+                    array[i][j] =  a1[i][j] / a2;
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
+
+
+void* producto_arrays2D(void** array1, void** array2, int size1, int size2, int size3, char* tipo){
+
+
+    switch(transforma_tipo(tipo)){
+
+        case entero:
+        case booleano:
+        {
+            int** array = (int **)malloc(size1 * sizeof(int*));
+            for(int i = 0; i < size2; i++) array[i] = (int *)malloc(size2 * sizeof(int));
+
+            int** a1 = (int**) array1;
+            int** a2 = (int**) array2;
+
+            int sum = 0;
+            for (int i = 0; i < size1; i++) {
+                for (int j = 0; j < size2; j++) {
+                    for (int k = 0; k < size3; k++) {
+                        sum = sum + a1[i][k]*a2[k][j];
+                    }
+                    array[i][j] = sum;
+                    sum = 0;
+                }
+            }
+            return array;
+        }
+        case real:
+        {
+            double** array = (double **)malloc(size1 * sizeof(double*));
+            for(int i = 0; i < size2; i++) array[i] = (double *)malloc(size2 * sizeof(double));
+
+            double** a1 = (double**) array1;
+            double** a2 = (double**) array2;
+           
+            double sum = 0;
+            for (int i = 0; i < size1; i++) {
+                for (int j = 0; j < size2; j++) {
+                    for (int k = 0; k < size3; k++) {
+                        sum = sum + a1[i][k]*a2[k][j];
+                    }
+                    array[i][j] = sum;
+                    sum = 0;
+                }
+            }
+
+            return array;
+        }
+        case caracter:
+        {
+            char** array = (char **)malloc(size1 * sizeof(char*));
+            for(int i = 0; i < size2; i++) array[i] = (char *)malloc(size2 * sizeof(char));
+
+            char** a1 = (char**) array1;
+            char** a2 = (char**) array2;
+
+            char sum = 0;
+            for (int i = 0; i < size1; i++) {
+                for (int j = 0; j < size2; j++) {
+                    for (int k = 0; k < size3; k++) {
+                        sum = sum + a1[i][k]*a2[k][j];
+                    }
+                    array[i][j] = sum;
+                    sum = 0;
+                }
+            }
+            return array;
+        }
+        default:
+          return NULL;
+    }
+}
