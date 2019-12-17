@@ -125,17 +125,19 @@ variables_locales           : variables_locales cuerpo_declar_variable
 ;
 
 cuerpo_declar_variable      : TIPO lista_id {
-                            // TODO: arreglar aquí y en cabecera de funciones???
+                            // TODO: arreglar cabecera de funciones???
                             genprintf("%s ", tipodatoToStrC(strToTipodato($1.lexema)));
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
-                                genprintf("%s", $2.lista_ids[i]);
-                                /*if ($2.lista_dims1[i] != 0) {
-                                  genprintf("[%d]", $2.lista_dims1[i]);
+
+                                if ($2.lista_dims1[i] != 0) {
+                                  genprintf("*");
                                   if ($2.lista_dims2[i] != 0) {
-                                    genprintf("[%d]", $2.lista_dims2[i]);
+                                    genprintf("*");
                                   }
-                                }*/
+                                }
+                                genprintf("%s", $2.lista_ids[i]);
+
                                 if (i < $2.tope_listas - 1) {
                                   genprintf(", ");
                                 }
@@ -767,6 +769,12 @@ expresion                   : PARIZQ expresion PARDCH
 
                                 genprintf("%s** %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                 genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $$.lexema, $$.dim1, $$.dim2, tipodatoToStr($$.tipo));
+                                int row, col;
+                                for (int i = 0; i < $1.dim1; i++) {
+                                  row = i % $$.dim2;
+                                  col = i / $$.dim2;
+                                  genprintf("inserta_dato2D(%s, &%s, %d, %d, \"%s\");\n", $$.lexema, $1.lista_ids[i], row, col, tipodatoToStr($1.tipo));
+                                }
                             }
                             | llamada_funcion
                             {
@@ -832,6 +840,11 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones_o_vacio LLAVEDCH {
                             }
                             $$.n_dims = 2;
 
+                            for (int i = 0; i < $1.tope_listas; i++){
+                                $$.lista_ids[i] = $1.lista_ids[i];
+                            }
+                            $$.tope_listas = $1.tope_listas;
+
                             for (int i = 0; i < $4.tope_listas; i++) {
                                 if ($$.tipo != $4.lista_tipos[i]){
                                     $$.tipo = desconocido;
@@ -839,9 +852,12 @@ agregado2D                  : LLAVEIZQ listas PYC expresiones_o_vacio LLAVEDCH {
                                     break;
                                 }
                                 else if ($4.lista_ndims[i] != 0) {
-                                  semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                    semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                } else {
+                                    $$.lista_ids[$$.tope_listas + i] = $4.lista_ids[i];
                                 }
                             }
+                            $$.tope_listas = $4.tope_listas;
                             }
 ;
 
@@ -855,6 +871,12 @@ listas                      : listas PYC expresiones {
 
                             $$.dim1 = $1.dim1 + 1;
 
+                            // Copiamos la lista de lexemas
+                            for (int i = 0; i < $1.tope_listas; i++){
+                                $$.lista_ids[i] = $1.lista_ids[i];
+                            }
+                            $$.tope_listas = $1.tope_listas;
+
                             for (int i = 0; i < $3.tope_listas; i++) {
                                 if ($$.tipo != $3.lista_tipos[i]){
                                     $$.tipo = desconocido;
@@ -862,13 +884,19 @@ listas                      : listas PYC expresiones {
                                     break;
                                 }
                                 else if ($3.lista_ndims[i] != 0) {
-                                  semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                    semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                } else {
+                                    $$.lista_ids[$$.tope_listas + i] = $3.lista_ids[i];
                                 }
                             }
+                            $$.tope_listas = $$.tope_listas + $3.tope_listas;
 
                             }
                             | expresiones {
                             $$.tipo = $1.lista_tipos[0];
+
+                            $$.lista_ids[0] = $1.lista_ids[0];
+
                             for (int i = 1; i < $1.tope_listas; i++) {
                                 if ($$.tipo != $1.lista_tipos[i]){
                                     $$.tipo = desconocido;
@@ -877,8 +905,12 @@ listas                      : listas PYC expresiones {
                                 }
                                 else if ($1.lista_ndims[i] != 0) {
                                   semprintf("Todas las expresiones dentro de un agregado2D deben tener dimensión 0.\n");
+                                } else {
+                                    $$.lista_ids[i] = $1.lista_ids[i];
                                 }
                             }
+                            $$.tope_listas = $1.tope_listas;
+
                             $$.dim1 += 1;
                             $$.dim2 = $1.tope_listas;
                             }

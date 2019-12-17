@@ -45,7 +45,7 @@ void* inserta_dato1D(void* array, void* elem, int pos, char* tipo) {
 
   Tipo t = transforma_tipo(tipo);
 
-  if (t == entero || t == booleano) {
+  if (t == entero || t == buleano) {
     int * a = (int*) array;
     a[pos] = *((int*) elem);
   }
@@ -56,6 +56,24 @@ void* inserta_dato1D(void* array, void* elem, int pos, char* tipo) {
   else if (t == caracter) {
     char* a = (char*) array;
     a[pos] = *((char*) elem);
+  }
+}
+
+void* inserta_dato2D(void** array, void* elem, int row, int col, char* tipo) {
+
+  Tipo t = transforma_tipo(tipo);
+
+  if (t == entero || t == buleano) {
+    int * a = (int*) array;
+    a[row][col] = *((int*) elem);
+  }
+  else if (t == real) {
+    double* a = (double*) array;
+    a[row][col] = *((double*) elem);
+  }
+  else if (t == caracter) {
+    char* a = (char*) array;
+    a[row][col] = *((char*) elem);
   }
 }
 
@@ -93,9 +111,7 @@ void* asigna_memoria2D(int size1, int size2, char* tipo){
 //  ------------------ ARRAY 1D -----------------------
 // -----------------------------------------------------
 
-
 void* suma_arrays1D(void* array1, void* array2, int size, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -137,7 +153,6 @@ void* suma_arrays1D(void* array1, void* array2, int size, char* tipo){
 
 void* resta_arrays1D(void* array1, void* array2, int size, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -178,7 +193,6 @@ void* resta_arrays1D(void* array1, void* array2, int size, char* tipo){
 
 void* multiplicacion_arrays1D(void* array1, void* array2, int size, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -218,7 +232,6 @@ void* multiplicacion_arrays1D(void* array1, void* array2, int size, char* tipo){
 }
 
 void* division_arrays1D(void* array1, void* array2, int size, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -429,9 +442,7 @@ void* divide_array1D_valor(void* array1, void* a, int size, char* tipo){
 //  ------------------ ARRAY 2D -----------------------
 // -----------------------------------------------------
 
-
 void* suma_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -482,7 +493,6 @@ void* suma_arrays2D(void** array1, void** array2, int size1, int size2, char* ti
 
 void* resta_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -531,7 +541,6 @@ void* resta_arrays2D(void** array1, void** array2, int size1, int size2, char* t
 }
 
 void* multiplicacion_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -582,7 +591,6 @@ void* multiplicacion_arrays2D(void** array1, void** array2, int size1, int size2
 
 void* division_arrays2D(void** array1, void** array2, int size1, int size2, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -631,7 +639,6 @@ void* division_arrays2D(void** array1, void** array2, int size1, int size2, char
 }
 
 void* suma_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -682,7 +689,6 @@ void* suma_array2D_valor(void** array1, void* valor, int size1, int size2, char*
 
 void* resta_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -731,7 +737,6 @@ void* resta_array2D_valor(void** array1, void* valor, int size1, int size2, char
 }
 
 void* multiplica_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
@@ -782,7 +787,6 @@ void* multiplica_array2D_valor(void** array1, void* valor, int size1, int size2,
 
 void* divide_array2D_valor(void** array1, void* valor, int size1, int size2, char* tipo){
 
-
     switch(transforma_tipo(tipo)){
 
         case entero:
@@ -830,9 +834,7 @@ void* divide_array2D_valor(void** array1, void* valor, int size1, int size2, cha
     }
 }
 
-
 void* producto_arrays2D(void** array1, void** array2, int size1, int size2, int size3, char* tipo){
-
 
     switch(transforma_tipo(tipo)){
 
