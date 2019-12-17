@@ -660,10 +660,13 @@ expresion                   : PARIZQ expresion PARDCH
                                 switch (nDimensiones($1.lexema) - $1.n_dims ){
                                     case 0:
                                         genprintf("%s = %s;\n", $$.lexema, $1.lexema);
+                                        break;
                                     case 1:
                                         genprintf("%s = %s[%s];\n", $$.lexema, $1.lexema, $1.acceso1);
+                                        break;
                                     case 2:
                                         genprintf("%s = %s[%s][%s];\n", $$.lexema, $1.lexema, $1.acceso1, $1.acceso2);
+                                        break;
                                 }
                             }
                             | CONSTANTE
@@ -852,9 +855,9 @@ sentencia_llamada_funcion   : llamada_funcion PYC {
                             }
 ;
 
-sentencia_asignacion        : identificador_comp ASIG {
+sentencia_asignacion    : identificador_comp ASIG {
                             genprintf("{\n");
-                            } expresion PYC {
+                        } expresion PYC {
                             if ($1.tipo != $4.tipo) {
                                 semprintf("El tipo de la expresión no coincide con el del identificador '%s'.\n", $1.lexema);
                             } else if ($1.n_dims != $4.n_dims) {
@@ -863,8 +866,19 @@ sentencia_asignacion        : identificador_comp ASIG {
                             else if ($1.dim1 != $4.dim1 || $1.dim2 != $4.dim2){
                                 semprintf("El tamaño de '%s' no coincide con el de la expresión asignada.\n", $1.lexema);
                             }
-                            genprintf("%s = %s;\n}\n", $1.lexema, $4.lexema);
+
+                            switch (nDimensiones($1.lexema) - $1.n_dims ){
+                                case 0:
+                                    genprintf("%s = %s;\n}\n", $1.lexema, $4.lexema);
+                                    break;
+                                case 1:
+                                    genprintf("%s[%s] = %s;\n}\n", $1.lexema, $1.acceso1, $4.lexema);
+                                    break;
+                                case 2:
+                                    genprintf("%s[%s][%s] = %s;\n}\n", $1.lexema, $1.acceso1, $1.acceso2, $4.lexema);
+                                    break;
                             }
+                        }
 ;
 
 sentencia_if                : IF PARIZQ
