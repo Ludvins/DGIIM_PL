@@ -426,19 +426,32 @@ expresion                   : PARIZQ expresion PARDCH
                                                 genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
                                                 break;
                                               case 1:
-                                                genprintf("%s = suma_array1D_valor(%s, %s, %s, %s);\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, tipodatoToStr($$.tipo));
+                                                genprintf("%s = suma_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, tipodatoToStr($$.tipo));
                                                 break;
                                               case 2:
-                                                genprintf("%s = suma_array2D_valor(%s, %s, %s, %s);\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, $3.dim2, tipodatoToStr($$.tipo));
+                                                genprintf("%s = suma_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, $3.dim2, tipodatoToStr($$.tipo));
                                                 break;
                                             }
                                             break;
                                           case 1:
-
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = suma_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 1:
+                                                genprintf("%s = suma_arrays1D(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
                                             break;
-
                                           case 2:
-
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = suma_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 2:
+                                                genprintf("%s = suma_arrays2D(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
                                             break;
                                         }
                                     }
@@ -448,6 +461,32 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $1.dim2;
                                         $$.n_dims = $1.n_dims;
+
+                                        switch($1.n_dims) {
+                                          case 0:
+                                            genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+                                            break;
+                                          case 1:
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = resta_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 1:
+                                                genprintf("%s = resta_arrays1D(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
+                                            break;
+                                          case 2:
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = resta_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 2:
+                                                genprintf("%s = resta_arrays2D(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
+                                            break;
+                                        }
                                     } else {
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es numérico.\n", $2.lexema);
                                     }
@@ -495,12 +534,15 @@ expresion                   : PARIZQ expresion PARDCH
                                     $$.tipo = desconocido;
                                 }
 
+                                $$.lexema = temporal();
+                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+
                                 if (!strcmp("**", $2.lexema)) {
                                     if ($1.n_dims == 2 && $3.n_dims == 2 && $1.dim2 == $3.dim1) {
                                         $$.n_dims = 2;
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $3.dim2;
-                                        genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, %s);\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2, tipodatoToStr($$.tipo));
+                                        genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2, tipodatoToStr($$.tipo));
 
                                     } else {
                                         semprintf("Las dimensiones de %s y/o %s no son las correctas para aplicar el operador %s.\n",$1.lexema, $3.lexema, $2.lexema);
@@ -515,6 +557,42 @@ expresion                   : PARIZQ expresion PARDCH
                                       $$.n_dims = max($1.n_dims, $3.n_dims);
                                       $$.dim1 = max($1.dim1, $3.dim1);
                                       $$.dim2 = max($1.dim2, $3.dim2);
+
+                                      switch($1.n_dims) {
+                                        case 0:
+                                          switch($3.n_dims) {
+                                            case 0:
+                                              genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+                                              break;
+                                            case 1:
+                                              genprintf("%s = multiplica_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, tipodatoToStr($$.tipo));
+                                              break;
+                                            case 2:
+                                              genprintf("%s = multiplica_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $3.lexema, $1.lexema, $3.dim1, $3.dim2, tipodatoToStr($$.tipo));
+                                              break;
+                                          }
+                                          break;
+                                        case 1:
+                                          switch($3.n_dims) {
+                                            case 0:
+                                              genprintf("%s = multiplica_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                              break;
+                                            case 1:
+                                              genprintf("%s = multiplicacion_arrays1D(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                              break;
+                                          }
+                                          break;
+                                        case 2:
+                                          switch($3.n_dims) {
+                                            case 0:
+                                              genprintf("%s = multiplica_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                              break;
+                                            case 2:
+                                              genprintf("%s = multiplicacion_arrays2D(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                              break;
+                                          }
+                                          break;
+                                      }
                                     }
                                 }
                                 else if (!strcmp("/", $2.lexema)) {
@@ -522,14 +600,36 @@ expresion                   : PARIZQ expresion PARDCH
                                         $$.dim1 = $1.dim1;
                                         $$.dim2 = $1.dim2;
                                         $$.n_dims = $1.n_dims;
+
+                                        switch($1.n_dims) {
+                                          case 0:
+                                            genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema);
+                                            break;
+                                          case 1:
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = divide_array1D_valor(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 1:
+                                                genprintf("%s = division_arrays1D(%s, %s, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
+                                            break;
+                                          case 2:
+                                            switch($3.n_dims) {
+                                              case 0:
+                                                genprintf("%s = divide_array2D_valor(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                              case 2:
+                                                genprintf("%s = division_arrays2D(%s, %s, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, tipodatoToStr($$.tipo));
+                                                break;
+                                            }
+                                            break;
+                                        }
                                     } else {
                                         semprintf("El operador %s solo puede actuar sobre elementos con la misma dimensión ó cuando el segundo elemento es una variable.\n", $2.lexema);
                                     }
                                 }
-
-                                $$.lexema = temporal();
-                                genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
-                                /* genprintf("%s = %s %s %s;\n", $$.lexema, $1.lexema, $2.lexema, $3.lexema); */
                             }
                             | identificador_comp
                             {

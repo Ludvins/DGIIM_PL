@@ -31,4 +31,7 @@ programa() {
 
   entrada "introduce numero : ", n;
   test[0, 0] = factoriza(n, test[0]);
+
+  test = test + n;
+  test = test / 3;
 }
