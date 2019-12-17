@@ -145,55 +145,61 @@ cuerpo_declar_variable      : TIPO lista_id {
                             | error
 ;
 
-acceso_array                : CORCHIZQ expresion CORCHDCH {
-                            $$.n_dims = 1;
-                            }
-                            | CORCHIZQ expresion COMA expresion CORCHDCH {
-                            $$.n_dims = 2;
-                            }
+accesoarray    : CORCHIZQ expresion CORCHDCH {
+                    $$.n_dims = 1;
+                    $$.acceso1 = $2.lexema;
+                }
+                | CORCHIZQ expresion COMA expresion CORCHDCH {
+                    $$.n_dims = 2;
+                    $$.acceso1 = $2.lexema;
+                    $$.acceso2 = $4.lexema;
+                }
 ;
 
-identificador_comp          : IDENTIFICADOR {
-                            $$.lexema = $1.lexema;
+identificador_comp  : IDENTIFICADOR {
+                        $$.lexema = $1.lexema;
 
-                            $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == desconocido) {
-                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
-                            } else {
-                                $$.n_dims = nDimensiones($1.lexema);
-                                unsigned i = encuentraTS($1.lexema);
-                                $$.dim1 = TS[i].t_dim1;
-                                $$.dim2 = TS[i].t_dim2;
+                        $$.tipo = encuentraTipo($1.lexema);
+                        if ($$.tipo == desconocido) {
+                            semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                        } else {
+                            $$.n_dims = nDimensiones($1.lexema);
+                            unsigned i = encuentraTS($1.lexema);
+                            $$.dim1 = TS[i].t_dim1;
+                            $$.dim2 = TS[i].t_dim2;
+                        }
+                    }
+                    | IDENTIFICADOR accesoarray {
+                        $$.lexema = $1.lexema;
+
+                        $$.tipo = encuentraTipo($1.lexema);
+                        if ($$.tipo == desconocido) {
+                            semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
+                        } else {
+                            int ndims_e = nDimensiones($1.lexema);
+                            $$.n_dims = ndims_e - $2.n_dims;
+                            unsigned i = encuentraTS($1.lexema);
+
+                            if (ndims_e == 0) {
+                                semprintf("El identificador '%s' no corresponde a un array.\n", $1.lexema);
                             }
+
+                            if (ndims_e == 1 && $2.n_dims == 2) {
+                                semprintf("Intento de acceder a un array 1D usando dos índices.\n");
                             }
-                            | IDENTIFICADOR acceso_array {
-                            $$.lexema = $1.lexema;
 
-                            $$.tipo = encuentraTipo($1.lexema);
-                            if ($$.tipo == desconocido) {
-                                semprintf("El identificador '%s' no está declarado en este ámbito.\n", $1.lexema);
-                            } else {
-                                int ndims_e = nDimensiones($1.lexema);
-                                $$.n_dims = ndims_e - $2.n_dims;
-                                unsigned i = encuentraTS($1.lexema);
-
-                                if (ndims_e == 0) {
-                                    semprintf("El identificador '%s' no corresponde a un array.\n", $1.lexema);
-                                }
-
-                                if (ndims_e == 1 && $2.n_dims == 2) {
-                                    semprintf("Intento de acceder a un array 1D usando dos índices.\n");
-                                }
-
-                                if (ndims_e == 2 && $2.n_dims == 1) {
-                                    $$.dim1 = TS[i].t_dim2;
-                                    $$.dim2 = 0;
-                                }
+                            if (ndims_e == 2 && $2.n_dims == 1) {
+                                $$.dim1 = TS[i].t_dim2;
+                                $$.dim2 = 0;
                             }
-                            }
+
+                            $$.acceso1 = $2.acceso1;
+                            $$.acceso2 = $2.acceso2;
+                        }
+                    }
 ;
 
-acceso_array_cte            : CORCHIZQ NATURAL CORCHDCH {
+accesoarray_cte            : CORCHIZQ NATURAL CORCHDCH {
                             $$.dim1 = atoi($2.lexema);
                             $$.dim2 = 0;
                             $$.n_dims = 1;
@@ -211,7 +217,7 @@ identificador_comp_cte      : IDENTIFICADOR {
                             $$.lexema = $1.lexema;
                             $$.n_dims = 0;
                             }
-                            | IDENTIFICADOR acceso_array_cte {
+                            | IDENTIFICADOR accesoarray_cte {
                             $$.lexema = $1.lexema;
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
@@ -256,7 +262,7 @@ tipo_comp                   : TIPO {
                             $$.dim1 = 0;
                             $$.dim2 = 0;
                             }
-                            | TIPO acceso_array_cte {
+                            | TIPO accesoarray_cte {
                             $$.tipo = strToTipodato($1.lexema);
                             $$.dim1 = $2.dim1;
                             $$.dim2 = $2.dim2;
@@ -639,17 +645,26 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.dim2 = $1.dim2;
 
                                 $$.lexema = temporal();
-                                if ($$.n_dims == 0)
+                                if ($$.n_dims == 0){
                                     genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
+                                }
                                 else if ($$.n_dims == 1){
                                     genprintf("%s* %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                     genprintf("%s = asigna_memoria1D(%d, %s);\n", $$.lexema, $$.dim1, tipodatoToStr($$.tipo));
                                 }
-                                else if ($$.n_dims == 2)
+                                else if ($$.n_dims == 2) {
                                     genprintf("%s** %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                     genprintf("%s = asigna_memoria2D(%d, %d, %s);\n", $$.lexema, $$.dim1, $$.dim2, tipodatoToStr($$.tipo));
+                                }
 
-                                genprintf("%s = %s;\n", $$.lexema, $1.lexema);
+                                switch (nDimensiones($1.lexema) - $1.n_dims ){
+                                    case 0:
+                                        genprintf("%s = %s;\n", $$.lexema, $1.lexema);
+                                    case 1:
+                                        genprintf("%s = %s[%s];\n", $$.lexema, $1.lexema, $1.acceso1);
+                                    case 2:
+                                        genprintf("%s = %s[%s][%s];\n", $$.lexema, $1.lexema, $1.acceso1, $1.acceso2);
+                                }
                             }
                             | CONSTANTE
                             {
