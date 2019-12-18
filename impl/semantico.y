@@ -69,7 +69,7 @@ void salFuncion(){
 
 programa                    : {
                             fout = main_file;
-                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include \"dec_fun\"\n#include \"dec_dat\"\n\n");
+                            genprintf("#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include \"dec_dat\"\n#include \"dec_fun\"\n\n");
                             }
                               cabecera_programa
                               bloque
@@ -230,7 +230,14 @@ identificador_comp_cte      : IDENTIFICADOR {
 
 cabecera_subprog            : tipo_comp IDENTIFICADOR PARIZQ {
                             entraFuncion();
-                            genprintf("%s %s(", tipodatoToStrC($1.tipo), $2.lexema);
+                            genprintf("%s", tipodatoToStrC($1.tipo));
+                            if ($1.dim1 != 0) {
+                              genprintf("*", $2.dim1);
+                              if ($1.dim2 != 0) {
+                                genprintf("*", $2.dim2);
+                              }
+                            }
+                            genprintf(" %s(", $2.lexema);
                             insertaFuncion($2.lexema, $1.tipo, $1.dim1, $1.dim2);
                             } lista_argumentos PARDCH {
                             genprintf(") ");
@@ -248,13 +255,14 @@ argumentos                  : argumentos COMA {
 ;
 
 argumento                   : TIPO identificador_comp_cte {
-                            genprintf("%s %s", tipodatoToStrC(strToTipodato($1.lexema)), $2.lexema)
+                            genprintf("%s", tipodatoToStrC(strToTipodato($1.lexema)))
                             if ($2.dim1 != 0) {
-                              genprintf("[%d]", $2.dim1);
+                              genprintf("*", $2.dim1);
                               if ($2.dim2 != 0) {
-                                genprintf("[%d]", $2.dim2);
+                                genprintf("*", $2.dim2);
                               }
                             }
+                            genprintf(" %s", $2.lexema);
                             insertaParametro($2.lexema, $1.lexema, $2.dim1, $2.dim2);
                             }
                             | error
@@ -583,7 +591,7 @@ expresion                   : PARIZQ expresion PARDCH
                                         genprintf("%s = producto_arrays2D(%s, %s, %d, %d, %d, \"%s\");\n", $$.lexema, $1.lexema, $3.lexema, $1.dim1, $1.dim2, $3.dim2, tipodatoToStr($$.tipo));
 
                                     } else {
-                                        semprintf("Las dimensiones de %s y/o %s no son las correctas para aplicar el operador %s.\n",$1.lexema, $3.lexema, $2.lexema);
+                                        semprintf("Las dimensiones no son las correctas para aplicar el operador %s.\n", $2.lexema);
                                     }
                                 }
                                 else if (!strcmp("*", $2.lexema)) {
@@ -912,8 +920,6 @@ listas                      : listas PYC expresiones {
                             }
                             $$.tope_listas = $1.tope_listas;
 
-                            printf("tope_listas: %d, %s, %s\n", $$.tope_listas, $$.lista_ids[0],$$.lista_ids[1]);
-
                             $$.dim1 += 1;
                             $$.dim2 = $1.tope_listas;
                             }
@@ -1163,7 +1169,7 @@ sentencia_salida            : COUT {
                             } lista_exp_cad PYC {
                             for(int i = 0; i < $3.tope_listas; ++i) {
                                 if ($3.lista_ndims[i] != 0) {
-                                    semprintf("El identificador '%s' para imprimir en la salida no tiene dimensión 0.\n", $3.lista_ids[i]);
+                                    semprintf("Algún identificador para imprimir en la salida no tiene dimensión 0.\n");
                                 }
                                 int expr = 0;
                                 char tipo = 'd';
