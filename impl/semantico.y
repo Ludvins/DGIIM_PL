@@ -1064,10 +1064,10 @@ sentencia_switch: SWITCH PARIZQ {
 ;
 
 bloque_switch:   LLAVEIZQ {
-                    genprintf("{");
+                    genprintf("{\n");
                 }
                 opciones_y_pred LLAVEDCH {
-                    genprintf("}");
+                    genprintf(";}");
                 }
 ;
 

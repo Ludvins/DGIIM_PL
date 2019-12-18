@@ -1,0 +1,16 @@
+programa() {
+  var
+    entero n;
+  finvar
+
+  entrada "Introduce un número: ", n;
+
+  casos(n - 1) {
+    caso 0: salida "Has introducido un 1.\n";
+            roto;
+    caso 1: salida "Has introducido un 2.\n";
+            roto;
+    predeterminado:
+      salida "Has introducido otro número.\n";
+  }
+}
