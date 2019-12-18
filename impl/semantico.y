@@ -150,12 +150,14 @@ cuerpo_declar_variable      : TIPO lista_id {
 
 accesoarray    : CORCHIZQ expresion CORCHDCH {
                     $$.n_dims = 1;
-                    $$.acceso1 = $2.lexema;
+                    $$.lista_ids[0] = $2.lexema;
+                    $$.tope_listas = 1;
                 }
                 | CORCHIZQ expresion COMA expresion CORCHDCH {
                     $$.n_dims = 2;
-                    $$.acceso1 = $2.lexema;
-                    $$.acceso2 = $4.lexema;
+                    $$.lista_ids[0] = $2.lexema;
+                    $$.lista_ids[1] = $4.lexema;
+                    $$.tope_listas = 2;
                 }
 ;
 
@@ -196,8 +198,10 @@ identificador_comp  : IDENTIFICADOR {
                                 $$.dim2 = 0;
                             }
 
-                            $$.acceso1 = $2.acceso1;
-                            $$.acceso2 = $2.acceso2;
+                            for (int i = 0; i < $2.tope_listas; i++) {
+                                $$.lista_ids[i] = $2.lista_ids[i];
+                            }
+                            $$.tope_listas = $2.tope_listas;
                         }
                     }
 ;
@@ -720,10 +724,10 @@ expresion                   : PARIZQ expresion PARDCH
                                         genprintf("%s = %s;\n", $$.lexema, $1.lexema);
                                         break;
                                     case 1:
-                                        genprintf("%s = %s[%s];\n", $$.lexema, $1.lexema, $1.acceso1);
+                                        genprintf("%s = %s[%s];\n", $$.lexema, $1.lexema, $1.lista_ids[0]);
                                         break;
                                     case 2:
-                                        genprintf("%s = %s[%s][%s];\n", $$.lexema, $1.lexema, $1.acceso1, $1.acceso2);
+                                        genprintf("%s = %s[%s][%s];\n", $$.lexema, $1.lexema, $1.lista_ids[0], $1.lista_ids[1]);
                                         break;
                                 }
                             }
@@ -988,10 +992,10 @@ sentencia_asignacion    : identificador_comp ASIG {
                                     genprintf("%s = %s;\n}\n", $1.lexema, $4.lexema);
                                     break;
                                 case 1:
-                                    genprintf("%s[%s] = %s;\n}\n", $1.lexema, $1.acceso1, $4.lexema);
+                                    genprintf("%s[%s] = %s;\n}\n", $1.lexema, $1.lista_ids[0], $4.lexema);
                                     break;
                                 case 2:
-                                    genprintf("%s[%s][%s] = %s;\n}\n", $1.lexema, $1.acceso1, $1.acceso2, $4.lexema);
+                                    genprintf("%s[%s][%s] = %s;\n}\n", $1.lexema, $1.lista_ids[0], $1.lista_ids[1], $4.lexema);
                                     break;
                             }
                         }
