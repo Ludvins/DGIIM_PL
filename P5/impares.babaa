@@ -9,7 +9,7 @@ programa() {
     finvar
 
     i = 0;
-    mientras (i <=n) {
+    mientras (i < n) {
       salida valores[i], ", ";
       i = i + 1;
     }
@@ -27,7 +27,7 @@ programa() {
       finvar
 
       i = 0;
-      mientras (i <= n) {
+      mientras (i < n) {
         salida valores[i], ", ";
         i = i + 1;
       }
@@ -35,18 +35,18 @@ programa() {
     }
 
     i = 0;
-    mientras (i <= n) {
+    mientras (i < n) {
       ret[i] = 2 * i + 1;
       i = i + 1;
     }
 
-    salida "Números impares hasta el", 2 * n + 1, ":\n";
+    salida "Primeros ", n, " números impares:\n";
     imprimir(ret, n);
 
     devolver ret;
   }
 
-  entrada "Introduce cuántos elementos impares quieres: ", n;
+  entrada "Introduce cuántos elementos impares quieres --->: ", n;
   valores1 = impares(n);
 
   valores2 = valores1 + valores1;

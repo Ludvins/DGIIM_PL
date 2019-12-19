@@ -32,6 +32,7 @@ void salFuncion(){
     fout = main_file;
 }
 
+int primero = 1;
 int aux1[100];
 int aux2[100];
 int n1 = 0;
@@ -81,7 +82,9 @@ programa                    : {
 ;
 
 bloque                      : inicio_de_bloque
-                              declar_de_variables_locales
+                              declar_de_variables_locales {
+                                primero = 0;
+                              }
                               declar_de_subprogs {
                             if (esMain()) {
                               genprintf("\nint main() {\n");
@@ -94,8 +97,6 @@ bloque                      : inicio_de_bloque
                                   int j = aux2[i];
                                   genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], $2.lista_dims2[j], tipodatoToStr(strToTipodato($2.lexema)));
                               }
-                              n1 = 0;
-                              n2 = 0;
                             }
                             }
                               sentencias
@@ -129,7 +130,9 @@ declar_subprog              : cabecera_subprog bloque {
 declar_de_variables_locales : /* empty */
                             | marca_ini_declar_variables
                               variables_locales
-                              marca_fin_declar_variables
+                              marca_fin_declar_variables {
+                                $$ = $2;
+                              }
 ;
 
 marca_ini_declar_variables  : INILOCAL
@@ -143,6 +146,9 @@ variables_locales           : variables_locales cuerpo_declar_variable
 ;
 
 cuerpo_declar_variable      : TIPO lista_id {
+                            int a1[100], a2[100];
+                            int m1 = 0;
+                            int m2 = 0;
                             genprintf("%s ", tipodatoToStrC(strToTipodato($1.lexema)));
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
@@ -151,11 +157,26 @@ cuerpo_declar_variable      : TIPO lista_id {
 
                                 if ($2.lista_ndims[i] == 1) {
                                   genprintf("*");
-                                  aux1[n1++] = i;
+                                  if (primero) {
+                                    aux1[n1++] = i;
+                                    $$.lista_ids[i] = $2.lista_ids[i];
+                                    $$.lista_dims1[i] = $2.lista_dims1[i];
+                                  }
+                                  else {
+                                    a1[m1++] = i;
+                                  }
                                 }
                                 if ($2.lista_ndims[i] == 2) {
                                     genprintf("**");
-                                    aux2[n2++] = i;
+                                    if (primero) {
+                                      aux2[n2++] = i;
+                                      $$.lista_ids[i] = $2.lista_ids[i];
+                                      $$.lista_dims1[i] = $2.lista_dims1[i];
+                                      $$.lista_dims2[i] = $2.lista_dims2[i];
+                                    }
+                                    else {
+                                      a2[m2++] = i;
+                                    }
                                 }
 
                                 genprintf("%s", $2.lista_ids[i]);
@@ -166,20 +187,18 @@ cuerpo_declar_variable      : TIPO lista_id {
                             }
                             genprintf(";\n");
 
-                              if (!esMain()) {
-                                for (int i = 0; i < n1; i++) {
-                                    int j = aux1[i];
+                                for (int i = 0; i < m1; i++) {
+                                    int j = a1[i];
                                     genprintf("%s = asigna_memoria1D(%d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], tipodatoToStr(strToTipodato($1.lexema)));
                                 }
-                                for (int i = 0; i < n2; i++) {
-                                    int j = aux2[i];
+                                for (int i = 0; i < m2; i++) {
+                                    int j = a2[i];
                                     genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], $2.lista_dims2[j], tipodatoToStr(strToTipodato($1.lexema)));
                                 }
-                                n1 = 0;
-                                n2 = 0;
-                              }
                             }
-                              PYC
+                              PYC {
+                                $$ = $3;
+                              }
                             | error
 ;
 
