@@ -1,2 +1,4 @@
 * PL
 Repositorio de las prácticas de PL.
+
+La práctica funciona, pero no es recomendable intentar replicarla.
