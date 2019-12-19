@@ -31,6 +31,11 @@ void salFuncion(){
   if(--prof == 0)
     fout = main_file;
 }
+
+int aux1[100];
+int aux2[100];
+int n1 = 0;
+int n2 = 0;
 %}
 
 %define parse.error verbose
@@ -78,7 +83,20 @@ programa                    : {
 bloque                      : inicio_de_bloque
                               declar_de_variables_locales
                               declar_de_subprogs {
-                            if (esMain()) {genprintf("\nint main() {\n");}
+                            if (esMain()) {
+                              genprintf("\nint main() {\n");
+
+                              for (int i = 0; i < n1; i++) {
+                                  int j = aux1[i];
+                                  genprintf("%s = asigna_memoria1D(%d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], tipodatoToStr(strToTipodato($2.lexema)));
+                              }
+                              for (int i = 0; i < n2; i++) {
+                                  int j = aux2[i];
+                                  genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], $2.lista_dims2[j], tipodatoToStr(strToTipodato($2.lexema)));
+                              }
+                              n1 = 0;
+                              n2 = 0;
+                            }
                             }
                               sentencias
                               fin_de_bloque
@@ -129,12 +147,17 @@ cuerpo_declar_variable      : TIPO lista_id {
                             for (int i=0; i<$2.tope_listas; i++){
                                 insertaVar($2.lista_ids[i], $1.lexema, $2.lista_dims1[i], $2.lista_dims2[i]);
 
-                                if ($2.lista_dims1[i] != 0) {
+                                $$.lexema = $1.lexema;
+
+                                if ($2.lista_ndims[i] == 1) {
                                   genprintf("*");
-                                  if ($2.lista_dims2[i] != 0) {
-                                    genprintf("*");
-                                  }
+                                  aux1[n1++] = i;
                                 }
+                                if ($2.lista_ndims[i] == 2) {
+                                    genprintf("**");
+                                    aux2[n2++] = i;
+                                }
+
                                 genprintf("%s", $2.lista_ids[i]);
 
                                 if (i < $2.tope_listas - 1) {
@@ -142,6 +165,19 @@ cuerpo_declar_variable      : TIPO lista_id {
                                 }
                             }
                             genprintf(";\n");
+
+                              if (!esMain()) {
+                                for (int i = 0; i < n1; i++) {
+                                    int j = aux1[i];
+                                    genprintf("%s = asigna_memoria1D(%d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], tipodatoToStr(strToTipodato($1.lexema)));
+                                }
+                                for (int i = 0; i < n2; i++) {
+                                    int j = aux2[i];
+                                    genprintf("%s = asigna_memoria2D(%d, %d, \"%s\");\n", $2.lista_ids[j], $2.lista_dims1[j], $2.lista_dims2[j], tipodatoToStr(strToTipodato($1.lexema)));
+                                }
+                                n1 = 0;
+                                n2 = 0;
+                              }
                             }
                               PYC
                             | error

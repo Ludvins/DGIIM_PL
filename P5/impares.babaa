@@ -27,7 +27,7 @@ programa() {
       finvar
 
       i = 0;
-      mientras (i <=n) {
+      mientras (i <= n) {
         salida valores[i], ", ";
         i = i + 1;
       }
