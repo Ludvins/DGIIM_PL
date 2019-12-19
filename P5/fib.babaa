@@ -12,7 +12,7 @@ programa() {
     devolver fib(a-1)+fib(a-2);
   }
 
-  entrada "Introduce cuantos elementos de la serie quieres: ", n;
+  entrada "Introduce cuántos elementos de la serie de Fibonacci quieres: ", n;
   aux = 0;
 
   mientras(aux != n){
