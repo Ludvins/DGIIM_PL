@@ -409,7 +409,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                 genprintf("%s = !%s;\n", $$.lexema, $2.lexema);
                             }
-                            | MASMENOS expresion
+                            | MASMENOS expresion %prec NOT
                             {
                                 if ($2.n_dims != 0) {
                                     semprintf("El operador unario %s no se puede aplicar a un array.\n", $1.lexema);
@@ -424,7 +424,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.lexema = temporal();
                                 genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                 genprintf("%s = %s%s;\n", $$.lexema, $1.lexema, $2.lexema);
-                            } %prec NOT
+                            }
                             | expresion OR expresion
                             {
                                 if ($1.tipo == booleano && $3.tipo == booleano)
