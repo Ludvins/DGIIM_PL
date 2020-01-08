@@ -424,7 +424,7 @@ expresion                   : PARIZQ expresion PARDCH
                                 $$.lexema = temporal();
                                 genprintf("%s %s;\n", tipodatoToStrC($$.tipo), $$.lexema);
                                 genprintf("%s = %s%s;\n", $$.lexema, $1.lexema, $2.lexema);
-                            }
+                            } %prec NOT
                             | expresion OR expresion
                             {
                                 if ($1.tipo == booleano && $3.tipo == booleano)
